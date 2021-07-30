@@ -102,3 +102,85 @@ export async function getAccount(api, address) {
     }
   };
 }
+
+export async function signAndSend(account, tx, options = {}) {
+  return new Promise((resolve, reject) => {
+    tx.signAndSend(
+      account.meta.isInjected ? account.address : account,
+      options,
+      result => {
+        if (result.status.isInBlock) {
+          result.events.forEach(events => {
+            const {
+              event: { data, method, section }
+            } = events;
+            if (section === "system" && method === "ExtrinsicFailed") {
+              reject(new Error(data.toString()));
+            } else if (section === "system" && method === "ExtrinsicSuccess") {
+              resolve({
+                block: result.status.asInBlock.toString(),
+                tx: tx.hash.toString()
+              });
+            }
+          });
+        }
+      }
+    ).catch(reject);
+  });
+}
+
+export class Datalog {
+  constructor(api) {
+    this.api = api;
+  }
+  maxId() {
+    const windowSize = this.api.consts.datalog.windowSize;
+    return windowSize.toNumber() - 1;
+  }
+  async getLastId(address) {
+    let id = null;
+    let full = false;
+    const index = await this.getIndex(address);
+    if (index.start != index.end) {
+      id = index.end - 1;
+      const max = this.maxId();
+      if (id < 0) {
+        id = max;
+      }
+      if (index.start > 0 || index.end === max) {
+        full = true;
+      }
+    }
+    return { id, full };
+  }
+  async getIndex(address) {
+    const index = await this.api.query.datalog.datalogIndex(address);
+    return {
+      start: index.start.toNumber(),
+      end: index.end.toNumber()
+    };
+  }
+  async readByIndex(address, index) {
+    return await this.api.query.datalog.datalogItem([address, index]);
+  }
+  async read(address, start = 0, end = null) {
+    const log = [];
+    if (!end) {
+      const id = await this.getLastId(address);
+      if (id.full) {
+        return (await this.read(address, id.id + 1, this.maxId())).concat(
+          await this.read(address, 0, id.id)
+        );
+      } else {
+        end = id.id;
+      }
+    }
+    if (end !== null) {
+      for (let index = start; index <= end; index++) {
+        const data = await this.readByIndex(address, index);
+        log.push(data);
+      }
+    }
+    return log;
+  }
+}
