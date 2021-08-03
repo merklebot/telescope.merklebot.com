@@ -66,7 +66,7 @@ export async function initAccounts(api) {
   );
 
   isInitAccounts = true;
-  return accounts;
+  return keyring.getPairs();
 }
 
 export function getAccounts(api) {

@@ -25,7 +25,7 @@
           View in Explorer
         </a>
       </div>
-      <div class="log">
+      <div class="log" v-if="log.length > 0">
         <div v-for="(item, k) in log" :key="k">
           <b>{{ new Date(item[0]).toLocaleString() }}:</b>&nbsp;
           {{ item[1] }}

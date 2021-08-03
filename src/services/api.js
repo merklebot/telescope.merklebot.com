@@ -6,14 +6,15 @@ export async function checkout(data) {
   return result.data;
 }
 
-export async function getStatusKey(account) {
-  const result = await axios.get(
-    `${config.API_SERVER}/account/status/${account}`
-  );
-  return result.data.result;
-}
-
 export async function setAccount(data) {
-  const result = await axios.post(`${config.API_SERVER}/account/send`, data);
-  return result.data;
+  try {
+    await axios.post(
+      `https://api.merklebot.com/spot-sdk-edu/access-credentials/`,
+      data
+    );
+    return { result: true };
+  } catch (error) {
+    console.log(error);
+  }
+  return { result: false };
 }

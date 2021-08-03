@@ -20,13 +20,13 @@
         </td>
       </tr>
       <tr>
-        <td><b>Name:</b></td>
+        <td><b>Email:</b></td>
         <td>
           <input
-            v-model="fields.name.value"
+            v-model="fields.email.value"
             type="text"
             class="container-full"
-            :class="{ error: fields.name.error }"
+            :class="{ error: fields.email.error }"
           />
         </td>
       </tr>
@@ -36,7 +36,7 @@
           <textarea
             v-model="fields.sshkey.value"
             class="container-full"
-            :class="{ error: fields.name.error }"
+            :class="{ error: fields.sshkey.error }"
           ></textarea>
         </td>
       </tr>
@@ -59,10 +59,10 @@ export default {
           rules: ["require", validators.length(48)],
           error: false
         },
-        name: {
+        email: {
           value: "",
           type: "text",
-          rules: ["require"],
+          rules: ["require", "email"],
           error: false
         },
         sshkey: {

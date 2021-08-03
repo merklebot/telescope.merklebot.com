@@ -19,6 +19,7 @@
       >
         Send
       </button>
+      <div v-if="error !== null" class="red">{{ error }}</div>
 
       <div
         v-show="status"
@@ -48,7 +49,7 @@ import { getProvider, getInstance, getAccounts } from "../services/substrate";
 import AccountForm from "../components/forms/Account.vue";
 import { formatBalance } from "@polkadot/util";
 import { loadScript } from "../utils/tools";
-import { getStatusKey, setAccount } from "../services/api";
+import { setAccount } from "../services/api";
 
 export default {
   components: {
@@ -116,13 +117,13 @@ export default {
           this.unsubscribe();
         }
 
-        this.status = false;
-        const result = await getStatusKey(newValue);
-        if (result.status) {
-          this.status = true;
-          this.$refs.form.fields.name.value = result.name;
-          this.$refs.form.fields.sshkey.value = result.sshkey;
-        }
+        // this.status = false;
+        // const result = await getStatusKey(newValue);
+        // if (result.status) {
+        //   this.status = true;
+        //   this.$refs.form.fields.email.value = result.email;
+        //   this.$refs.form.fields.sshkey.value = result.sshkey;
+        // }
 
         this.unsubscribe = await this.api.query.system.account(
           newValue,
@@ -133,13 +134,18 @@ export default {
       }
     },
     async handleSubmit({ error, fields }) {
+      this.error = null;
       if (!error) {
         const result = await setAccount({
-          account: fields.account.value,
-          name: fields.name.value,
-          sshkey: fields.sshkey.value
+          polkadot_pubkey: fields.account.value,
+          email: fields.email.value,
+          ssh_pubkey: fields.sshkey.value,
+          check_only: false
         });
         this.status = result.result;
+        if (!result.result) {
+          this.error = "Error: check the correctness of input form";
+        }
       }
     }
   }
