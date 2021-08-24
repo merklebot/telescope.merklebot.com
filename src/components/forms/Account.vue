@@ -20,6 +20,17 @@
         </td>
       </tr>
       <tr>
+        <td><b>Full name:</b></td>
+        <td>
+          <input
+            v-model="fields.name.value"
+            type="text"
+            class="container-full"
+            :class="{ error: fields.name.error }"
+          />
+        </td>
+      </tr>
+      <tr>
         <td><b>Email:</b></td>
         <td>
           <input
@@ -57,6 +68,12 @@ export default {
           value: "",
           type: "text",
           rules: ["require", validators.length(48)],
+          error: false
+        },
+        name: {
+          value: "",
+          type: "text",
+          rules: ["require"],
           error: false
         },
         email: {

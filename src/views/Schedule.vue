@@ -137,6 +137,7 @@ export default {
       this.error = null;
       if (!error) {
         const result = await setAccount({
+          fullname: fields.name.value,
           polkadot_pubkey: fields.account.value,
           email: fields.email.value,
           ssh_pubkey: fields.sshkey.value,
