@@ -6,6 +6,7 @@ import Cancel from "@/views/Cancel";
 import Checkout from "@/views/Checkout";
 import Schedule from "@/views/Schedule";
 import Datalog from "@/views/Datalog";
+import Lesson from "@/views/Lesson";
 
 Vue.use(Router);
 
@@ -40,6 +41,12 @@ export default new Router({
       path: "/datalog",
       name: "datalog",
       component: Datalog
+    },
+    {
+      path: "/lesson/:lesson",
+      name: "lesson",
+      component: Lesson,
+      props: true
     },
     { path: "*", redirect: "/" }
   ]

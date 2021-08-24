@@ -16,6 +16,7 @@
     "stripe": "^8.154.0",
     "vue": "^2.6.11",
     "vue-fragment": "^1.5.2",
+    "vue-markdown-render": "^1.1.2",
     "vue-router": "^3.5.1"
   },
   "devDependencies": {
@@ -25,6 +26,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "markdown-image-loader": "^2.0.1",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {

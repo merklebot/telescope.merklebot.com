@@ -10,6 +10,10 @@ module.exports = {
           test: /\.mjs$/,
           include: /node_modules/,
           type: "javascript/auto"
+        },
+        {
+          test: /\.(md|markdown)$/,
+          use: "markdown-image-loader"
         }
       ]
     }
