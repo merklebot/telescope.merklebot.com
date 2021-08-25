@@ -24,16 +24,8 @@
       <div
         v-show="status"
         class="meetings-iframe-container"
-        data-src="https://meetings.hubspot.com/v8/lesson-on-spot-sdk?embed=true"
+        data-src="https://meetings.hubspot.com/strelka?embed=true"
       ></div>
-      <!-- <template v-if="balance > 0">
-        <a
-          href="https://meetings.hubspot.com/v8/lesson-on-spot-sdk"
-          target="_blank"
-        >
-          Schedule your time
-        </a>
-      </template> -->
     </template>
     <template v-else-if="error === null">
       Load ...
