@@ -24,13 +24,33 @@
         Study the documentation
       </a>
     </Section>
+    <Section v-if="lessons.length" title="Lessons">
+      <router-link
+        v-for="(lesson, k) in lessons"
+        :key="k"
+        :to="{ name: 'lesson', params: { lesson: lesson.fileName } }"
+        active-class="active"
+        exact
+      >
+        {{ lesson.title }}
+      </router-link>
+    </Section>
   </div>
 </template>
 
 <script>
 import Section from "./section";
+import menu from "@/md/menu";
 
 export default {
-  components: { Section }
+  components: { Section },
+  data() {
+    return {
+      lessons: []
+    };
+  },
+  created() {
+    this.lessons = menu;
+  }
 };
 </script>
