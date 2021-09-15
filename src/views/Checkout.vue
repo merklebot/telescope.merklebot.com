@@ -9,7 +9,7 @@
         :accounts="accounts"
       />
       <div>
-        Your balance: <b>{{ balance }}</b>
+        Your balance: <b>{{ balance }} SPOT</b>
       </div>
       <button @click="$refs.form.submit()">Checkout</button>
     </template>
@@ -27,7 +27,7 @@ import { checkout } from "../services/api";
 import stripe from "../services/stripe";
 import { getProvider, getInstance, getAccounts } from "../services/substrate";
 import CheckoutForm from "../components/forms/Checkout.vue";
-import { formatBalance } from "@polkadot/util";
+import config from "../config";
 
 export default {
   components: {
@@ -79,10 +79,11 @@ export default {
         if (this.unsubscribe) {
           this.unsubscribe();
         }
-        this.unsubscribe = await this.api.query.system.account(
+        this.unsubscribe = await this.api.query.assets.account(
+          config.ID_ASSET,
           newValue,
-          ({ data: { free: currentFree } }) => {
-            this.balance = formatBalance(currentFree);
+          ({ balance: currentFree }) => {
+            this.balance = currentFree.toNumber();
           }
         );
       }

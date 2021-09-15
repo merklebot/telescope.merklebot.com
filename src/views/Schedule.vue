@@ -39,9 +39,9 @@
 <script>
 import { getProvider, getInstance, getAccounts } from "../services/substrate";
 import AccountForm from "../components/forms/Account.vue";
-import { formatBalance } from "@polkadot/util";
 import { loadScript } from "../utils/tools";
 import { setAccount } from "../services/api";
+import config from "../config";
 
 export default {
   components: {
@@ -90,7 +90,7 @@ export default {
   },
   computed: {
     balanceView() {
-      return formatBalance(this.balance);
+      return this.balance + " SPOT";
     }
   },
   watch: {
@@ -117,10 +117,11 @@ export default {
         //   this.$refs.form.fields.sshkey.value = result.sshkey;
         // }
 
-        this.unsubscribe = await this.api.query.system.account(
+        this.unsubscribe = await this.api.query.assets.account(
+          config.ID_ASSET,
           newValue,
-          ({ data: { free: currentFree } }) => {
-            this.balance = Number(currentFree);
+          ({ balance: currentFree }) => {
+            this.balance = currentFree.toNumber();
           }
         );
       }

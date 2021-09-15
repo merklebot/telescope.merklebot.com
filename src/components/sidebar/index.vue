@@ -13,10 +13,6 @@
         Schedule your time
       </router-link>
 
-      <router-link :to="{ name: 'datalog' }" active-class="active" exact>
-        Save result
-      </router-link>
-
       <a
         href="https://github.com/boston-dynamics/spot-sdk/blob/master/docs/python/understanding_spot_programming.md"
         target="_blank"
