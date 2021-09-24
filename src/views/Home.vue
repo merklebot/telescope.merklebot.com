@@ -14,7 +14,7 @@
       <iframe
         width="960px"
         height="540px"
-        src="https://www.youtube.com/embed/kzn5KjwwRiU"
+        src="https://www.youtube.com/embed/_xBLkszEwWk"
         title="YouTube video player"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
