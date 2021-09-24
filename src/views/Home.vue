@@ -1,7 +1,6 @@
 <template>
   <Card style="text-align:center;">
     <h1>Spot SDK Eucational Program</h1>
-    <h2>Lesson 1</h2>
 
     <div>
       We are excited to see you join the Spot SDK educational program.<br />Our
