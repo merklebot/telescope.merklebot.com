@@ -35,7 +35,8 @@
 </template>
 
 <script>
-import form, { validators } from "@/mixins/form";
+import form from "@/mixins/form";
+import { checkAddress } from "@polkadot/util-crypto";
 
 export default {
   props: ["accounts"],
@@ -46,7 +47,12 @@ export default {
         account: {
           value: "",
           type: "text",
-          rules: ["require", validators.length(48)],
+          rules: [
+            "require",
+            v => {
+              return checkAddress(v, 2)[0];
+            }
+          ],
           error: false
         },
         ipfs: {
