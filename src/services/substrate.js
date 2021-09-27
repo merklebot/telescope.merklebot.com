@@ -38,19 +38,31 @@ export async function getInstance() {
   return api;
 }
 
-export async function getExtension() {
-  const extensions = await web3Enable("demo");
-  if (extensions.length === 0) throw new Error("no extension");
-  return extensions[0];
+function onLoad() {
+  return new Promise(function(resolve, reject) {
+    const timeout = setTimeout(() => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+      return reject(new Error("Not fount polkadot.extension"));
+    }, 3000);
+    const interval = setInterval(() => {
+      if (Object.keys(window.injectedWeb3).length > 0) {
+        clearTimeout(timeout);
+        clearInterval(interval);
+        return resolve();
+      }
+    }, 100);
+  });
 }
 
 let isInitAccounts = false;
+
 export async function initAccounts(api) {
-  const timeout = new Promise(resolve => {
-    setTimeout(resolve, 300);
-  });
-  await timeout;
-  await getExtension();
+  await onLoad();
+  const extensions = await web3Enable("robonomics");
+  if (extensions.length === 0) {
+    throw new Error("no extension");
+  }
   const accounts = await web3Accounts();
   const injectedAccounts = accounts.map(({ address, meta }) => ({
     address,
@@ -64,7 +76,6 @@ export async function initAccounts(api) {
     },
     injectedAccounts
   );
-
   isInitAccounts = true;
   return keyring.getPairs();
 }
