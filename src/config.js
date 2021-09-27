@@ -1,6 +1,6 @@
 export default {
-  API_SERVER: "http://localhost:3012",
-  STRIPE_KEY: "pk_................",
+  API_SERVER: process.env.VUE_APP_API_SERVER ?? "http://localhost:3012",
+  STRIPE_KEY: process.env.VUE_APP_STRIPE_KEY ?? "pk_................",
   ID_ASSET: 1441,
   SUBSTRATE: {
     url: "ws://127.0.0.1:9944",
