@@ -4,13 +4,10 @@
       <router-link :to="{ name: 'home' }" active-class="active" exact>
         Home
       </router-link>
-
+    </Section>
+    <Section title="Practice">
       <router-link :to="{ name: 'checkout' }" active-class="active" exact>
         Rent Spot
-      </router-link>
-
-      <router-link :to="{ name: 'schedule' }" active-class="active" exact>
-        Schedule your time
       </router-link>
     </Section>
     <Section v-if="lessons.length" title="Theory">
