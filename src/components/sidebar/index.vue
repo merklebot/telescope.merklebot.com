@@ -20,7 +20,7 @@
         Study the documentation
       </a>
     </Section>
-    <Section v-if="lessons.length" title="Lessons">
+    <Section v-if="lessons.length" title="Theory">
       <router-link
         v-for="(lesson, k) in lessons"
         :key="k"
