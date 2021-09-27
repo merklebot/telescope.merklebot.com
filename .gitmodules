@@ -1,0 +1,3 @@
+[submodule "external/github.com/merklebot/robonomics-wiki"]
+	path = external/github.com/merklebot/robonomics-wiki
+	url = https://github.com/merklebot/robonomics-wiki
