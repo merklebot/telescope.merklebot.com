@@ -34,15 +34,13 @@ export default {
             /* webpackChunkName: "lesson" */ `../md/docs/${this.lesson}.md`
           )
         ).default;
-        const rows = this.src.split("\n");
-        const title = rows.find(row => {
-          return row.substring(0, 2) === "# ";
-        });
-        if (title) {
-          document.title = `Lesson spot: ${title.substring(2)}`;
-        } else {
-          document.title = "Lesson spot";
-        }
+        // ToDo: proper front matter processing
+        document.title = this.src.slice(
+            this.src.indexOf("title: ") + "title: ".length,
+            this.src.indexOf("\ncontributors")
+        );
+        this.src = this.src.split("\n").slice(4).join("\n");
+        this.src = `# ${document.title}\n` + this.src;
       } catch (_) {
         console.log("Not find lesson");
       }
