@@ -1,6 +1,6 @@
 export default {
   API_SERVER:
-    process.env.VUE_APP_API_SERVER ?? "https://checkout.spot-sdk.education/",
+    process.env.VUE_APP_API_SERVER ?? "https://checkout.spot-sdk.education",
   STRIPE_KEY: process.env.VUE_APP_STRIPE_KEY ?? "pk_................",
   ID_ASSET: 1441,
   SUBSTRATE: {
