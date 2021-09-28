@@ -1,9 +1,10 @@
 export default {
-  API_SERVER: process.env.VUE_APP_API_SERVER ?? "http://localhost:3012",
+  API_SERVER:
+    process.env.VUE_APP_API_SERVER ?? "https://checkout.spot-sdk.education/",
   STRIPE_KEY: process.env.VUE_APP_STRIPE_KEY ?? "pk_................",
   ID_ASSET: 1441,
   SUBSTRATE: {
-    url: "ws://127.0.0.1:9944",
+    url: "wss://kusama-statemine-rpc.paritytech.net",
     types: {
       Address: "AccountId",
       LookupSource: "AccountId",
