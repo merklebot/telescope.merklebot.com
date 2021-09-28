@@ -1,6 +1,27 @@
 <template>
   <Card style="text-align:center;">
     <h1>Rent Spot</h1>
+    <div class="notice">
+      <p>
+        You can study the documentation materials freely and we charge you only
+        for renting the time on Spot to practice your skills. Every lessons
+        costs 42 USD. Please take your time studying the documentation before
+        you pay for and schedule your lesson. We recommend to think about or
+        even write down specific code that you plan to use during the lesson.
+      </p>
+      <p>
+        We are looking to promote the adoption of Web3 technologies because we
+        believe that they are natural and efficient for online identification
+        and exchange of value. That is why to manage the lesson times and data
+        from Spot, you need to create an account using the &nbsp;<a
+          href="https://polkadot.js.org/extension/"
+          target="_blank"
+          >Polkadot.js extention</a
+        >. The logs that the robot will generate during your lesson will be
+        automatically recorded and assigned to you, creating a cryptographic
+        proof that you passed the lesson successfully.
+      </p>
+    </div>
     <template v-if="isReady">
       <CheckoutForm
         ref="form"
@@ -17,7 +38,19 @@
       Load ...
     </template>
     <template v-else>
-      {{ error }}
+      <template v-if="error === 'NOT_FOUND_EXTENSION'">
+        <div class="red">
+          Error: Not found
+          <a href="https://polkadot.js.org/extension/" target="_blank"
+            >polkadot.extension</a
+          >
+        </div>
+      </template>
+      <template v-else>
+        <div class="red">
+          Error: <b>{{ error }}</b>
+        </div>
+      </template>
     </template>
   </Card>
 </template>
@@ -60,12 +93,7 @@ export default {
       }
       this.isReady = true;
     } catch (error) {
-      if (error.message === "no extension") {
-        this.error = "Not found extension polkadot.js";
-      } else {
-        console.log(error);
-        this.error = "Error";
-      }
+      this.error = error.message;
     }
   },
   destroyed() {
@@ -112,3 +140,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.notice {
+  width: 50%;
+  margin: 20px auto;
+}
+</style>

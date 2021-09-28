@@ -43,7 +43,7 @@ function onLoad() {
     const timeout = setTimeout(() => {
       clearTimeout(timeout);
       clearInterval(interval);
-      return reject(new Error("Not fount polkadot.extension"));
+      return reject(new Error("NOT_FOUND_EXTENSION"));
     }, 3000);
     const interval = setInterval(() => {
       if (Object.keys(window.injectedWeb3).length > 0) {
@@ -61,7 +61,7 @@ export async function initAccounts(api) {
   await onLoad();
   const extensions = await web3Enable("robonomics");
   if (extensions.length === 0) {
-    throw new Error("no extension");
+    throw new Error("NOT_FOUND_EXTENSION");
   }
   const accounts = await web3Accounts();
   const injectedAccounts = accounts.map(({ address, meta }) => ({
