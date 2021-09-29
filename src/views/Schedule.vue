@@ -108,15 +108,6 @@ export default {
         if (this.unsubscribe) {
           this.unsubscribe();
         }
-
-        // this.status = false;
-        // const result = await getStatusKey(newValue);
-        // if (result.status) {
-        //   this.status = true;
-        //   this.$refs.form.fields.email.value = result.email;
-        //   this.$refs.form.fields.sshkey.value = result.sshkey;
-        // }
-
         this.unsubscribe = await this.api.query.assets.account(
           config.ID_ASSET,
           newValue,
@@ -136,8 +127,9 @@ export default {
           ssh_pubkey: fields.sshkey.value,
           check_only: false
         });
-        this.status = result.result;
-        if (!result.result) {
+        if (result === null) {
+          this.status = true;
+        } else {
           this.error = "Error: check the correctness of input form";
         }
       }
