@@ -127,9 +127,8 @@ export default {
           ssh_pubkey: fields.sshkey.value,
           check_only: false
         });
-        if (result === null) {
-          this.status = true;
-        } else {
+        this.status = result.result;
+        if (this.status === false) {
           this.error = "Error: check the correctness of input form";
         }
       }
