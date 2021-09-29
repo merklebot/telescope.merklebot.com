@@ -33,6 +33,9 @@ jobs:
       - run: yarn install --frozen-lockfile
 
       - run: yarn build
+        env:
+          VUE_APP_API_SERVER: ${{ secrets.VUE_APP_API_SERVER }}
+          VUE_APP_STRIPE_KEY: ${{ secrets.VUE_APP_STRIPE_KEY }}
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
