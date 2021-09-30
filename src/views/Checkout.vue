@@ -5,9 +5,9 @@
       <p>
         You can study the documentation materials freely and we charge you only
         for renting the time on Spot to practice your skills. Every lessons
-        costs 42 USD. Please take your time studying the documentation before
-        you pay for and schedule your lesson. We recommend to think about or
-        even write down specific code that you plan to use during the lesson.
+        costs {{ price_per_lesson }} USD. Please take your time studying the
+        documentation before you pay for and schedule your lesson. We recommend to think
+        about or even write down specific code that you plan to use during the lesson.
       </p>
       <p>
         We are looking to promote the adoption of Web3 technologies because we
@@ -73,10 +73,12 @@ export default {
       api: null,
       unsubscribe: null,
       balance: 0,
-      accounts: []
+      accounts: [],
+      price_per_lesson: "not set",
     };
   },
   async created() {
+    this.price_per_lesson = (config.PRICE_PER_LESSON_CENTS / 100).toFixed(2)
     try {
       const provider = getProvider();
       provider.on("error", () => {

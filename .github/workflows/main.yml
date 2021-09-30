@@ -36,6 +36,7 @@ jobs:
         env:
           VUE_APP_API_SERVER: ${{ secrets.VUE_APP_API_SERVER }}
           VUE_APP_STRIPE_KEY: ${{ secrets.VUE_APP_STRIPE_KEY }}
+          VUE_APP_PRICE_PER_LESSON_CENTS: ${{ secrets.VUE_APP_PRICE_PER_LESSON_CENTS }}
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

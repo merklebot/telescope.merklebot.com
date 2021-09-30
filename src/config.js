@@ -2,6 +2,7 @@ export default {
   API_SERVER:
     process.env.VUE_APP_API_SERVER ?? "https://checkout.spot-sdk.education",
   STRIPE_KEY: process.env.VUE_APP_STRIPE_KEY ?? "pk_................",
+  PRICE_PER_LESSON_CENTS: process.env.VUE_APP_PRICE_PER_LESSON_CENTS ?? 4200,
   ID_ASSET: 1441,
   SUBSTRATE: {
     url: "wss://kusama-statemine-rpc.paritytech.net",
