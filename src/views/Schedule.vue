@@ -8,8 +8,9 @@
         @onChange="onChange"
         @onSubmit="handleSubmit"
         :accounts="accounts"
+        v-if="!status"
       />
-      <div>
+      <div v-if="!status">
         Your balance: <b>{{ balanceView }}</b>
       </div>
       <button
@@ -74,6 +75,7 @@ export default {
         this.error = "Not found account";
       }
       this.isReady = true;
+      this.status = true;
     } catch (error) {
       if (error.message === "no extension") {
         this.error = "Not found extension polkadot.js";
