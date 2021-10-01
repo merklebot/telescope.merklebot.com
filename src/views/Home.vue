@@ -13,6 +13,10 @@
 
     </div>
 
+    <a href="https://dapp.spot-sdk.education/#/lesson/spot-lesson0">Study Theory</a>
+    <br>
+    <a href="https://dapp.spot-sdk.education/#/checkout">Rent Spot for Practice</a>
+
     <div style="margin:30px 0">
       <iframe
         width="960px"
