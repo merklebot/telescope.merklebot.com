@@ -142,9 +142,12 @@ export default {
   }
 
 
-  .logo > *:not(:last-child), .nav-g > *:not(:last-child) {
+  .logo > *, .nav-g > * {
     display: inline-block;
     vertical-align: middle;
+  }
+
+  .logo > *:not(:last-child), .nav-g > *:not(:last-child) {
     margin-right: var(--space);
   }
 
