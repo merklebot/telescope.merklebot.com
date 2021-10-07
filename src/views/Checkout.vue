@@ -13,7 +13,7 @@
         <p class="text-mid">We are looking to promote the adoption of Web3 technologies because we
         believe that they are natural and efficient for online identification
         and exchange of value. That is why to manage the lesson times and data
-        from Spot, you need to create an account using the &nbsp;<a href="https://polkadot.js.org/extension/" target="_blank">Polkadot.js extention</a>. The logs that the robot will generate during your lesson will be
+        from Spot, you need to create an account using the &nbsp;<a href="https://polkadot.js.org/extension/" target="_blank">Polkadot.js extension</a>. The logs that the robot will generate during your lesson will be
         automatically recorded and assigned to you, creating a cryptographic
         proof that you passed the lesson successfully.</p>
 
@@ -42,12 +42,12 @@
             </form>
           </template>
           <template v-else>
-            <label class="red">Please create an account or switch on account's visibility in <a href="https://polkadot.js.org/extension/" target="_blank">Polkadot.js extention</a>. Then reload this page.</label>
+            <label class="red">Please create an account or switch on account's visibility in <a href="https://polkadot.js.org/extension/" target="_blank">Polkadot.js extension</a>. Then reload this page.</label>
           </template>
         </template>
 
         <template v-else-if="error === null">
-          <span class="loader-ring"></span> <i class="text-mid">Checking Polkadot.js extention</i>
+          <span class="loader-ring"></span> <i class="text-mid">Checking Polkadot.js extension</i>
         </template>
         <template v-else>
           <template v-if="error === 'NOT_FOUND_EXTENSION'">
