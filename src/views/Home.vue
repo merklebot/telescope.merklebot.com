@@ -68,7 +68,7 @@ export default {
     };
   },
   components: {
-    pricePerLesson: () => import('../components/price/PricePerLesson.vue')
+    pricePerLesson: () => import('../components/includes/PricePerLesson.vue')
   },
 
   created() {

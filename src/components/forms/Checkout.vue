@@ -1,22 +1,22 @@
 <template>
   <form v-on:submit.prevent="submit">
-    <table style="width: 500px;margin: 30px auto;">
+
+
+
+    <input
+        type="email"
+        v-model="fields.email.value"
+        class="container-full"
+        :class="{ error: fields.email.error }"
+        required
+        placeholder="Your email"
+    />
+
+    <!-- <table style="width: 500px;margin: 30px auto;">
       <tr>
         <td><b>Account:</b></td>
         <td>
-          <select
-            v-model="fields.account.value"
-            class="container-full"
-            :class="{ error: fields.account.error }"
-          >
-            <option
-              v-for="(account, key) in accounts"
-              :key="key"
-              :value="account.address"
-            >
-              {{ account.meta.name }}
-            </option>
-          </select>
+          <AccountSelect :accounts="accounts"/>
         </td>
       </tr>
       <tr>
@@ -30,7 +30,7 @@
           />
         </td>
       </tr>
-    </table>
+    </table> -->
   </form>
 </template>
 
@@ -41,6 +41,7 @@ import { checkAddress } from "@polkadot/util-crypto";
 export default {
   props: ["accounts"],
   mixins: [form],
+
   data() {
     return {
       fields: {
@@ -63,11 +64,6 @@ export default {
         }
       }
     };
-  },
-  created() {
-    if (this.accounts.length > 0) {
-      this.fields.account.value = this.accounts[0].address;
-    }
   }
 };
 </script>

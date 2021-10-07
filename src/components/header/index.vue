@@ -122,8 +122,10 @@ export default {
     }
   }
 
-  .logo {
-    white-space: nowrap
+  @media screen and (min-width: 500px) {
+    .logo {
+      white-space: nowrap
+    }
   }
 
   .logo img {

@@ -1,6 +1,27 @@
 <template>
   <Card style="text-align:center">
-    <h1>Success</h1>
-    <router-link :to="{ name: 'schedule' }">Go To Schedule</router-link>
+    <Spot/>
+    <h1>Your payment is successfull!</h1>
+    <p>Now you may book 1 hour-long remote session with Boston Dynamics Spot robot</p>
+    <router-link :to="{ name: 'checkout' }" class="button">Rent Spot</router-link>
   </Card>
 </template>
+
+<script>
+export default {
+  components: {
+    Spot: () => import('../components/includes/Spot.vue')
+  },
+}
+</script>
+
+<style scoped>
+  .spot {
+    margin: var(--space) auto;
+    transform: scale(1) !important;
+  }
+
+  @media screen and (max-width:600px) {
+    .spot { transform: scale(0.6) !important; }
+  }
+</style>

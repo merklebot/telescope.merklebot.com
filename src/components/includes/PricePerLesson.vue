@@ -8,7 +8,7 @@ import config from "../../config";
 export default {
   data() {
     return {
-      price_per_lesson: "not set",
+      price_per_lesson: "–",
     };
   },
   async created() {
