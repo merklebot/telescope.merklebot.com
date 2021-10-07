@@ -1,8 +1,31 @@
 <template>
-  <Card class="post">
-    <VueMarkdown v-if="src" :source="src" />
-    <h1 v-else>Not found lesson</h1>
-  </Card>
+  <div>
+    <Card class="post">
+      <VueMarkdown v-if="src" :source="src" />
+      <h1 v-else>Not found lesson</h1>
+    </Card>
+
+    <section>
+      <div class="grid-1-2">
+        <div>
+          <Spot />
+        </div>
+        <div>
+        </div>
+      </div>
+
+      <div class="grid-1-2">
+        <div>
+          <h2>Are you ready to practice?</h2>
+        </div>
+        <div>
+          <p>Once you feel ready, you may buy a 1 hour-long practice session specifying your access credentials (SSH key) and the time when you want to connect to Spot to solve the task.</p>
+          <router-link :to="{ name: 'checkout' }" class="button">Rent Spot</router-link>
+        </div>
+      </div>
+
+    </section>
+  </div>
 </template>
 
 <script>
@@ -11,7 +34,8 @@ import VueMarkdown from "vue-markdown-render";
 export default {
   props: ["lesson"],
   components: {
-    VueMarkdown
+    VueMarkdown,
+    Spot: () => import('../components/includes/Spot.vue')
   },
   data() {
     return {
@@ -34,6 +58,7 @@ export default {
             /* webpackChunkName: "lesson" */ `../md/docs/${this.lesson}.md`
           )
         ).default;
+
         // ToDo: proper front matter processing
         document.title = this.src.slice(
             this.src.indexOf("title: ") + "title: ".length,
@@ -94,5 +119,9 @@ h1 {
   padding: 0 0.25rem;
   color: rgb(179, 37, 133);
   background: rgba(179, 37, 133, 0.06);
+}
+
+.post img {
+  max-width: 100%;
 }
 </style>

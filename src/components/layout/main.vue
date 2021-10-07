@@ -157,6 +157,12 @@ input[type='checkbox']:checked:before {
 .button {
   border: 2px solid var(--color-blue);
   color: var(--color-blue);
+  transition: all 0.4s;
+}
+
+.button:hover {
+  background-color: var(--color-blue);
+  color: var(--color-light)
 }
 
 /* end -  OverWrites (over robonomics.min.css) */
