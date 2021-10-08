@@ -4,6 +4,7 @@ import router from "./router";
 import "./ui";
 import Fragment from "vue-fragment";
 import Vuex from 'vuex'; // for some global data
+import { checkAddress } from "@polkadot/util-crypto";
 
 Vue.use(Fragment.Plugin);
 Vue.use(Vuex);
@@ -16,8 +17,10 @@ const store = new Vuex.Store({
   },
   mutations: {
     setAccountActive(state, address) {
-      state.accountActive = address
-      localStorage.setItem('accountActive', state.accountActive)
+      if(checkAddress(address, 2)[0]){
+        state.accountActive = address
+        localStorage.setItem('accountActive', state.accountActive)
+      }
     },
 
     setEmail(state, value) {

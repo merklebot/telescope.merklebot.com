@@ -51,11 +51,11 @@
         </template>
         <template v-else>
           <template v-if="error === 'NOT_FOUND_EXTENSION'">
+            <label class="red">Please install <a href="https://polkadot.js.org/extension/" target="_blank">Polkadot.js extension</a>, create and add Web3 account. Then reload this page.</label>
+          </template>
+          <template v-else-if="!accounts || accounts.length < 1">
             <div class="red">
-              Error: Not found
-              <a href="https://polkadot.js.org/extension/" target="_blank"
-                >polkadot.extension</a
-              >
+              <label class="red">You currently don't have any accounts. Please create an account or switch on account's visibility in <a href="https://polkadot.js.org/extension/" target="_blank">Polkadot.js extension</a>. Then reload this page.</label>
             </div>
           </template>
           <template v-else>
