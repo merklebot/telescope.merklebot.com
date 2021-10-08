@@ -47,7 +47,7 @@
         </template>
 
         <template v-else-if="error === null">
-          <span class="loader-ring"></span> <i class="text-mid">Checking Polkadot.js extension</i>
+          <span class="loader"></span> <i class="text-mid">Checking Polkadot.js extension</i>
         </template>
         <template v-else>
           <template v-if="error === 'NOT_FOUND_EXTENSION'">
@@ -294,4 +294,28 @@ export default {
     margin-left: var(--space);
   }
   
+
+   @keyframes bounceLoader {
+    0{
+      transform: translateY(-1rem);
+    }
+    50%{
+      transform: translateY(1rem) scaleY(0.8);
+    }
+    100%{
+      transform: translateY(-1rem);
+    }
+  }
+
+  .loader {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 2rem;
+    margin-right: var(--space);
+    background-color: var(--color-yellow);
+    transform: translateY(-1rem);
+    animation: bounceLoader 1s ease infinite;
+  }
+
 </style>
