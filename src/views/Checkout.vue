@@ -183,6 +183,13 @@ export default {
           "https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js"
         );
       }
+    },
+    account: function(newValue, oldValue) {
+      this.onChange({
+        name: "account",
+        newValue: newValue,
+        oldValue: oldValue
+      });
     }
   },
 
