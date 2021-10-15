@@ -71,6 +71,12 @@ export default {
     pricePerLesson: () => import('../components/includes/PricePerLesson.vue')
   },
 
+  head: {
+    title: {
+      inner: 'Intro'
+    },
+  },
+
   created() {
     this.lessons = menu;
   }

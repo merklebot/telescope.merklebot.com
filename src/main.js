@@ -5,9 +5,11 @@ import "./ui";
 import Fragment from "vue-fragment";
 import Vuex from 'vuex'; // for some global data
 import { checkAddress } from "@polkadot/util-crypto";
+import VueHead from 'vue-head'; // for injecting to <head/>
 
 Vue.use(Fragment.Plugin);
 Vue.use(Vuex);
+Vue.use(VueHead);
 
 const store = new Vuex.Store({
   state: {

@@ -3,13 +3,6 @@
     <Header />
 
     <main role="main">
-      <!-- <Sidebar /> -->
-      <!-- <div class="content">
-        <div class="content-in">
-          <slot />
-        </div>
-      </div> -->
-
       <div class="layout-mid">
         <slot />
       </div>
@@ -20,13 +13,11 @@
 
 <script>
 import Header from "../header";
-// import Sidebar from "../sidebar";
 
 export default {
   name: "Layout",
   components: {
-    Header,
-    // Sidebar
+    Header
   }
 };
 </script>
