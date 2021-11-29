@@ -5,7 +5,7 @@ export default {
   PRICE_PER_LESSON_CENTS: process.env.VUE_APP_PRICE_PER_LESSON_CENTS ?? 4200,
   ID_ASSET: 1441,
   SUBSTRATE: {
-    url: "wss://kusama-statemine-rpc.paritytech.net",
+    url: "wss://statemine-rpc.polkadot.io",
     types: {
       Address: "AccountId",
       LookupSource: "AccountId",
