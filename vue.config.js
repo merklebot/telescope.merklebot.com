@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: "",
+  publicPath: "/beyond-the-sky/",
   configureWebpack: {
     resolve: {
       extensions: ["*", ".mjs", ".js", ".vue", ".json", ".gql", ".graphql"]
