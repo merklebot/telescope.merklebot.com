@@ -31,7 +31,6 @@ const store = new Vuex.Store({
     },
 
     setAccountChecked(state, value) {
-
       if ( value ) {
         if ( !state.checkedAccounts.includes(state.accountActive)) {
           state.checkedAccounts += ' ' + state.accountActive

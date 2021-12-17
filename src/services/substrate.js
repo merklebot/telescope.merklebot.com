@@ -38,6 +38,7 @@ export async function getInstance() {
   return api;
 }
 
+
 function onLoad() {
   return new Promise(function(resolve, reject) {
     const timeout = setTimeout(() => {

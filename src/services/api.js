@@ -18,3 +18,8 @@ export async function setAccount(data) {
   }
   return { result: false };
 }
+
+export async function astronomicalObject(){
+  const response = await axios.get(`https://api.merklebot.com/beyond-the-sky/astronomical-objects/`)
+  return response.data
+}
