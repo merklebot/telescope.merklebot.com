@@ -158,7 +158,7 @@
 </template>
 
 <script>
-import { checkout} from "../services/api";
+import { checkout, serviceStatus } from "../services/api";
 import stripe from "../services/stripe";
 import { getProvider, getInstance, getAccounts } from "../services/substrate";
 import config from "../config";
@@ -180,6 +180,14 @@ export default {
       accounts: [],
       accountDefault: "",
       status: false,
+
+      // Contains information if telescope is in operations or not.
+      // Possible "status" values are: "off" and "on".
+      // Additonally "message" says why it works or not right now.
+      serviceStatus: {
+        "status": undefined,
+        "message": "",
+      },
     };
   },
   async created() {
@@ -203,6 +211,12 @@ export default {
       }
       this.isReady = true;
       this.status = true;
+
+      // Poll telescope status
+      this.serviceStatus = await serviceStatus()
+      setInterval(async () => {
+        this.serviceStatus = await serviceStatus()
+      }, 10000)
 
     } catch (error) {
       this.error = error.message;
