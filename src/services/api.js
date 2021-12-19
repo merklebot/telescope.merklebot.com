@@ -28,3 +28,15 @@ export async function serviceStatus() {
   const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/status/")
   return { "status": resp.data.status, "message": resp.data.message }
 }
+
+export async function createNFT(name, owner) {
+  const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/nft", {
+    params: {
+      "name": name,
+      "sender": owner,
+      "block_number": 0,
+      "block_hash": "0x00"
+    }
+  })
+  console.log("createNFT:", resp)
+}
