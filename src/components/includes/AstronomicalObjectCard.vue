@@ -61,7 +61,7 @@
         <div class="grid-2">
           <div>
             <form>
-              <p><button class="container-full">SUBMIT</button></p>
+              <p><button class="container-full" v-on:click="onSubmit">SUBMIT</button></p>
             </form>
           </div>
         </div>
@@ -70,7 +70,10 @@
 </template>
 
 <script>
-import { astronomicalObject } from "../../services/api";
+import { astronomicalObject, createNFT } from "../../services/api";
+import { sendAsset } from "../../services/substrate";
+import config from "../../config";
+
 export default {
     data() {
     return {
@@ -91,6 +94,10 @@ export default {
     astronomicalObjChange(e) {
       this.astronomicalObjSelected = e.target.value;
     },
+    async onSubmit() {
+      await sendAsset(this.$store.state.accountActive, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
+      await createNFT(this.astronomicalObjSelected, this.$store.state.accountActive);
+    }
   }
 }
 </script>
