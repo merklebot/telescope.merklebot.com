@@ -294,16 +294,15 @@ export default {
       }
     },
     handleSubmit() {
-      if (this.email && this.account) {
-        this.checkout(this.account, this.email);
+      if (this.account) {
+        this.checkout(this.account);
       }
     },
-    async checkout(account, email) {
+    async checkout(account) {
       this.proccess = true;
       try {
         const session = await checkout({
           account: account,
-          email: email,
         });
         const r = await stripe.redirectToCheckout({ sessionId: session.id });
         if (r.error) {
