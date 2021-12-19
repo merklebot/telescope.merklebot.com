@@ -1,4 +1,6 @@
-# dapp
+# Beyond The Sky frontend DApp
+
+Stargazing NFTs on [RMRK](https://rmrk.app/) platform captured by [AtacamaScope](https://atacamascope.cl/) telescope in Atacama Desert, Chile. Powered by [Robonomics Network](http://robonomics.network/).
 
 ## Project setup
 ```
