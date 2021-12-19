@@ -4,8 +4,6 @@ import Home from "@/views/Home";
 import Success from "@/views/Success";
 import Cancel from "@/views/Cancel";
 import Checkout from "@/views/Checkout";
-// import Schedule from "@/views/Schedule";
-import Lesson from "@/views/Lesson";
 
 Vue.use(Router);
 
@@ -30,17 +28,6 @@ export default new Router({
       path: "/cancel",
       name: "cancel",
       component: Cancel
-    },
-    // {
-    //   path: "/schedule",
-    //   name: "schedule",
-    //   component: Schedule
-    // },
-    {
-      path: "/lesson/:lesson",
-      name: "lesson",
-      component: Lesson,
-      props: true
     },
     { path: "*", redirect: "/" }
   ]
