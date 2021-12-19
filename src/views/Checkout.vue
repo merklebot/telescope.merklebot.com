@@ -121,6 +121,8 @@
           online. So he accepts specific token for his job. You cn get it here
           with your credit card.
         </p>
+        <p class="text-mid">Your balance: {{ balance }} STRGZN</p>
+        <hr />
         <p class="text-mid">1 picture with NFT minting = 1 $STRGZN</p>
         <hr />
         <p class="text-mid">1 $STRGZN = 20 USD</p>
