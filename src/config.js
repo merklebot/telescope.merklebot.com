@@ -6,16 +6,7 @@ export default {
   ID_ASSET: process.env.VUE_APP_ACCESS_TOKEN_ASSET_ID,
   SUBSTRATE: {
     url: "wss://statemine-rpc.polkadot.io",
-    types: {
-      Address: "AccountId",
-      LookupSource: "AccountId",
-      Record: "Vec<u8>",
-      RingBufferIndex: {
-        start: "Compact<u64>",
-        end: "Compact<u64>"
-      },
-      RingBufferItem: "(Compact<Moment>,Record)"
-    },
+    types: {},
     keyring: {
       isDevelopment: false,
       type: "sr25519"
