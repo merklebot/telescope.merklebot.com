@@ -60,9 +60,7 @@
         <br />
         <div class="grid-2">
           <div>
-            <form>
-              <p><button class="container-full" v-on:click="onSubmit">SUBMIT</button></p>
-            </form>
+            <p><button class="container-full" v-on:click="onSubmit">SUBMIT</button></p>
           </div>
         </div>
       </Card>
@@ -95,6 +93,7 @@ export default {
       this.astronomicalObjSelected = e.target.value;
     },
     async onSubmit() {
+      // console.log(this.$store.state.accountActive, this.astronomicalObjSelected, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET)
       await sendAsset(this.$store.state.accountActive, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
       await createNFT(this.astronomicalObjSelected, this.$store.state.accountActive);
     }
