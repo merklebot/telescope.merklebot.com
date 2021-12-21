@@ -1,23 +1,25 @@
-# dapp
+# Beyond The Sky frontend DApp
+
+Stargazing NFTs on [RMRK](https://rmrk.app/) platform captured by [AtacamaScope](https://atacamascope.cl/) telescope in Atacama Desert, Chile. Powered by [Robonomics Network](http://robonomics.network/).
 
 ## Project setup
 ```
-yarn install
+npm install
 ```
 
 ### Compiles and hot-reloads for development
 ```
-yarn serve
+npm run serve
 ```
 
 ### Compiles and minifies for production
 ```
-yarn build
+npm run build
 ```
 
 ### Lints and fixes files
 ```
-yarn lint
+npm run lint
 ```
 
 ### Customize configuration

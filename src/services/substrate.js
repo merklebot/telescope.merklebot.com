@@ -3,7 +3,8 @@ import keyring from "@polkadot/ui-keyring";
 import {
   web3FromSource,
   web3Accounts,
-  web3Enable
+  web3Enable,
+  web3FromAddress
 } from "@polkadot/extension-dapp";
 import { u8aToHex } from "@polkadot/util";
 import config from "../config";
@@ -139,6 +140,39 @@ export async function signAndSend(account, tx, options = {}) {
       }
     ).catch(reject);
   });
+}
+
+export async function sendAsset(from, to, asset_id, amount) {
+  const injector = await web3FromAddress(from);
+  const tx = api.tx.utility.batch([
+    api.tx.assets.transfer(asset_id, to, amount),
+  ]);
+  try {
+    await tx.signAndSend(from, {signer: injector.signer}, (result) => {
+      if (result.status.isInBlock) {
+        result.events.forEach((events) => {
+          const {
+            event: { method, section },
+          } = events;
+          if (section === "system" && method === "ExtrinsicFailed") {
+            console.log("ExtrinsicFailed", {
+              block: result.status.asInBlock.toString(),
+              tx: tx.hash.toString(),
+            });
+          } else if (section === "system" && method === "ExtrinsicSuccess") {
+            console.log(null, {
+              block: result.status.asInBlock.toString(),
+              tx: tx.hash.toString(),
+            });
+          }
+        });
+      } else if (result.status.isFinalized) {
+        console.log("isFinalized");
+      }
+    })
+  } catch (error) {
+    console.log("Error:", error);
+  }
 }
 
 export class Datalog {

@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -18,25 +21,15 @@ jobs:
         with:
           node-version: "lts/*"
 
-      - name: Get yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - run: npm install --frozen-lockfile
 
-      - name: Cache dependencies
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-website-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-website-
-
-      - run: yarn install --frozen-lockfile
-
-      - run: yarn build
+      - run: npm run build
         env:
           VUE_APP_API_SERVER: ${{ secrets.VUE_APP_API_SERVER }}
           VUE_APP_STRIPE_KEY: ${{ secrets.VUE_APP_STRIPE_KEY }}
           VUE_APP_PRICE_PER_LESSON_CENTS: ${{ secrets.VUE_APP_PRICE_PER_LESSON_CENTS }}
+          VUE_APP_ACCESS_TOKEN_ASSET_ID: ${{ secrets.VUE_APP_ACCESS_TOKEN_ASSET_ID }}
+          VUE_APP_ACCESS_TOKEN_RECV_ACCOUNT: ${{ secrets.VUE_APP_ACCESS_TOKEN_RECV_ACCOUNT }}
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

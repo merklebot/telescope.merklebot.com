@@ -121,6 +121,8 @@
           online. So he accepts specific token for his job. You cn get it here
           with your credit card.
         </p>
+        <p class="text-mid">Your balance: {{ balance }} STRGZN</p>
+        <hr />
         <p class="text-mid">1 picture with NFT minting = 1 $STRGZN</p>
         <hr />
         <p class="text-mid">1 $STRGZN = 20 USD</p>
@@ -158,7 +160,7 @@
 </template>
 
 <script>
-import { checkout} from "../services/api";
+import { checkout, serviceStatus } from "../services/api";
 import stripe from "../services/stripe";
 import { getProvider, getInstance, getAccounts } from "../services/substrate";
 import config from "../config";
@@ -181,10 +183,27 @@ export default {
       accounts: [],
       accountDefault: "",
       status: false,
+
+      // Contains information if telescope is in operations or not.
+      // Possible "status" values are: "off" and "on".
+      // Additonally "message" says why it works or not right now.
+      serviceStatus: {
+        "status": undefined,
+        "message": "",
+      },
     };
   },
   async created() {
     try {
+      // Poll telescope status
+      setImmediate(async () => {
+        this.serviceStatus = await serviceStatus()
+      })
+      setInterval(async () => {
+        this.serviceStatus = await serviceStatus()
+        console.log(this.serviceStatus)
+      }, 10000)
+
       const provider = getProvider();
       provider.on("error", () => {
         this.error = "Disconnected provider";
@@ -281,16 +300,15 @@ export default {
       }
     },
     handleSubmit() {
-      if (this.email && this.account) {
-        this.checkout(this.account, this.email);
+      if (this.account) {
+        this.checkout(this.account);
       }
     },
-    async checkout(account, email) {
+    async checkout(account) {
       this.proccess = true;
       try {
         const session = await checkout({
           account: account,
-          email: email,
         });
         const r = await stripe.redirectToCheckout({ sessionId: session.id });
         if (r.error) {
