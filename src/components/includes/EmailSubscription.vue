@@ -5,7 +5,7 @@
         <p class="text-mid">
           Join our subscribers list to get the latest news, updates and special offers delivered directly in your inbox.
         </p>
-        <button @click="handleSubscription">Click here</button>
+        <button @click="handleSubscription">Click Here</button>
         <br>
         <br>
         <div>
@@ -16,10 +16,11 @@
     </div>
 </template>
 <script>
+import config from '../../config'
 export default {
     methods:{
         handleSubscription(){
-           const { open } = window.tf.createPopup('VucIKqtE');
+           const { open } = window.tf.createPopup(config.TYPEFORM_ID);
            open();
         },
         
