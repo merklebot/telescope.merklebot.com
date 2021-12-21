@@ -140,6 +140,8 @@
         </div>
       </Card>
       <astronomicalObjectCard :checkedAccount="this.checkedAccount" :accounts="this.accounts"  :isReady="this.isReady" />
+
+      <emailSubscription />
       <!-- <Card :class="{'disabled': !checkedAccount || accounts.length < 1 || balance < 1 || !isReady}">
         <h2>3. Schedule your time</h2>
 
@@ -166,6 +168,7 @@ export default {
   components: {
     pricePerLesson: () => import("../components/includes/PricePerLesson.vue"),
     astronomicalObjectCard: () => import('../components/includes/AstronomicalObjectCard.vue'),
+    emailSubscription: () => import('../components/includes/EmailSubscription.vue'),
     Spot: () => import("../components/includes/Spot.vue"),
   },
   data() {

@@ -85,7 +85,6 @@ export default {
   },
   async created(){
     this.astronomicalObj = await astronomicalObject();
-    console.log('New Astro ** ', this.astronomicalObj)
   },
   methods:{
     astronomicalObjChange(e) {
