@@ -192,6 +192,15 @@ export default {
   },
   async created() {
     try {
+      // Poll telescope status
+      setImmediate(async () => {
+        this.serviceStatus = await serviceStatus()
+      })
+      setInterval(async () => {
+        this.serviceStatus = await serviceStatus()
+        console.log(this.serviceStatus)
+      }, 10000)
+
       const provider = getProvider();
       provider.on("error", () => {
         this.error = "Disconnected provider";
@@ -211,12 +220,6 @@ export default {
       }
       this.isReady = true;
       this.status = true;
-
-      // Poll telescope status
-      this.serviceStatus = await serviceStatus()
-      setInterval(async () => {
-        this.serviceStatus = await serviceStatus()
-      }, 10000)
 
     } catch (error) {
       this.error = error.message;
