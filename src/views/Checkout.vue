@@ -142,6 +142,9 @@
             <ul class="dashed">
               <li>1 picture with NFT minting = 1 $STRGZN</li>
               <li>1 $STRGZN = 20 USD</li>
+              <li>
+                You buy: <input v-model.number="quantityRaw" value="quantity"/> $STRGZN
+              </li>
             </ul>
           </section>
 
@@ -150,7 +153,7 @@
         }">
             <p>
               <Button class="container-full">
-                <span class="text">Pay <pricePerLesson /> USD</span>
+                <span class="text">Pay {{ pricePerToken }} * {{ quantity }} = {{ totalPaymentUSD }} USD</span>
                 <img class="label" alt="with Stripe" src="i/stripe.svg" />
               </Button>
             </p>
@@ -195,7 +198,6 @@ import moment from 'moment-timezone'
 
 export default {
   components: {
-    pricePerLesson: () => import("../components/includes/PricePerLesson.vue"),
     astronomicalObjectCard: () => import('../components/includes/AstronomicalObjectCard.vue'),
     Button: () => import('../components/includes/Button.vue'),
   },
@@ -219,7 +221,11 @@ export default {
       },
 
       // How much STRGZN tokens user selected to purchase
-      quantity: 1,
+      quantity: 1, // filtered value
+      quantityRaw: 1, // raw user input
+
+      // USD price per one STRGZN
+      pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(2),
 
       time: "test"
 
@@ -275,6 +281,13 @@ export default {
     }
   },
   watch: {
+    quantityRaw: function (newValue) {
+      if (newValue && newValue >= 1 && newValue <= 100) {
+        this.quantity = newValue.toFixed(0)
+      } else if (newValue > 100) {
+        this.quantity = 100
+      }
+    },
     status: async function(newValue, oldValue) {
       if (oldValue === false && newValue === true) {
         await loadScript(
@@ -292,6 +305,11 @@ export default {
   },
 
   computed: {
+    totalPaymentUSD: {
+      get() {
+        return (this.quantity * this.pricePerToken).toFixed(2)
+      }
+    },
     checkedAccount: {
       get() {
         return this.$store.state.checkedAccounts.includes(
