@@ -218,6 +218,9 @@ export default {
         "message": "",
       },
 
+      // How much STRGZN tokens user selected to purchase
+      quantity: 1,
+
       time: "test"
 
     };
@@ -349,14 +352,15 @@ export default {
     },
     handleSubmit() {
       if (this.account) {
-        this.checkout(this.account);
+        this.checkout(this.account, this.quantity);
       }
     },
-    async checkout(account) {
+    async checkout(account, quantity) {
       this.proccess = true;
       try {
         const session = await checkout({
-          account: account,
+          account,
+          quantity,
         });
         const r = await stripe.redirectToCheckout({ sessionId: session.id });
         if (r.error) {
