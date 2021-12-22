@@ -141,7 +141,8 @@
           <section>
             <ul class="dashed">
               <li>1 picture with NFT minting = 1 $STRGZN</li>
-              <li>1 $STRGZN = 20 USD</li>
+              <li>1 $STRGZN = {{ pricePerToken }} USD</li>
+              <li>Your balance is: {{ balance }} $STRGZN</li>
               <li>
                 You buy: <input v-model.number="quantityRaw" value="quantity"/> $STRGZN
               </li>
