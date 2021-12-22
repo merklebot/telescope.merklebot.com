@@ -1,67 +1,64 @@
 <template>
     <div>
-        <Card
-        :class="{
-          disabled: !checkedAccount || accounts.length < 1 || !isReady
-        }"
-      >
-        <h2>3. Enjoy the stars</h2>
-        <p class="text-mid">
-          Choose an astronimical object:
-        </p>
-        <form>
-          <p>
-            <select @change="astronomicalObjChange">
-              <option
-                v-for="(astr, key) in astronomicalObj"
-                :key="key"
-                :value="astr.catalog_name"
-              >
-                {{ astr.catalog_name }}
-              </option>
-            </select>
-          </p>
-        </form>
+        <Card>
+        <div class="layout-narrow">
+          <h3>3. Enjoy the stars</h3>
+          <p>Choose an astronimical object:</p>
+          
+          <form>
+            <p>
+              <select @change="astronomicalObjChange">
+                <option
+                  v-for="(astr, key) in astronomicalObj"
+                  :key="key"
+                  :value="astr.catalog_name"
+                >
+                  {{ astr.catalog_name }}
+                </option>
+                <option v-if="astronomicalObj.length === 0">Loading...</option>
+              </select>
+            </p>
+          </form>
 
-        <div v-if="astronomicalObjSelected === null">
-          <div v-if="this.astronomicalObj[0]">
-            <div
-              v-if="
-                this.astronomicalObj[0].friendly_name ===
-                  this.astronomicalObj[0].catalog_name
-              "
-            >
-              <div>{{ this.astronomicalObj[0].friendly_name }}</div>
-              <div>{{ this.astronomicalObj[0].kind }}</div>
-            </div>
-            <div v-else>
-              <div>{{ this.astronomicalObj[0].friendly_name }}</div>
-              <div>{{ this.astronomicalObj[0].catalog_name }}</div>
-              <div>{{ this.astronomicalObj[0].kind }}</div>
-            </div>
-          </div>
-        </div>
-        <div v-else>
-          <div v-for="(astr, key) in astronomicalObj" :key="key">
-            <div v-if="astronomicalObjSelected === astr.catalog_name">
-              <div v-if="astr.catalog_name === astr.friendly_name">
-                {{ astr.friendly_name }}
+          <div v-if="astronomicalObjSelected === null">
+            <div v-if="this.astronomicalObj[0]">
+              <div
+                v-if="
+                  this.astronomicalObj[0].friendly_name ===
+                    this.astronomicalObj[0].catalog_name
+                "
+              >
+                <div>{{ this.astronomicalObj[0].friendly_name }}</div>
+                <div>{{ this.astronomicalObj[0].kind }}</div>
               </div>
               <div v-else>
-                {{ astr.friendly_name }}
-                <br />
-                {{ astr.catalog_name }}
+                <div>{{ this.astronomicalObj[0].friendly_name }}</div>
+                <div>{{ this.astronomicalObj[0].catalog_name }}</div>
+                <div>{{ this.astronomicalObj[0].kind }}</div>
               </div>
-              {{ astr.kind }}
             </div>
           </div>
-        </div>
-
-        <br />
-        <div class="grid-2">
-          <div>
-            <p><button class="container-full" v-on:click="onSubmit">SUBMIT</button></p>
+          <div v-else>
+            <div v-for="(astr, key) in astronomicalObj" :key="key">
+              <div v-if="astronomicalObjSelected === astr.catalog_name">
+                <div v-if="astr.catalog_name === astr.friendly_name">
+                  {{ astr.friendly_name }}
+                </div>
+                <div v-else>
+                  {{ astr.friendly_name }}
+                  <br />
+                  {{ astr.catalog_name }}
+                </div>
+                {{ astr.kind }}
+              </div>
+            </div>
           </div>
+
+          <br />
+          <Button v-on:click="onSubmit" :class="{
+          disabled: !checkedAccount || accounts.length < 1 || !isReady
+        }">Submit</Button>
+
         </div>
       </Card>
     </div>
@@ -84,6 +81,9 @@ export default {
     isReady: Boolean,
     accounts: Array
   },
+  components: {
+    Button: () => import('../includes/Button.vue'),
+  },
   async created(){
     this.astronomicalObj = await astronomicalObject();
     console.log('New Astro ** ', this.astronomicalObj)
@@ -100,3 +100,10 @@ export default {
   }
 }
 </script>
+
+
+<style scoped>
+  .layout-narrow {
+    text-align: center;
+  }
+</style>

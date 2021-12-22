@@ -1,88 +1,61 @@
 <template>
   <header class="header" role="banner">
 
-    <router-link :to="{ name: 'home' }" class="logo" active-class="active" exact>
-      <img alt="dApp logo" src="logo.svg"/><span>Merklebot Spot SDK educational program</span>
-    </router-link>
+    <router-link :to="{ name: 'home' }" class="toplink">Online telescope</router-link>
 
     <nav class="nav-g">
-      <router-link :to="{ name: 'home' }" active-class="active" exact>
-        Intro
-      </router-link>
+      <details class="nav-expand" tabindex="0">
+        <summary class="icon">?</summary>
 
-      <details class="nav-expand highlightText" tabindex="0">
-         <summary>Lessons</summary>
-
-         <nav class="nav-v">
-            <router-link
-              v-for="(lesson, k) in lessons"
-              :key="k"
-              :to="{ name: 'lesson', params: { lesson: lesson.fileName } }"
-              active-class="active"
-              exact
-            >
-              {{ lesson.title }}
-            </router-link>
-          </nav>
+        <div class="nav-expand-content">
+          <h4>Have a question?</h4>
+          <p>Please contact us by <a href="#">Discord</a> or <a href="#">Email</a></p>
+        </div>
       </details>
 
-      <router-link :to="{ name: 'checkout' }" active-class="active" exact class="highlightText">
-        Rent Spot
-      </router-link>
+      <details class="nav-expand" tabindex="0">
+        <summary class="icon">i</summary>
 
-      <!-- <a href="#">Support</a> -->
-      
+        <div class="nav-expand-content">
+          <h4>Metaverse project experiment</h4>
+          <p>This project is experiment within online metaverse experiment by <a href="#">Merklebot</a>. It aims to ....</p>
+          <h4>Uses technologies</h4>
+          <p>Blockchain, <a href="#">Robonomics</a>, <a href="#">Polkadot</a>, <a href="#">IPFS</a>, <a href="#">RMRK</a></p>
+        </div>
+      </details>
     </nav>
 
-    <!-- <div class="header__panel">
-      <div>
-        <div
-          class="account on"
-          v-if="$robonomicsModule.isReady && $robonomics.account"
-        >
-          <div class="account__avatar">
-            <Avatar :address="$robonomics.account.address" />
-          </div>
-          <div class="account__info">
-            <div class="address">
-              {{ $robonomics.account.address | labelAddress }}
-            </div>
-            <div class="status">connected</div>
-          </div>
-        </div>
-
-        <button
-          v-if="$robonomicsModule.isReady && !$robonomics.account"
-          @click="$web3Module.accessAccount"
-        >
-          <span class="i-switch"></span><span>Connect account</span>
-        </button>
-      </div>
-      <div class="nav">
-        <button
-          class="header__panel__settings btn-outline"
-          id="mobile-menutoggle"
-        >
-          <span class="i-menu"></span>
-        </button>
-      </div>
-    </div> -->
   </header>
 </template>
 
 
-
 <script>
-import menu from "@/md/menu";
 
 export default {
-  data() {
-    return {
-      lessons: []
-    };
-  },
-  created() {
-    this.lessons = menu;
+
+  mounted() {
+    // get the sticky element
+    // const el = document.querySelector(".header")
+    // const observer = new IntersectionObserver( 
+    //   ([e]) => e.target.classList.toggle("is-pinned", e.intersectionRatio < 1),
+    //   { threshold: [1] }
+    // );
+
+    // observer.observe(el);
+
+
+    // Close all opened details on body click
+    document.body.onclick = (e) => {
+        const current = e.target.parentNode; //save clicked element to detect if it is our current detail
+
+        document.body.querySelectorAll('details')
+            .forEach((e) => {
+                if(e !== current){ //we need this condition not to break details behavior
+                    e.open = false
+                }
+        })
+
+    }
   }
 };
 </script>
@@ -92,107 +65,91 @@ export default {
 
 <style scoped>
 
-  /* Global CSS variables taken from layout/main.vue */
+  /* Global CSS variables taken from App.vue */
 
-  header[role="banner"] {
-    background-color: var(--color-dark);
-    color: var(--color-light);
+  header {
+    --header-textcolor: var(--color-cyan);
+
     font-family: var(--font-highlight);
-    font-size: 85%;
+    font-weight: 900;
+    color: var(--header-textcolor);
+ 
+    padding: var(--space);
 
-    padding-top: var(--space);
-    padding-bottom: var(--space);
-    position: -webkit-sticky;
+    /* position: -webkit-sticky;
     position: sticky;
+    top: -1px; */
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 999;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 
-  header[role="banner"] a {
-    color: var(--color-light);
+  header > *:nth-child(2) {
+    justify-self: end;
   }
 
-  @media screen and (max-width: 800px) {
-    header[role="banner"] {
-      display: block;
-    }
-
-    header[role="banner"] > *:not(:last-child) {
-      margin-bottom: var(--space);
-    }
+  header a.toplink {
+    color: var(--header-textcolor);
   }
 
-  @media screen and (min-width: 500px) {
-    .logo {
-      white-space: nowrap
-    }
+  /* Nav details expand */
+
+  .nav-expand summary::-webkit-details-marker, .nav-expand summary::marker { display: none }
+
+  .nav-expand:hover summary { opacity: 0.8; }
+
+  .nav-expand summary {
+    cursor: pointer;
+    padding-top: calc(var(--space)*0.5);
+    padding-bottom: calc(var(--space)*0.5);
   }
-
-  .logo img {
-    max-width: 30px;
-  }
-
-  .logo:after {
-    content: "";
-    display: inline-block;
-    vertical-align: text-bottom;
-    width: 6px;
-    height: 6px;
-    border-radius: 3px;
-    background-color: var(--color-yellow);
-    margin-left: calc(var(--space)/2);
-  }
-
-
-  .logo > *, .nav-g > * {
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  .logo > *:not(:last-child), .nav-g > *:not(:last-child) {
-    margin-right: var(--space);
-  }
-
-
-  header > nav .active {
-    color: var(--color-blue) !important;
-  }
-
-  /* Expand / hide details */
-
-  .nav-expand nav { display: none; }
-  .nav-expand:focus-within nav, nav-expand:focus nav { display: block; }
 
   .nav-expand {
     position: relative;
   }
-
-  .nav-expand:hover summary {
-    opacity: 0.8;
-  }
-
-  .nav-expand summary {
-    cursor: pointer;
-    padding-top: calc(var(--space)*0.5); /* to reduce miss-types */
-    padding-bottom: calc(var(--space)*0.5); /* to reduce miss-types */
-  }
-
-  .nav-expand nav {
-    background-color: var(--color-dark);
+  
+  .nav-expand .nav-expand-content {
     padding: var(--space);
-
     position: absolute;
-    left: 0;
-    top: calc(var(--space)*2.5);
+    right: 0;
+    top: calc(var(--space)*2.7);
+
+    background-color: var(--color-blue-darkest);
+    min-width: 450px;
+    max-width: 100%;
+    border: 2px solid var(--header-textcolor);
+    border-radius: var(--space);
   }
 
-  .nav-expand nav a {
-    white-space: nowrap;
+  /* end of Nav details expand */
+
+  .icon {
+    font-size: calc(var(--space) * 1.8);
+    line-height: 1;
+
+    width: calc(var(--space) * 2.4);
+    height: calc(var(--space) * 2.4);
+
+    border: 2px solid var(--header-textcolor);
+    border-radius: calc(var(--space) * 2.4);
+
+    display: flex;
+    align-items: center;
+    justify-content: center
   }
 
-  .nav-v > *:not(:last-child) {
-    display: block;
-    margin-bottom: calc(var(--space)*0.5);
+  .nav-expand[open] .icon {
+    background-color: var(--color-blue-darkest)
+  }
+
+  .nav-expand-content p {
+    font-family: var(--font-text);
+    font-size: 80%;
   }
 
 </style>
