@@ -57,10 +57,10 @@
           </div>
 
           <br />
-          <Button v-on:click="onSubmit" :class="{
-          disabled: !checkedAccount || accounts.length < 1 || !isReady
-        }">Submit</Button>
-
+          <Button :onClick="onSubmit" :class="{
+            disabled: !checkedAccount || accounts.length < 1 || !isReady
+          }">Submit</Button>
+          
         </div>
       </Card>
     </div>

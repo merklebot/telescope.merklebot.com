@@ -1,5 +1,5 @@
 <template>
-    <button :class="classes"><slot/></button>
+    <button v-on:click="onClick" :class="classes"><slot/></button>
 </template>
 
 <script>
@@ -20,6 +20,11 @@ export default {
           return ['none', 'stripe'].indexOf(value) !== -1;
         }
     },
+
+    onClick: {
+      type: Function,
+      required: false,
+    }
   },
 
   computed: {
