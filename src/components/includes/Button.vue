@@ -1,0 +1,77 @@
+<template>
+    <button :class="classes"><slot/></button>
+</template>
+
+<script>
+export default {
+  props: {
+    size: {
+        type: String,
+        default: 'big',
+        validator: function (value) {
+          return ['medium', 'big'].indexOf(value) !== -1;
+        }
+    },
+
+    label: {
+        type: String,
+        default: 'none',
+        validator: function (value) {
+          return ['none', 'stripe'].indexOf(value) !== -1;
+        }
+    },
+  },
+
+  computed: {
+    classes() {
+      return {
+        [`${this.size}`]: true,
+        [`label-${this.label}`]: true
+      };
+    },
+  }
+}
+</script>
+
+<style scoped>
+  button {
+    border: 0;
+    cursor: pointer;
+
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: var(--font-highlight);
+    font-weight: 900;
+    font-size: calc(var(--font-size) * 1.2);
+    padding: 1rem 2rem;
+    min-width: 300px;
+    border-radius: 2rem;
+    
+    background-color: var(--color-lilac);
+    color: var(--color-cyan);
+
+    transition: all 0.2s linear;
+  }
+
+  button:hover {
+    background-color: var(--color-orange);
+  }
+
+  .text, .label {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+   .label {
+    max-width: 76px;
+    margin: 0 var(--space);
+  }
+
+  .label:first-child {
+    margin-left: 0;
+  }
+
+  .label:last-child {
+    margin-right: 0;
+  }
+</style>
