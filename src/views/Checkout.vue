@@ -3,9 +3,9 @@
       <div class="banner">
         <div class="banner-top" :class="bannerClasses">
           <div class="banner-top-content">
-            <h1>Watch the stars and get your NFT</h1>
+            <h1>Connecting the Universe to the Metaverse!</h1>
             <div class="layout-narrow">
-              <p>Connect to an autonomous telescope in the Atacama desert, take a picture of deep Space and issue your <a href="https://singular.rmrk.app/" target="_blank" rel="noopener noreferrer">NFT</a> in a few clicks.</p>
+              <p>Connect to our autonomous telescope in the dark night of Atacama desert in Chile, select any real constellation or star, and mint one of the very first fully autonomous NFTs taken by a robot from the Sky!</p>
             </div>
             <Button v-on:click.native="start">Start</Button>
           </div>
@@ -35,6 +35,7 @@
       <section id="start" class="section-blue">
         <div class="layout-narrow">
           <h2>Follow the steps and mint your nft Of astronomical object</h2>
+          <p>* If you already have the STRGZN token, please proceed to the 3rd step. Otherwise please continue to the 2nd step.</p>
         </div>
       </section>
 
@@ -135,7 +136,7 @@
           <h3>2. Get telescope tokens</h3>
 
           <p class="hyphens">
-            An autonomous telescope leaves in Chile desert Atacama and works online. So he accepts specific token for his job. You can get it here with your credit card.
+            Our fully autonomous telescope lives in the Chile desert in Atacama, where we have some of the darkest skies in the world! The telescope works only with the STRGZN tokens, which you can purchase conveniently through Stripe below.
           </p>
 
           <section>
