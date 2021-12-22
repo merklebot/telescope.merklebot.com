@@ -48,10 +48,7 @@
             <a href="https://polkadot.js.org/extension/" target="_blank"
               >Polkadot.js extension</a
             >
-            and Kusama Relay Chain to manage user account. Don't worry if you
-            haven't it yet. Just follow the official instructions and than get
-            your telescope tokens with an old familiar credit card here in the
-            next step.
+            and the Kusama Relay Chain in our Stargazing product. If you don't have a Polkadot account, don't worry! Simply follow the official instructions and get your telescope tokens with an old, familiar credit card. Please note that the STRGZN tokens are <b>only</b> utilized for the telescope and burnt afterwards. They are not general purpose tokens.
           </p>
 
           <section>
