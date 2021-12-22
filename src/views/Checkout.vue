@@ -151,7 +151,7 @@
             <p>
               <Button class="container-full">
                 <span class="text">Pay <pricePerLesson /> USD</span>
-                <img class="label" alt="with Stripe" src="/i/stripe.svg" />
+                <img class="label" alt="with Stripe" src="i/stripe.svg" />
               </Button>
             </p>
           </form>
