@@ -264,6 +264,14 @@ export default {
       this.isReady = true;
       this.status = true;
 
+      this.unsubscribe = await this.api.query.assets.account(
+        config.ID_ASSET,
+        this.account,
+        ({ balance: currentFree }) => {
+          this.balance = currentFree.toNumber();
+        }
+      );
+
     } catch (error) {
       this.error = error.message;
     }
