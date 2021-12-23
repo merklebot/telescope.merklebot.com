@@ -30,6 +30,7 @@ jobs:
           VUE_APP_PRICE_PER_LESSON_CENTS: ${{ secrets.VUE_APP_PRICE_PER_LESSON_CENTS }}
           VUE_APP_ACCESS_TOKEN_ASSET_ID: ${{ secrets.VUE_APP_ACCESS_TOKEN_ASSET_ID }}
           VUE_APP_ACCESS_TOKEN_RECV_ACCOUNT: ${{ secrets.VUE_APP_ACCESS_TOKEN_RECV_ACCOUNT }}
+          VUE_APP_TYPEFORM_ID: ${{ secrets.VUE_APP_TYPEFORM_ID }}
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

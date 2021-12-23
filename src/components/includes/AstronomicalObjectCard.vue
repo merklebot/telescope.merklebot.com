@@ -97,7 +97,9 @@ export default {
     async onSubmit() {
       // console.log(this.$store.state.accountActive, this.astronomicalObjSelected, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET)
       await sendAsset(this.$store.state.accountActive, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
-      await createNFT(this.astronomicalObjSelected, this.$store.state.accountActive);
+      createNFT(this.astronomicalObjSelected, this.$store.state.accountActive);
+      const { open } = window.tf.createPopup(config.TYPEFORM_ID);
+      open();
     }
   }
 }
