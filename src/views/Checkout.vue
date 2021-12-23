@@ -166,7 +166,7 @@
 
 
      
-      <astronomicalObjectCard :checkedAccount="this.checkedAccount" :accounts="this.accounts"  :isReady="this.isReady" />
+      <astronomicalObjectCard :checkedAccount="this.checkedAccount" :accounts="this.accounts"  :isReady="this.isReady" :balance="this.balance"/>
       <!-- <Card :class="{'disabled': !checkedAccount || accounts.length < 1 || balance < 1 || !isReady}">
         <h2>3. Schedule your time</h2>
 
