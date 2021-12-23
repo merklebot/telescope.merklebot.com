@@ -5,7 +5,7 @@
           <h3>3. Enjoy the stars</h3>
           <p>Choose an astronomical object below, once you hit the submit button, your request will be queued on the Telescope and processed at night with a first-come first-served sequence.</p>
           <p>Please note that this is a real, physical process, and so it is also dependent on the weather conditions in Chile at the time of the NFT. In the case of inclement weather, we will again maintain the proper order of requests, and process them in sequence when the skies are once again available.</p>
-          <p>If you like to be informed when your NFT is taken, or generally like to be informed of our upcoming projects, please feel free to provide your email.</p>
+          <p>If you like to stay informed of our soon-to-be upcoming additional projects, please feel free to join our mailing list and discord channel.</p>
           <p>Thank you, and enjoy the stars!</p>
           <form>
             <p>
