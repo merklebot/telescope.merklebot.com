@@ -57,7 +57,7 @@
           </div>
 
           <br />
-          <Button :onClick="onSubmit" :class="{
+          <Button @click.native="onSubmit" :class="{
             disabled: !checkedAccount || accounts.length < 1 || !isReady
           }">Submit</Button>
           
