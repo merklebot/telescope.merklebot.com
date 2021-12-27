@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { telescopeIsFree, astronomicalObject, createNFT } from "../../services/api";
+import { telescopeIsFree, astronomicalObject, createNFT, serviceStatus } from "../../services/api";
 import { sendAsset } from "../../services/substrate";
 import config from "../../config";
 
@@ -100,6 +100,12 @@ export default {
       console.log("Telescope status:", telescopeStaus);
       if (!telescopeStaus.isFree) {
         alert("Our telescope is busy. Please try again in 2-3 minutes.");
+        return;
+      }
+      const status = await serviceStatus();
+      console.log("Service status:", status);
+      if (status.status !== "on") {
+        alert("Out of service. Please try again later.");
         return;
       }
       const success = await sendAsset(this.$store.state.accountActive, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
