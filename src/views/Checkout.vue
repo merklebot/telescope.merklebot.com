@@ -79,6 +79,7 @@
                   </label>
                 </p>
               </form>
+              <Button v-on:click.native="openSingularUI">Check my NFTs</Button>
             </template>
           <template v-else>
             <label class="red"
@@ -403,6 +404,15 @@ export default {
           top: document.querySelector("#start").offsetTop,
           behavior: "smooth"
       })
+    },
+
+    openSingularUI() {
+      if (!this.account) {
+        alert("Please select your account first.")
+        return
+      }
+      const url = `https://singular.rmrk.app/space/${this.account}?tab=owned&owner=yes`
+      window.open(url)
     },
 
     /* Gets telescope time in Atacama(Chile) */
