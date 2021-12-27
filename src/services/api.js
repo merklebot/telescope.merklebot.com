@@ -29,6 +29,11 @@ export async function serviceStatus() {
   return { "status": resp.data.status, "message": resp.data.message }
 }
 
+export async function telescopeIsFree() {
+  const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/telescopes/{telescope_id}/is_free/")
+  return { "isFree": resp.data }
+}
+
 export async function createNFT(name, owner) {
   const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/nft", {
     params: {
