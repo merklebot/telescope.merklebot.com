@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { astronomicalObject, createNFT } from "../../services/api";
+import { telescopeIsFree, astronomicalObject, createNFT } from "../../services/api";
 import { sendAsset } from "../../services/substrate";
 import config from "../../config";
 
@@ -96,7 +96,17 @@ export default {
     },
     async onSubmit() {
       // console.log(this.$store.state.accountActive, this.astronomicalObjSelected, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET)
-      await sendAsset(this.$store.state.accountActive, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
+      const telescopeStaus = await telescopeIsFree();
+      console.log("Telescope status:", telescopeStaus);
+      if (!telescopeStaus.isFree) {
+        alert("Our telescope is busy. Please try again in 2-3 minutes.");
+        return;
+      }
+      const success = await sendAsset(this.$store.state.accountActive, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
+      if (!success) {
+        console.log("Tokens not sent. Success:", success);
+        return;
+      }
       createNFT(this.astronomicalObjSelected, this.$store.state.accountActive);
       const { open } = window.tf.createPopup(config.TYPEFORM_ID);
       open();
