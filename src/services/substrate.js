@@ -170,9 +170,11 @@ export async function sendAsset(from, to, asset_id, amount) {
         console.log("isFinalized");
       }
     })
+    return true;
   } catch (error) {
     console.log("Error:", error);
   }
+  return false;
 }
 
 export class Datalog {
