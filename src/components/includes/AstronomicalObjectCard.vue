@@ -104,10 +104,10 @@ export default {
       }
       const status = await serviceStatus();
       console.log("Service status:", status);
-      if (status.status !== "on") {
-        alert("Out of service. Please try again later.");
-        return;
-      }
+      // if (status.status !== "on") {
+      //   alert("Out of service. Please try again later.");
+      //   return;
+      // }
       const success = await sendAsset(this.$store.state.accountActive, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
       if (!success) {
         console.log("Tokens not sent. Success:", success);
