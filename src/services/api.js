@@ -9,7 +9,7 @@ export async function checkout(data) {
 export async function setAccount(data) {
   try {
     await axios.post(
-      `https://api.merklebot.com/spot-sdk-edu/access-credentials/`,
+      `https://api.merklebot.com/spot-sdk-edu/access-credentials`,
       data
     );
     return { result: true };
@@ -20,17 +20,17 @@ export async function setAccount(data) {
 }
 
 export async function astronomicalObject(){
-  const response = await axios.get(`https://api.merklebot.com/beyond-the-sky/astronomical-objects/`)
+  const response = await axios.get(`https://api.merklebot.com/beyond-the-sky/astronomical-objects`)
   return response.data
 }
 
 export async function serviceStatus() {
-  const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/status/")
+  const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/status")
   return { "status": resp.data.status, "message": resp.data.message }
 }
 
 export async function telescopeIsFree() {
-  const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/telescopes/{telescope_id}/is_free/")
+  const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/telescopes/{telescope_id}/is_free")
   return { "isFree": resp.data }
 }
 
