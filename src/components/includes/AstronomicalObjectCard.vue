@@ -13,9 +13,9 @@
                 <option
                   v-for="(astr, key) in astronomicalObj"
                   :key="key"
-                  :value="astr.catalog_name"
+                  :value="astr.friendly_name"
                 >
-                  {{ astr.catalog_name }}
+                  {{ astr.friendly_name }}
                 </option>
                 <option v-if="astronomicalObj.length === 0">Loading...</option>
               </select>
