@@ -89,6 +89,8 @@ export default {
   },
   async created(){
     this.astronomicalObj = await astronomicalObject();
+    this.astronomicalObjSelected = this.astronomicalObj[0].catalog_name;
+    console.log("Default object selected:", this.astronomicalObjSelected);
   },
   methods:{
     astronomicalObjChange(e) {
