@@ -42,7 +42,7 @@
           </div>
           <div v-else>
             <div v-for="(astr, key) in astronomicalObj" :key="key">
-              <div v-if="astronomicalObjSelected === astr.catalog_name">
+              <div v-if="astronomicalObjSelected === astr">
                 <div v-if="astr.catalog_name === astr.friendly_name">
                   {{ astr.friendly_name }}
                 </div>
@@ -89,12 +89,13 @@ export default {
   },
   async created(){
     this.astronomicalObj = await astronomicalObject();
-    this.astronomicalObjSelected = this.astronomicalObj[0].catalog_name;
+    this.astronomicalObjSelected = this.astronomicalObj[0];
     console.log("Default object selected:", this.astronomicalObjSelected);
   },
   methods:{
     astronomicalObjChange(e) {
-      this.astronomicalObjSelected = e.target.value;
+      const selected = e.target.value
+      this.astronomicalObjSelected = this.astronomicalObj.find(element => element.friendly_name === selected);
     },
     async onSubmit() {
       // console.log(this.$store.state.accountActive, this.astronomicalObjSelected, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET)
@@ -115,7 +116,7 @@ export default {
         console.log("Tokens not sent. Success:", success);
         return;
       }
-      createNFT(this.astronomicalObjSelected, this.$store.state.accountActive);
+      createNFT(this.astronomicalObjSelected.catalog_name, this.$store.state.accountActive);
       const { open } = window.tf.createPopup(config.TYPEFORM_ID);
       open();
     }
