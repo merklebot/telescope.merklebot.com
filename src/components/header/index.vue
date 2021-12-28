@@ -1,7 +1,7 @@
 <template>
   <header class="header" role="banner">
 
-    <router-link :to="{ name: 'home' }" class="toplink">Online telescope</router-link>
+    <router-link :to="{ name: 'checkout' }" class="toplink">Online telescope</router-link>
 
     <nav class="nav-g">
       <details class="nav-expand" tabindex="0">
