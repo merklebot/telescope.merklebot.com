@@ -5,7 +5,7 @@
           <div class="banner-top-content">
             <h1>Connecting the Universe to the Metaverse!</h1>
             <div class="layout-narrow">
-              <p>Connect to our autonomous telescope in the dark night of Atacama desert in Chile, select any real constellation or star, and mint one of the very first fully autonomous NFTs taken by a robot from the Sky!</p>
+              <p>Connect to our autonomous telescope in the dark night of Atacama desert in Chile, select an astronomical object and mint unique NFTs in a few clicks.</p>
             </div>
             <Button v-on:click.native="start">Start</Button>
           </div>
@@ -35,20 +35,22 @@
       <section id="start" class="section-blue">
         <div class="layout-narrow">
           <h2>Follow the steps and mint your nft Of astronomical object</h2>
-          <p>* If you already have the STRGZN token, please proceed to the 3rd step. Otherwise please continue to the 2nd step.</p>
         </div>
       </section>
 
       <section class="section-blue-mid">
         <div class="layout-narrow">
-          <h3>1. Create or choose your crypto account</h3>
+          <h3>1. Create or choose your account</h3>
 
           <p class="hyphens">
             We use
             <a href="https://polkadot.js.org/extension/" target="_blank"
               >Polkadot.js extension</a
             >
-            and the Kusama Relay Chain in our Stargazing product. If you don't have a Polkadot account, don't worry! Simply follow the official instructions and get your telescope tokens with an old, familiar credit card. Please note that the STRGZN tokens are <b>only</b> utilized for the telescope and burnt afterwards. They are not general purpose tokens.
+            to manage use accounts. Here is the
+            <a href="https://medium.com/merklebot/how-to-create-an-account-using-polkadot-js-extension-bd02a0953946" target="_blank"
+              >initial setup guide.</a
+            >
           </p>
 
           <section>
@@ -134,13 +136,11 @@
           <h3>2. Get telescope tokens</h3>
 
           <p class="hyphens">
-            Our fully autonomous telescope lives in the Chile desert in Atacama, where we have some of the darkest skies in the world! The telescope works only with the STRGZN tokens, which you can purchase conveniently through Stripe below.
+            Our telescope only accepts special STRGZN tokens and you can buy them below using your credit card. 
           </p>
 
           <section>
             <ul class="dashed">
-              <li>1 picture with NFT minting = 1 $STRGZN</li>
-              <li>1 $STRGZN = {{ pricePerToken }} USD</li>
               <li>Your balance is: {{ balance }} $STRGZN</li>
               <li>
                 You buy: <input v-model.number="quantityRaw" value="quantity"/> $STRGZN
