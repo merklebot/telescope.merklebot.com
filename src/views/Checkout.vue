@@ -273,7 +273,7 @@ export default {
 
       setInterval(() => {
        self.time = self.countdown(this.currentTime())
-      }, 1000)
+      }, 10000)
   },
   destroyed() {
     if (this.unsubscribe) {
@@ -401,16 +401,28 @@ export default {
     currentHour(){
       return new Date().toLocaleString("en-US", { timeZone: "America/Santiago", hour: 'numeric', hour12: false })
     },
-
     currentTime(){
       return new Date().toLocaleString("en-US", { timeZone: "America/Santiago", hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false })
     },
 
+    /* Gets how long left tonight */
     countdown(currentTime) {
       var 
           startNight = moment.duration(this.hourStartNight + ':00:00'),
-          timer = startNight.subtract(currentTime);
-      return timer.hours() + ":" + timer.minutes() + ":" + timer.seconds()
+          timer = startNight.subtract(currentTime),
+          timeString = '';
+
+          if(timer.hours() > 0) {
+            timeString += timer.hours() + ' hours '
+          }
+
+          if(timer.minutes() > 0) {
+            timeString += timer.minutes() + ' minutes '
+          }
+
+          // timeString += timer.seconds() + ' seconds'
+
+      return timeString
     },
 
     /* For frontend purposes */
