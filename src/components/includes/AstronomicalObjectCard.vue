@@ -55,7 +55,7 @@
 
           <br />
           <Button @click.native="onSubmit" :class="{
-            disabled: !checkedAccount || accounts.length < 1 || !isReady || balance < 1
+            disabled: accounts.length < 1 || !isReady || balance < 1
           }">Submit</Button>
           
         </div>
@@ -76,7 +76,6 @@ export default {
     };
   },
     props: {
-    checkedAccount : Boolean,
     isReady: Boolean,
     accounts: Array,
     balance: Number,

@@ -69,17 +69,6 @@
                     </option>
                   </select>
                 </p>
-                <p>
-                  <label>
-                    <input
-                      type="checkbox"
-                      name="checkedAccount"
-                      v-model="checkedAccount"
-                    />
-                    I wrote down seed phrase, keep it safe and have access to this
-                    account
-                  </label>
-                </p>
               </form>
               <Button v-on:click.native="openSingularUI">Check my NFTs</Button>
             </template>
@@ -149,7 +138,7 @@
           </section>
 
           <form @onChange="onChange" @submit.prevent="handleSubmit" :class="{
-          disabled: !checkedAccount || accounts.length < 1 || !isReady,
+          disabled: accounts.length < 1 || !isReady,
         }">
             <p>
               <Button class="container-full">
@@ -167,8 +156,8 @@
 
 
      
-      <astronomicalObjectCard :checkedAccount="this.checkedAccount" :accounts="this.accounts"  :isReady="this.isReady" :balance="this.balance"/>
-      <!-- <Card :class="{'disabled': !checkedAccount || accounts.length < 1 || balance < 1 || !isReady}">
+      <astronomicalObjectCard :accounts="this.accounts"  :isReady="this.isReady" :balance="this.balance"/>
+      <!-- <Card :class="{'disabled': accounts.length < 1 || balance < 1 || !isReady}">
         <h2>3. Schedule your time</h2>
 
         <template v-if="isReady">
@@ -317,16 +306,6 @@ export default {
       get() {
         return (this.quantity * this.pricePerToken).toFixed(2)
       }
-    },
-    checkedAccount: {
-      get() {
-        return this.$store.state.checkedAccounts.includes(
-          this.$store.state.accountActive
-        );
-      },
-      set(value) {
-        this.$store.commit("setAccountChecked", value);
-      },
     },
     account: {
       get() {

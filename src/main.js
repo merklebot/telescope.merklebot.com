@@ -20,7 +20,6 @@ Vue.use(VueMoment, {
 const store = new Vuex.Store({
   state: {
     accountActive: localStorage.accountActive ? localStorage.accountActive : '', // checkout
-    checkedAccounts: localStorage.checkedAccounts ? localStorage.checkedAccounts : '', // checkout
     email: localStorage.email ? localStorage.email : '', // checkout
   },
   mutations: {
@@ -35,21 +34,6 @@ const store = new Vuex.Store({
       state.email = value
       localStorage.setItem('email', state.email)
     },
-
-    setAccountChecked(state, value) {
-      if ( value ) {
-        if ( !state.checkedAccounts.includes(state.accountActive)) {
-          state.checkedAccounts += ' ' + state.accountActive
-        }
-      }
-      else {
-        if ( state.checkedAccounts.includes(state.accountActive) ) {
-          state.checkedAccounts = state.checkedAccounts.replace(state.accountActive, '')
-        }
-      }
-
-      localStorage.setItem('checkedAccounts', state.checkedAccounts)
-    }
   }
 });
 
