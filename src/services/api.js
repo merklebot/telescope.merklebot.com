@@ -34,6 +34,11 @@ export async function telescopeIsFree() {
   return { "isFree": resp.data }
 }
 
+export async function pricePerNFT() {
+  const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/price")
+  return resp.data
+}
+
 export async function createNFT(name, owner) {
   const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/nft", {
     params: {
