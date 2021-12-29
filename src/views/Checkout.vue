@@ -216,7 +216,9 @@ export default {
       // USD price per one STRGZN
       pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(2),
 
-      time: "test"
+      time: "00:00:00",
+      hourStartNight: "17",
+      hourEndNight: "09",
 
     };
   },
@@ -265,11 +267,12 @@ export default {
     }
   },
   mounted() {
-      this.time = this.countdown(Date.now())
+    
+      this.time = this.countdown(this.currentTime())
       var self = this
 
       setInterval(() => {
-       self.time = self.countdown(Date.now())
+       self.time = self.countdown(this.currentTime())
       }, 1000)
   },
   destroyed() {
@@ -396,33 +399,35 @@ export default {
 
     /* Gets telescope time in Atacama(Chile) */
     currentHour(){
-      return moment(Date.now()).zone("-03:00").format("HH")
+      return new Date().toLocaleString("en-US", { timeZone: "America/Santiago", hour: 'numeric', hour12: false })
     },
 
-    countdown(date) {
-      var 
-          current = moment.duration(moment(date).zone("-03:00").format("HH:MM:SS")),
-          next = moment.duration('17:00:00'),
-          timer = next.subtract(current);
+    currentTime(){
+      return new Date().toLocaleString("en-US", { timeZone: "America/Santiago", hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false })
+    },
 
+    countdown(currentTime) {
+      var 
+          startNight = moment.duration(this.hourStartNight + ':00:00'),
+          timer = startNight.subtract(currentTime);
       return timer.hours() + ":" + timer.minutes() + ":" + timer.seconds()
     },
 
     /* For frontend purposes */
     isDay() {
-      return this.currentHour() >= 10 && this.currentHour() < 16
+      return this.currentHour() >= (this.hourEndNight + 0.5) && this.currentHour() < (this.hourStartNight - 0.5)
     },
 
     isNight() {
-      return this.currentHour() >= 17 || this.currentHour() <= 10
+      return this.currentHour() >= this.hourStartNight || this.currentHour() <= this.hourEndNight
     },
 
     isDawn() {
-      return this.currentHour() > 9 && this.currentHour() <= 10
+      return this.currentHour() > this.hourEndNight && this.currentHour() <= (this.hourEndNight + 0.5)
     },
 
     isSunset() {
-      return this.currentHour() >= 16 && this.currentHour() < 17
+      return this.currentHour() >= (this.hourStartNight - 0.5) && this.currentHour() < this.hourStartNight
     },
 
     telescopeOn() {
@@ -581,6 +586,11 @@ export default {
 
   .telecopePause-content {
     align-self: center;
+    padding: var(--padding) 0;
+  }
+
+  .telecopePause-content p {
+    margin-bottom: calc(var(--space) * 0.5);
   }
 
   .banner .telecopePause {
