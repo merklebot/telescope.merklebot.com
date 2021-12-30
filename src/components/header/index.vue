@@ -9,7 +9,7 @@
 
         <div class="nav-expand-content">
           <h4>Have a question?</h4>
-          <p>Please contact us by <a href="#">Discord</a> or <a href="#">Email</a></p>
+          <p>Please contact us by <a href="#" target="_blank" rel="noopener noreferrer">Discord</a> or <a href="#" target="_blank" rel="noopener noreferrer">Email</a></p>
         </div>
       </details>
 
@@ -19,9 +19,9 @@
         <div class="nav-expand-content">
           <h4>First Beyond the Sky</h4>
           <p>This digital experience explores the interconnection of realverse and metaverse. </p>
-          <p><a href="https://medium.com/merklebot/mint-nfts-with-telescope-in-chile-371eb773189">Learn more</a></p>
+          <p><a href="https://medium.com/merklebot/mint-nfts-with-telescope-in-chile-371eb773189" target="_blank" rel="noopener noreferrer">Learn more</a></p>
           <h4>Technologies used</h4>
-          <p>Blockchain, <a href="https://robonomics.network/">Robonomics</a>, <a href="https://kusama.network/">Kusama</a>, <a href="https://ipfs.io/">IPFS</a>, <a href="https://www.rmrk.app/">RMRK</a></p>
+          <p>Blockchain, <a href="https://robonomics.network/" target="_blank" rel="noopener noreferrer">Robonomics</a>, <a href="https://kusama.network/" target="_blank" rel="noopener noreferrer">Kusama</a>, <a href="https://ipfs.io/" target="_blank" rel="noopener noreferrer">IPFS</a>, <a href="https://www.rmrk.app/" target="_blank" rel="noopener noreferrer">RMRK</a></p>
         </div>
       </details>
     </nav>
