@@ -119,10 +119,3 @@ export default {
   }
 }
 </script>
-
-
-<style scoped>
-  .layout-narrow {
-    text-align: center;
-  }
-</style>

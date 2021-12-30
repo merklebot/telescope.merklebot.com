@@ -57,6 +57,7 @@ sub { vertical-align: sub; }
   --color-blue: #222274;
   --color-blue-mid: #0F0F50;
   --color-blue-dark: #0B0B34;
+  --color-red: #B71313;
 
   /* --color-yellow: #ffb600;
   --color-blue: #03a5ed;
@@ -231,7 +232,7 @@ ul.dashed li {
   margin-right: auto;
 }
 .layout-mid { max-width: 1400px; }
-.layout-narrow { max-width: 40rem; }
+.layout-narrow { max-width: 40rem;  text-align: center; }
 
 .container-full { width: 100%; }
 
@@ -301,6 +302,44 @@ section section {
   background-color: var(--color-blue-dark);
 }
 /* end of Colored sections */
+
+.loader {
+  position: relative;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+  border-color: var(--color-cyan);
+  border-top: 2px solid var(--color-cyan);
+  border-right: 2px solid var(--color-cyan);
+  animation: 0.8s Rotate ease-in-out infinite;
+  margin: 0 var(--space);
+}
+
+.loader:first-child { margin-left: 0}
+.loader:last-child { margin-right: 0}
+
+@keyframes Rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+.error-title, .error-text {
+  font-weight: 900;
+  font-family: var(--font-highlight);
+}
+
+.error-title {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-red)
+}
 
 </style>
 

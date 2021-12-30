@@ -1,11 +1,11 @@
 <template>
   <div>
       <div class="banner">
-        <div class="banner-top" :class="bannerClasses">
+        <div class="banner-top" :class="dayStatusName">
           <div class="banner-top-content">
             <h1>Connecting the Universe to the Metaverse!</h1>
             <div class="layout-narrow">
-              <p>Connect to our autonomous telescope in the dark night of Atacama desert in Chile, select an astronomical object and mint unique NFTs in a few clicks.</p>
+              <p >Connect to our autonomous telescope in the dark night of Atacama desert in Chile, select an astronomical object and mint unique NFTs in a few clicks.</p>
             </div>
             <Button v-on:click.native="start">Start</Button>
           </div>
@@ -13,7 +13,7 @@
           <div class="banner-top-art">
             <div class="banner-grass"></div>
             <img aria-hidden="true" src="i/banner-stone.png" class="banner-stone" />
-            <img aria-hidden="true" src="i/banner-clouds.png" class="banner-clouds" />
+            <!-- <img aria-hidden="true" src="i/banner-clouds.png" class="banner-clouds" /> -->
             <img aria-hidden="true" src="i/banner-sights.png" class="banner-sights" />
             <div class="banner-telescope">
               <img aria-hidden="true" src="i/banner-telescope-pod-1.png" class="banner-telescope-pod-1" />
@@ -24,7 +24,7 @@
         </div>
         <div class="banner-bottom">
           <div class="telecopePause layout-narrow" v-if="!telescopeOn()">
-             <div class="telecopePause-content" v-if="!isNight()">
+             <div class="telecopePause-content" v-if="dayStatusName !== 'night'">
                 <p class="telecopePause-title">Telescope is Waiting for night…</p>
                 <p>{{ time }} left</p>
               </div>
@@ -53,69 +53,71 @@
             >
           </p>
 
-          <section>
-            <template v-if="isReady">
-            <template v-if="accounts.length > 0">
-              <form>
-                <p>
-                  <select v-model="account">
-                    <option
-                      v-for="(account, key) in accounts"
-                      :key="key"
-                      :value="account.address"
-                    >
-                      {{ account.meta.name }} –
-                      {{ addressShort(account.address) }}
-                    </option>
-                  </select>
-                </p>
-              </form>
-              <Button v-on:click.native="openSingularUI">Check my NFTs</Button>
-            </template>
-          <template v-else>
-            <label class="red"
-              >Please create an account or switch on account's visibility in
-              <a href="https://polkadot.js.org/extension/" target="_blank"
-                >Polkadot.js extension</a
-              >. Then reload this page.</label
-            >
-          </template>
-        </template>
-
-        <template v-else-if="error === null">
-          <span class="loader"></span>
-          <i class="text-mid">Checking Polkadot.js extension</i>
-        </template>
-        <template v-else>
-          <template v-if="error === 'NOT_FOUND_EXTENSION'">
-            <label class="red"
-              >Please install
-              <a href="https://polkadot.js.org/extension/" target="_blank"
-                >Polkadot.js extension</a
-              >, create and add Web3 account. Then reload this page.</label
-            >
-          </template>
-          <template v-else-if="!accounts || accounts.length < 1">
-            <div class="red">
-              <label class="red"
-                >You currently don't have any accounts. Please create an account
-                or switch on account's visibility in
-                <a href="https://polkadot.js.org/extension/" target="_blank"
-                  >Polkadot.js extension</a
-                >. Then reload this page.</label
-              >
-            </div>
-          </template>
-          <template v-else>
-            <div class="red">
-              Error: <b>{{ error }}</b>
-            </div>
-          </template>
-        </template>
-
+          <section v-if="!isReady && error === null && !connectAccountClicked">
+            <Button v-on:click.native="connectAccount">Connect account</Button>
           </section>
 
+          <template v-if="isReady">
+              <template v-if="accounts.length > 0">
+                <form>
+                  <p>
+                    <select v-model="account">
+                      <option
+                        v-for="(account, key) in accounts"
+                        :key="key"
+                        :value="account.address"
+                      >
+                        {{ account.meta.name }} –
+                        {{ addressShort(account.address) }}
+                      </option>
+                    </select>
+                  </p>
+                </form>
+                <Button v-on:click.native="openSingularUI">Check my NFTs</Button>
+              </template>
+            <template v-else>
+               <section>
+                <p class="error-title">Account not found</p>
+                <p class="error-text">Please create an account or switch on account's visibility in
+                <a href="https://polkadot.js.org/extension/" target="_blank"
+                  >Polkadot.js extension</a
+                >. Then reload this page.</p>
+              </section>
+            </template>
+          </template>
 
+          <template v-else-if="error === null && connectAccountClicked">
+            <section>
+              <span class="loader"></span>
+              <i>Checking Polkadot.js extension</i>
+            </section>
+          </template>
+
+          <template v-else-if="connectAccountClicked">
+            <template v-if="error === 'NOT_FOUND_EXTENSION'">
+              <section>
+                <p class="error-title">Extension not found</p>
+                <p class="error-text">Please install
+                <a href="https://polkadot.js.org/extension/" target="_blank"
+                  >Polkadot.js extension</a
+                >, create and add Web3 account. Then reload this page.</p>
+              </section>
+            </template>
+            <template v-else-if="!accounts || accounts.length < 1">
+              <section>
+                <p class="error-title">You currently don't have any accounts</p>
+                <p class="error-text">Please create an account
+                  or switch on account's visibility in
+                  <a href="https://polkadot.js.org/extension/" target="_blank">Polkadot.js extension</a>. Then reload this page.</p>
+              </section>
+            </template>
+            <template v-else>
+              <section>
+                <p class="error-title">Some error occured</p>
+                <p class="error-text">{{ error }}</p>
+              </section>
+            </template>
+          </template>
         </div>
       </section>
 
@@ -183,16 +185,17 @@ import { getProvider, getInstance, getAccounts } from "../services/substrate";
 import config from "../config";
 import { loadScript } from "../utils/tools";
 
-import moment from 'moment-timezone'
+import moment from 'moment-timezone';
 
 export default {
   components: {
     astronomicalObjectCard: () => import('../components/includes/AstronomicalObjectCard.vue'),
-    Button: () => import('../components/includes/Button.vue'),
+    Button: () => import('../components/includes/Button.vue')
   },
   data() {
     return {
       isReady: false,
+      connectAccountClicked: false,
       error: null,
       api: null,
       unsubscribe: null,
@@ -217,8 +220,10 @@ export default {
       pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(2),
 
       time: "00:00:00",
-      hourStartNight: "17",
-      hourEndNight: "09",
+      hourStartNight: "06",
+      hourEndNight: "02",
+      currentHour: "00",
+      dayStatusName: "day"
 
     };
   },
@@ -234,45 +239,47 @@ export default {
         console.log(this.serviceStatus)
       }, 10000)
 
-      const provider = getProvider();
-      provider.on("error", () => {
-        this.error = "Disconnected provider";
-        this.isReady = false;
-      });
-      provider.on("connect", () => {
-        this.isReady = true;
-      });
-      this.api = await getInstance();
-      this.accounts = await getAccounts(this.api);
-      if (this.accounts) {
-        this.accountDefault = this.accounts[0].address;
-      }
+      // const provider = getProvider();
+      // provider.on("error", () => {
+      //   this.error = "Disconnected provider";
+      //   this.isReady = false;
+      // });
+      // provider.on("connect", () => {
+      //   this.isReady = true;
+      // });
+      // this.api = await getInstance();
+      // this.accounts = await getAccounts(this.api);
+      // if (this.accounts) {
+      //   this.accountDefault = this.accounts[0].address;
+      // }
 
-      if (this.accounts.length === 0) {
-        this.error = "Not found account";
-      }
-      this.isReady = true;
-      this.status = true;
+      // if (this.accounts.length === 0) {
+      //   this.error = "Not found account";
+      // }
+      // this.isReady = true;
+      // this.status = true;
 
-      this.unsubscribe = await this.api.query.assets.account(
-        config.ID_ASSET,
-        this.account,
-        ({ balance: currentFree }) => {
-          this.balance = currentFree.toNumber();
-        }
-      );
+      // this.unsubscribe = await this.api.query.assets.account(
+      //   config.ID_ASSET,
+      //   this.account,
+      //   ({ balance: currentFree }) => {
+      //     this.balance = currentFree.toNumber();
+      //   }
+      // );
 
     } catch (error) {
       this.error = error.message;
     }
   },
   mounted() {
-    
-      this.time = this.countdown(this.currentTime())
+  
       var self = this
+      this.time = this.countdown(this.currentTime())
+      this.currentHour = this.getCurrentHour()
 
       setInterval(() => {
-       self.time = self.countdown(this.currentTime())
+        self.time = self.countdown(self.currentTime())
+        self.currentHour = self.getCurrentHour()
       }, 10000)
   },
   destroyed() {
@@ -302,6 +309,9 @@ export default {
         oldValue: oldValue,
       });
     },
+    currentHour: function(){
+      this.dayStatusName = this.dayStatus()
+    }
   },
 
   computed: {
@@ -328,22 +338,50 @@ export default {
         this.$store.commit("setEmail", value);
       },
     },
-
-    bannerClasses() {
-      return {
-        [`is-day`]: this.isDay(),
-        [`is-night`]: this.isNight(),
-        [`is-dawn`]: this.isDawn(),
-        [`is-sunset`]: this.isSunset(),
-        [`on`]: this.telescopeOn(),
-      };
-    },
   },
 
   methods: {
+    async connectAccount() {
+      this.connectAccountClicked = true;
+
+      try {
+        const provider = getProvider();
+        provider.on("error", () => {
+          this.error = "Disconnected provider";
+          this.isReady = false;
+        });
+        provider.on("connect", () => {
+          this.isReady = true;
+        });
+        this.api = await getInstance();
+        this.accounts = await getAccounts(this.api);
+        if (this.accounts) {
+          this.accountDefault = this.accounts[0].address;
+        }
+
+        if (this.accounts.length === 0) {
+          this.error = "Not found account";
+        }
+        this.isReady = true;
+        this.status = true;
+
+        this.unsubscribe = await this.api.query.assets.account(
+          config.ID_ASSET,
+          this.account,
+          ({ balance: currentFree }) => {
+            this.balance = currentFree.toNumber();
+          }
+        );
+
+      } catch (error) {
+        this.error = error.message;
+      }
+    },
+
     addressShort(address) {
       return address.slice(0, 6) + "..." + address.slice(-4);
     },
+
     async onChange({ name, newValue }) {
       if (name === "account") {
         if (this.unsubscribe) {
@@ -398,7 +436,7 @@ export default {
     },
 
     /* Gets telescope time in Atacama(Chile) */
-    currentHour(){
+    getCurrentHour(){
       return new Date().toLocaleString("en-US", { timeZone: "America/Santiago", hour: 'numeric', hour12: false })
     },
     currentTime(){
@@ -416,8 +454,8 @@ export default {
             timeString += timer.hours() + ' hours '
           }
 
-          if(timer.minutes() > 0) {
-            timeString += timer.minutes() + ' minutes '
+          if(timer.minutes() >= 0) {
+            timeString += timer.minutes() + ' minute(s) '
           }
 
           // timeString += timer.seconds() + ' seconds'
@@ -425,26 +463,29 @@ export default {
       return timeString
     },
 
-    /* For frontend purposes */
-    isDay() {
-      return this.currentHour() >= (this.hourEndNight + 0.5) && this.currentHour() < (this.hourStartNight - 0.5)
-    },
+    /* Gets time of day, For frontend purposes */
+    dayStatus() {
 
-    isNight() {
-      return this.currentHour() >= this.hourStartNight || this.currentHour() <= this.hourEndNight
-    },
+      if(this.currentHour >= (this.hourEndNight + 1) && this.currentHour < (this.hourStartNight - 1)) {
+        return 'day'
+      }
 
-    isDawn() {
-      return this.currentHour() > this.hourEndNight && this.currentHour() <= (this.hourEndNight + 0.5)
-    },
+      if (this.currentHour >= this.hourStartNight || this.currentHour <= this.hourEndNight) {
+        return 'night'
+      }
 
-    isSunset() {
-      return this.currentHour() >= (this.hourStartNight - 0.5) && this.currentHour() < this.hourStartNight
+      if( this.currentHour > this.hourEndNight && this.currentHour <= (this.hourEndNight + 1) ) {
+        return 'dawn'
+      }
+
+      if ( this.currentHour >= (this.hourStartNight - 1) && this.currentHour < this.hourStartNight ) {
+        return 'sunset'
+      }
     },
 
     telescopeOn() {
       /* && this.serviceStatus.status on */
-      if( this.isNight() ) { return true }
+      if( this.dayStatus() === 'night' ) { return true }
     }
   },
 };
@@ -459,7 +500,6 @@ export default {
   }
 
   .banner-top {
-    background: linear-gradient(#5681ff, #c7ffdf);
     color: var(--color-blue-darkest);
 
     display: flex;
@@ -559,19 +599,20 @@ export default {
     bottom: 202px;
     left: 28px;
     z-index: 1;
+    transform: rotate(30deg);
   }
 
   .banner-sights {
     width: 413px;
-    bottom: 20px;
+    bottom: 10px;
     right: 80px
   }
 
-  .banner-clouds {
+  /* .banner-clouds {
     width: 1800px;
     left: calc(50% - 900px);
     bottom: 120px
-  }
+  } */
 
   
   /* Section with telescope status (pause) */
@@ -580,7 +621,8 @@ export default {
     font-weight: 900;
     display: grid;
     grid-template-columns: 1fr 4fr;
-    gap: var(--padding)
+    gap: var(--padding);
+    text-align: left;
   }
 
   .telecopePause:before {
@@ -615,5 +657,90 @@ export default {
   }
 
   /* end of Section with telescope status (pause) */
+
+
+  /* Day time change */
+
+  .banner-top {
+    --daychange-duration: 10s;
+
+    background-position: 50% 0;
+    background-size: 100% 600%;
+    animation: var(--daychange-duration) DayTime linear forwards;
+  }
+
+  .banner-top.day {
+    background-image: linear-gradient(#00519b, #ccc1ff, #5681ff, #c7ffdf, #00519b);
+  }
+
+  .banner-top.sunset {
+    background-image: linear-gradient(#5681ff, #c7ffdf, #9265ab, #ffc888, #5681ff);
+  }
+
+  .banner-top.night {
+    background-image: linear-gradient(#9265ab, #ffc888, #000008, #00819d, #9265ab);
+    animation-name: DayTimeTextLight;
+  }
+
+  .banner-top.dawn {
+    background-image: linear-gradient(#000008, #00819d, #00519b, #ccc1ff, #000008);
+    color: var(--color-cyan);
+    animation-name: DayTimeTextDark;
+  }
+
+  @keyframes DayTime {
+    to{
+      background-position: 50% 60%;
+    }
+  }
+
+  @keyframes DayTimeTextLight {
+    to{
+      background-position: 50% -60%;
+      color: var(--color-cyan)
+    }
+  }
+
+  @keyframes DayTimeTextDark {
+    to{
+      background-position: 50% 60%;
+      color: var(--color-blue-darkest)
+    }
+  }
+
+
+
+  .night .banner-telescope-head {
+    animation: TelescopeOn 3s ease var(--daychange-duration) forwards;
+  }
+
+  .night .banner-stone, .night .banner-grass, .night .banner-sights {
+    animation: Darken 3s ease var(--daychange-duration) forwards;
+  }
+
+  .dawn .banner-telescope-head {
+    transform: rotate(0deg);
+    animation: TelescopeOff 3s ease calc(var(--daychange-duration) * 0.5) forwards;
+  }
+
+  @keyframes Darken {
+    to {
+      filter: brightness(0.5);
+    }
+  }
+
+  @keyframes TelescopeOn {
+    to {
+      transform: rotate(0deg);
+    }
+  }
+
+  @keyframes TelescopeOff {
+    to {
+      transform: rotate(30deg);
+    }
+  }
+
+  /* end of Day time change */
 
 </style>
