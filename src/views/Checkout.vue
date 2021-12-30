@@ -53,27 +53,36 @@
             >
           </p>
 
-          <section v-if="!isReady && error === null && !connectAccountClicked">
+          <section v-if="!isReady && !connectAccountClicked">
             <Button v-on:click.native="connectAccount">Connect account</Button>
           </section>
 
+          <template v-if="!isReady && error === null && connectAccountClicked">
+            <section>
+              <span class="loader"></span>
+              <i>Checking Polkadot.js extension</i>
+            </section>
+          </template>
+
           <template v-if="isReady">
               <template v-if="accounts.length > 0">
-                <form>
-                  <p>
-                    <select v-model="account">
-                      <option
-                        v-for="(account, key) in accounts"
-                        :key="key"
-                        :value="account.address"
-                      >
-                        {{ account.meta.name }} –
-                        {{ addressShort(account.address) }}
-                      </option>
-                    </select>
-                  </p>
-                </form>
-                <Button v-on:click.native="openSingularUI">Check my NFTs</Button>
+                <section>
+                  <form>
+                    <p>
+                      <select v-model="account">
+                        <option
+                          v-for="(account, key) in accounts"
+                          :key="key"
+                          :value="account.address"
+                        >
+                          {{ account.meta.name }} –
+                          {{ addressShort(account.address) }}
+                        </option>
+                      </select>
+                    </p>
+                  </form>
+                </section>
+                <!-- <Button v-on:click.native="openSingularUI">Check my NFTs</Button> -->
               </template>
             <template v-else>
                <section>
@@ -86,14 +95,7 @@
             </template>
           </template>
 
-          <template v-else-if="error === null && connectAccountClicked">
-            <section>
-              <span class="loader"></span>
-              <i>Checking Polkadot.js extension</i>
-            </section>
-          </template>
-
-          <template v-else-if="connectAccountClicked">
+          <template v-else-if="error && connectAccountClicked">
             <template v-if="error === 'NOT_FOUND_EXTENSION'">
               <section>
                 <p class="error-title">Extension not found</p>
@@ -127,7 +129,7 @@
           <h3>2. Get telescope tokens</h3>
 
           <p class="hyphens">
-            Our telescope only accepts special STRGZN tokens and you can buy them below using your credit card. 
+            Our telescope only accepts special $STRGZN tokens and you can buy them below using your credit card. 
           </p>
 
           <section>
@@ -196,7 +198,7 @@ export default {
   data() {
     return {
       isReady: false,
-      connectAccountClicked: false,
+      connectAccountClicked: localStorage.getItem('connectAccountClicked') || false,
       error: null,
       api: null,
       unsubscribe: null,
@@ -240,6 +242,10 @@ export default {
         console.log(this.serviceStatus)
       }, 10000)
 
+      if(this.connectAccountClicked) {
+        await this.connectAccount()
+      }
+
       // const provider = getProvider();
       // provider.on("error", () => {
       //   this.error = "Disconnected provider";
@@ -272,6 +278,8 @@ export default {
       this.error = error.message;
     }
   },
+
+
   mounted() {
   
       var self = this
@@ -343,7 +351,9 @@ export default {
 
   methods: {
     async connectAccount() {
-      this.connectAccountClicked = true;
+      if (!this.connectAccountClicked) {
+        localStorage.setItem('connectAccountClicked', true)
+      }
 
       try {
         const provider = getProvider();
