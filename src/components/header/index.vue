@@ -17,10 +17,10 @@
         <summary class="icon">i</summary>
 
         <div class="nav-expand-content">
-          <h4>Window from metaverse</h4>
+          <h4>First Beyond the Sky</h4>
           <p>This digital experience explores the interconnection of realverse and metaverse. </p>
           <p><a href="https://medium.com/merklebot/mint-nfts-with-telescope-in-chile-371eb773189">Learn more</a></p>
-          <h4>Uses technologies</h4>
+          <h4>Technologies used</h4>
           <p>Blockchain, <a href="https://robonomics.network/">Robonomics</a>, <a href="https://kusama.network/">Kusama</a>, <a href="https://ipfs.io/">IPFS</a>, <a href="https://www.rmrk.app/">RMRK</a></p>
         </div>
       </details>

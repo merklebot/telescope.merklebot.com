@@ -3,7 +3,7 @@
       <div class="banner">
         <div class="banner-top" :class="dayStatusName">
           <div class="banner-top-content">
-            <h1>Connecting the Universe to the Metaverse!</h1>
+            <h1>Connecting Universe to Metaverse!</h1>
             <div class="layout-narrow">
               <p >Connect to our autonomous telescope in the dark night of Atacama desert in Chile, select an astronomical object and mint unique NFTs in a few clicks.</p>
             </div>
@@ -47,7 +47,7 @@
             <a href="https://polkadot.js.org/extension/" target="_blank"
               >Polkadot.js extension</a
             >
-            to manage use accounts. Here is the
+            to manage user accounts. Here is the
             <a href="https://medium.com/merklebot/how-to-create-an-account-using-polkadot-js-extension-bd02a0953946" target="_blank"
               >initial setup guide.</a
             >
@@ -132,6 +132,7 @@
 
           <section>
             <ul class="dashed">
+              <li>Price: 1 $STRGZN for 1 telescope NFT</li>
               <li>Your balance is: {{ balance }} $STRGZN</li>
               <li>
                 You buy: <input v-model.number="quantityRaw" value="quantity"/> $STRGZN
