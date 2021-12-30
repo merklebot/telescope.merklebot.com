@@ -192,11 +192,17 @@ select {
 
   font-family: var(--font-text);
   font-size: var(--font-size);
-  background-color: var(--color-blue);
-  color: var(--color-cyan);
+  background-color: #fff;
+  /* background-color: var(--color-blue); */
+  /* color: var(--color-cyan); */
+  color: var(--color-lilac);
   border: 2px solid var(--color-lilac);
   border-radius: 2rem;
   padding: 0.5rem 2rem;
+  background-image: url(/i/select.svg);
+  background-repeat: no-repeat;
+  background-position: 99% 50%;
+  padding-right: 60px;
 }
 
 

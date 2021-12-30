@@ -6,7 +6,7 @@
           <p>Choose an astronomical object below and hit the submit button. The telescope will start moving and will mint your NFT in a few minutes.</p>
           <form>
             <p>
-              <select @change="astronomicalObjChange">
+              <select class="container-full" @change="astronomicalObjChange">
                 <option
                   v-for="(astr, key) in astronomicalObj"
                   :key="key"

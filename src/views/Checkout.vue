@@ -69,7 +69,7 @@
                 <section>
                   <form>
                     <p>
-                      <select v-model="account">
+                      <select class="container-full" v-model="account">
                         <option
                           v-for="(account, key) in accounts"
                           :key="key"
