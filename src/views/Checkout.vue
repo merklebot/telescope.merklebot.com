@@ -239,7 +239,7 @@ export default {
       })
       setInterval(async () => {
         this.serviceStatus = await serviceStatus()
-        console.log(this.serviceStatus)
+        console.log("Service status:", { "status": this.serviceStatus.status, "message": this.serviceStatus.message })
       }, 10000)
 
       if(this.connectAccountClicked) {
@@ -425,7 +425,7 @@ export default {
           console.error(r.error.message);
         }
       } catch (error) {
-        console.log(error);
+        console.log("Checkout error:", error);
       }
       this.proccess = false;
     },

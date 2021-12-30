@@ -167,12 +167,12 @@ export async function sendAsset(from, to, asset_id, amount) {
           }
         });
       } else if (result.status.isFinalized) {
-        console.log("isFinalized");
+        console.log("Asset send tx is finalized");
       }
     })
     return true;
   } catch (error) {
-    console.log("Error:", error);
+    console.log("Asset send error:", error);
   }
   return false;
 }
