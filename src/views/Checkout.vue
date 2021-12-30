@@ -353,6 +353,7 @@ export default {
     async connectAccount() {
       if (!this.connectAccountClicked) {
         localStorage.setItem('connectAccountClicked', true)
+        this.connectAccountClicked = true
       }
 
       try {
