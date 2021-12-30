@@ -137,7 +137,7 @@
               <li>Price: 1 $STRGZN for 1 telescope NFT</li>
               <li>Your balance is: {{ balance }} $STRGZN</li>
               <li>
-                You buy: <input v-model.number="quantityRaw" value="quantity"/> $STRGZN
+                Purchase amount: <input v-model.number="quantityRaw" value="quantity"/> $STRGZN
               </li>
             </ul>
           </section>
