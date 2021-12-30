@@ -5,7 +5,7 @@
           <div class="banner-top-content">
             <h1>Connecting Universe to Metaverse!</h1>
             <div class="layout-narrow">
-              <p >Connect to our autonomous telescope in the dark night of Atacama desert in Chile, select an astronomical object and mint unique NFTs in a few clicks.</p>
+              <p>Connect to our autonomous telescope in the dark night of Atacama desert in Chile, select an astronomical object and mint unique NFTs in a few clicks.</p>
             </div>
             <Button v-on:click.native="start">Start</Button>
           </div>
