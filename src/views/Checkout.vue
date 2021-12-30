@@ -82,7 +82,7 @@
                     </p>
                   </form>
                 </section>
-                <!-- <Button v-on:click.native="openSingularUI">Check my NFTs</Button> -->
+                <Button v-on:click.native="openSingularUI">Check my NFTs</Button>
               </template>
             <template v-else>
                <section>
