@@ -134,7 +134,7 @@
 
           <section>
             <ul class="dashed">
-              <li>Price: 1 $STRGZN for 1 telescope NFT</li>
+              <li>Price: 25 $STRGZN for 1 telescope NFT</li>
               <li>Your balance is: {{ balance }} $STRGZN</li>
               <li>
                 Purchase amount: <input class="input" v-model.number="quantityRaw" value="quantity"/> $STRGZN
