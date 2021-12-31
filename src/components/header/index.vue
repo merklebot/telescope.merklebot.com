@@ -9,7 +9,7 @@
 
         <div class="nav-expand-content">
           <h4>Have a question?</h4>
-          <p>Please contact us by <a href="#" target="_blank" rel="noopener noreferrer">Discord</a> or <a href="#" target="_blank" rel="noopener noreferrer">Email</a></p>
+          <p>Please contact us by <a href="https://discord.gg/H7FndCWb" target="_blank" rel="noopener noreferrer">Discord</a>.</p>
         </div>
       </details>
 
