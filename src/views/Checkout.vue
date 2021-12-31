@@ -216,8 +216,8 @@ export default {
       },
 
       // How much STRGZN tokens user selected to purchase
-      quantity: 1, // filtered value
-      quantityRaw: 1, // raw user input
+      quantity: 50, // filtered value
+      quantityRaw: 50, // raw user input
 
       // USD price per one STRGZN
       pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(2),
