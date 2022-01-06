@@ -9,7 +9,7 @@ export default {
         type: String,
         default: 'big',
         validator: function (value) {
-          return ['medium', 'big'].indexOf(value) !== -1;
+          return ['small', 'medium', 'big'].indexOf(value) !== -1;
         }
     },
 
@@ -55,6 +55,12 @@ export default {
 
   button:hover {
     background-color: var(--color-orange);
+  }
+
+  button.mid {
+    font-size: var(--font-size);
+    padding: 0.8rem 1rem;
+    min-width: auto;
   }
 
   .text, .label {

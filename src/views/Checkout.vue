@@ -124,15 +124,47 @@
       </section>
 
 
-      <section class="section-blue-dark">
+      <section class="section-blue-dark p-b-0">
         <div class="layout-narrow">
           <h3>2. Get telescope tokens</h3>
 
           <p class="hyphens">
             Our telescope only accepts special $STRGZN tokens and you can buy them below using your credit card. 
           </p>
+        </div>
 
-          <section>
+        <section class="tokenSection layout-sm">
+          <div class="tokenSection-info">
+            <h4>Your balance <span>{{ balance }} $STRGZN</span></h4>
+            <p>1 $STRGZN = {{ pricePerToken }} USD</p>
+            <p>With 1 $STRGZN you can<br/> get 1 telescope NFT</p>
+          </div>
+
+          <div class="tokenSection-form">
+            <h4>Purchase tokens</h4>
+
+            <p v-if="accounts.length < 1 || !isReady" class="error-title text-small">Please connect the account first</p>
+
+            <form @onChange="onChange" @submit.prevent="handleSubmit" :class="{
+              disabled: accounts.length < 1 || !isReady,
+            }">
+              <div class="inputNumbers">
+                <div class="less" @click="setQuantity(-1)">-</div>
+                <input type="number" v-model.number="quantity" value="quantity" required />
+                <div class="more" @click="setQuantity(+1)">+</div>
+              </div>
+
+              <h5>Total: {{ totalPaymentUSD }} USD</h5>
+
+              <Button class="container-full" size="mid">
+                <span class="text">Pay with</span>
+                <img class="label" alt="Stripe" src="i/stripe.svg" />
+              </Button>
+            </form>
+          </div>
+        </section>
+
+          <!-- <section>
             <ul class="dashed">
               <li>Price: 1 $STRGZN for 1 telescope NFT</li>
               <li>Your balance is: {{ balance }} $STRGZN</li>
@@ -151,8 +183,7 @@
                 <img class="label" alt="with Stripe" src="i/stripe.svg" />
               </Button>
             </p>
-          </form>
-        </div>
+          </form> -->
       </section>
 
 
@@ -218,6 +249,8 @@ export default {
       // How much STRGZN tokens user selected to purchase
       quantity: 50, // filtered value
       quantityRaw: 50, // raw user input
+      minBuy: 1,
+      maxBuy: 100,
 
       // USD price per one STRGZN
       pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(2),
@@ -297,13 +330,14 @@ export default {
     }
   },
   watch: {
-    quantityRaw: function (newValue) {
-      if (newValue && newValue >= 1 && newValue <= 100) {
-        this.quantity = newValue.toFixed(0)
-      } else if (newValue > 100) {
-        this.quantity = 100
-      }
-    },
+    // quantityRaw: function (newValue) {
+    //   if (newValue && newValue >= 1 && newValue <= 100) {
+    //     this.quantity = newValue.toFixed(0)
+    //   } else if (newValue > 100) {
+    //     this.quantity = 100
+    //   }
+    // },
+
     status: async function(newValue, oldValue) {
       if (oldValue === false && newValue === true) {
         await loadScript(
@@ -350,6 +384,12 @@ export default {
   },
 
   methods: {
+    setQuantity(change) {
+        if ( (this.quantity + change) >=  this.minBuy &&  (this.quantity + change) <=  this.maxBuy ){
+          this.quantity += change
+        }
+    },
+
     async connectAccount() {
       if (!this.connectAccountClicked) {
         localStorage.setItem('connectAccountClicked', true)
@@ -498,16 +538,50 @@ export default {
     telescopeOn() {
       /* && this.serviceStatus.status on */
       if( this.dayStatus() === 'night' ) { return true }
-    }
+    },
+
   },
 };
 </script>
 
 <style scoped>
-  .input {
-    background-color: white;
-    color: black;
+
+  /* Token purchase section */
+  .tokenSection {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr;
+    gap: calc(var(--space) * 3);
+    background: url("/i/telescope-shadow.png") no-repeat 0 100%;
+    background-size: 260px;
+    min-height: 480px;
   }
+
+  .tokenSection-info, .tokenSection-info h4 {
+    text-align: right;
+  }
+
+  .tokenSection-info {
+    font-size: 80%;
+  }
+
+  .tokenSection-form {
+    text-align: center;
+    background-color: var(--color-blue-darkest);
+    padding: calc(var(--space) * 2) calc(var(--space) * 3);
+    border-radius: 20px;
+    max-width: 350px;
+  }
+
+  .tokenSection-form h4 {
+    text-transform: uppercase;
+  }
+
+  @media screen and (min-width: 500px) {
+    .tokenSection h4 span {
+      display: block;
+    }
+  }
+  /* end of Token purchase section */
 
   .banner {
     min-height: 100vh;

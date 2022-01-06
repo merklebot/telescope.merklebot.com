@@ -58,82 +58,10 @@ sub { vertical-align: sub; }
   --color-blue-mid: #0F0F50;
   --color-blue-dark: #0B0B34;
   --color-red: #B71313;
-
-  /* --color-yellow: #ffb600;
-  --color-blue: #03a5ed;
-  --color-green: yellowgreen;
-  --color-red: #e84004;
-
-  --color-dark: #333;
-  --color-mid: #a8a8a8;
-  --color-light: #fff;
-  --color-gray: #f2f2f2;
-  --color-gray-light: #f0f0f0; */
   
 }
 
 /* end - G - variables */
-
-
-/* OverWrites (over robonomics.min.css) */
-
-/* select, input, button, label, textarea, .button {
-  font-size: calc(var(--font-size)*0.85) !important;
-  font-weight: bold !important;
-  font-family: var(--font-mono);
-}
-
-input, select, button, textarea, .button {
-  padding: calc(var(--space)*0.5) var(--space) !important;
-  border-radius: 0 !important;
-}
-
-input:not([type=submit]):not([type=button]), select, label {
-  color: var(--color-dark) !important
-}
-
-input[disabled], select[disabled], button[disabled], textarea[disabled],
-input.disabled, select.disabled, button.disabled, textarea.disabled {
-  opacity: .6;
-}
-
-select {
-  padding-right: calc(var(--space)*2) !important
-}
-
-input:not([type=submit]):not([type=button]):focus,
-select:focus,
-textarea:focus {
-  border-color: var(--color-dark) !important
-}
-
-input[type=checkbox] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  cursor: pointer;
-  width: calc(var(--space)*2);
-  height: calc(var(--space)*2);
-  position: relative;
-  margin-right: calc(var(--space)*0.5);
-  padding: 0 !important;
-}
-
-input[type='checkbox']:checked {
-    background-color: var(--color-green) !important;
-    border-color: var(--color-green) !important;
-  }
-
-input[type='checkbox']:checked:before {
-    content:"✓";
-    position: absolute;
-    top: 0;
-    left: 0.3rem;
-    color: var(--color-light) !important;
-    font-size: calc(var(--space)*1.5);
-} */
-
-/* end -  OverWrites (over robonomics.min.css) */
 
 
 body {
@@ -145,6 +73,11 @@ body {
 
   background-color: var(--color-blue-darkest);
   color: var(--color-cyan)
+}
+
+body *::selection {
+    color: var(--color-blue);
+    background-color: var(--color-cyan); 
 }
 
 h1, h2, h3, h4, h5 {
@@ -162,8 +95,7 @@ h1:not(:first-child), h2:not(:first-child), h3:not(:first-child), h4:not(:first-
 h1 { font-size: calc(var(--font-size) * 1.7); }
 h2 { font-size: calc(var(--font-size) * 1.2); }
 h3 { font-size: calc(var(--font-size) * 1.2); }
-h4 { font-size: calc(var(--font-size) * 1); }
-h5 { font-size: calc(var(--font-size) * 0.8); }
+h4, h5 { font-size: calc(var(--font-size) * 1); }
 
 h1, h2 {
   text-transform: uppercase;
@@ -184,26 +116,93 @@ p {
   margin-bottom: var(--space);
 }
 
-select {
+.text-small { font-size: 80%; } 
+
+/* form elements */
+
+select,
+input:not([type=submit]):not([type=button]):not([type=number]) {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  cursor: pointer;
+}
 
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+input[type=number] {
+   -moz-appearance:textfield;
+}
+
+select, input:not([type=submit]):not([type=button]) {
   font-family: var(--font-text);
   font-size: var(--font-size);
-  background-color: #fff;
   /* background-color: var(--color-blue); */
   /* color: var(--color-cyan); */
+  background-color: #fff;
   color: var(--color-lilac);
   border: 2px solid var(--color-lilac);
   border-radius: 2rem;
   padding: 0.5rem 2rem;
+
+  max-width: 100%;
+}
+
+select {
+  cursor: pointer;
   background-image: url(/i/select.svg);
   background-repeat: no-repeat;
   background-position: 99% 50%;
   padding-right: 60px;
 }
+
+.inputNumbers {
+  --inputNumbers-tog-size: 30px;
+  position: relative;
+}
+
+.inputNumbers .less, .inputNumbers .more {
+  position: absolute;
+  top: calc(50% - var(--inputNumbers-tog-size)/2);
+
+  cursor: pointer;
+  width: var(--inputNumbers-tog-size);
+  height: var(--inputNumbers-tog-size);
+  border-radius: calc(var(--inputNumbers-tog-size)/2);
+  background-color: var(--color-lilac);
+  color: var(--color-cyan);
+  text-align: center;
+  line-height: 1.3;
+
+  transition: 0.4s all ease;
+}
+
+.inputNumbers .less:hover, .inputNumbers .more:hover {
+  background-color: var(--color-orange);
+}
+
+.inputNumbers .less::selection, .inputNumbers .more::selection{
+  background-color: transparent;
+  color: var(--color-cyan);
+}
+
+.inputNumbers .less {
+  left: 10px
+}
+
+.inputNumbers .more {
+  right: 10px;
+}
+
+.inputNumbers input[type="number"] {
+  padding-left: calc(var(--inputNumbers-tog-size) + 10px);
+  padding-right: calc(var(--inputNumbers-tog-size) + 10px);
+  text-align: center;
+}
+
+
+/* end of form elements */
 
 
 main[role="main"] {
@@ -230,7 +229,7 @@ ul.dashed li {
 }
 
 
-.layout, .layout-mid, .layout-narrow {
+.layout, .layout-mid, .layout-narrow, .layout-sm {
   box-sizing: border-box;
   padding-left: var(--padding);
   padding-right: var(--padding);
@@ -238,6 +237,7 @@ ul.dashed li {
   margin-right: auto;
 }
 .layout-mid { max-width: 1400px; }
+.layout-sm { max-width: 1100px; }
 .layout-narrow { max-width: 40rem;  text-align: center; }
 
 .container-full { width: 100%; }
@@ -265,6 +265,8 @@ ul.dashed li {
 @media screen and (max-width:570px){
   .grid-4, .grid-2 { grid-template-columns: 1fr; }
 }
+
+.p-b-0 { padding-bottom: 0; }
 
 .videoEmbed {
   position: relative;
