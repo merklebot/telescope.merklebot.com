@@ -48,5 +48,5 @@ export async function createNFT(name, owner) {
       "block_hash": "0x00"
     }
   })
-  console.log("createNFT:", resp)
+  console.log("Сreate NFT response:", resp)
 }

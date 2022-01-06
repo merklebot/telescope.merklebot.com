@@ -82,7 +82,7 @@
                     </p>
                   </form>
                 </section>
-                <!-- <Button v-on:click.native="openSingularUI">Check my NFTs</Button> -->
+                <Button v-on:click.native="openSingularUI">Check my NFTs</Button>
               </template>
             <template v-else>
                <section>
@@ -137,7 +137,7 @@
               <li>Price: 1 $STRGZN for 1 telescope NFT</li>
               <li>Your balance is: {{ balance }} $STRGZN</li>
               <li>
-                You buy: <input v-model.number="quantityRaw" value="quantity"/> $STRGZN
+                Purchase amount: <input class="input" v-model.number="quantityRaw" value="quantity"/> $STRGZN
               </li>
             </ul>
           </section>
@@ -216,8 +216,8 @@ export default {
       },
 
       // How much STRGZN tokens user selected to purchase
-      quantity: 1, // filtered value
-      quantityRaw: 1, // raw user input
+      quantity: 50, // filtered value
+      quantityRaw: 50, // raw user input
 
       // USD price per one STRGZN
       pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(2),
@@ -239,7 +239,7 @@ export default {
       })
       setInterval(async () => {
         this.serviceStatus = await serviceStatus()
-        console.log(this.serviceStatus)
+        console.log("Service status:", { "status": this.serviceStatus.status, "message": this.serviceStatus.message })
       }, 10000)
 
       if(this.connectAccountClicked) {
@@ -425,7 +425,7 @@ export default {
           console.error(r.error.message);
         }
       } catch (error) {
-        console.log(error);
+        console.log("Checkout error:", error);
       }
       this.proccess = false;
     },
@@ -504,6 +504,11 @@ export default {
 </script>
 
 <style scoped>
+  .input {
+    background-color: white;
+    color: black;
+  }
+
   .banner {
     min-height: 100vh;
     display: grid;
