@@ -10,16 +10,16 @@
             <Button v-on:click.native="start">Start</Button>
           </div>
 
-          <div class="banner-top-art">
-            <div class="banner-grass"></div>
-            <img aria-hidden="true" src="i/banner-stone.png" class="banner-stone" />
-            <!-- <img aria-hidden="true" src="i/banner-clouds.png" class="banner-clouds" /> -->
-            <img aria-hidden="true" src="i/banner-sights.png" class="banner-sights" />
-            <div class="banner-telescope">
+          <div class="banner-telescope" aria-hidden="true">
               <img aria-hidden="true" src="i/banner-telescope-pod-1.png" class="banner-telescope-pod-1" />
               <img aria-hidden="true" src="i/banner-telescope-pod-2.png" class="banner-telescope-pod-2" />
               <img aria-hidden="true" src="i/banner-telescope-head.png" class="banner-telescope-head" />
             </div>
+
+          <div class="banner-top-art" aria-hidden="true">
+            <div class="banner-grass"></div>
+            <img aria-hidden="true" src="i/banner-stone.png" class="banner-stone" />
+            <img aria-hidden="true" src="i/banner-sights.png" class="banner-sights" />
           </div>
         </div>
         <div class="banner-bottom">
@@ -587,9 +587,11 @@ export default {
     width: 150px;
   }
 
-  .banner-telescope {
+  .banner-telescope, .banner-telescope > * {
+    position: absolute;
     bottom: -100px;
     left: 60px;
+    z-index: 1;
   }
 
   .banner-telescope-pod-1 {
@@ -620,11 +622,12 @@ export default {
     right: 80px
   }
 
-  /* .banner-clouds {
-    width: 1800px;
-    left: calc(50% - 900px);
-    bottom: 120px
-  } */
+  
+  @media screen and (max-width: 1100px) {
+    .banner-telescope {
+      position: static;
+    }
+  }
 
   
   /* Section with telescope status (pause) */
