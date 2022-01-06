@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div class="banner">
+      <div class="banner" :class="telescopeOn()?'on':'off'">
         <div class="banner-top" :class="dayStatusName">
           <div class="banner-top-content">
             <h1>Connecting Universe to Metaverse!</h1>
@@ -11,22 +11,22 @@
             <template v-if="!isReady && error === null && connectAccountClicked">
               <span class="loader"></span>
             </template>
-          
-            <Button v-if="!isReady && !connectAccountClicked" @click.native="jump('#start')">Start</Button>
+
+            <Button v-if="!connectAccountClicked || (!isReady && error !== null)" @click.native="jump('#start')">Start</Button>
             
             <template v-if="isReady && accounts.length > 0">
               <a v-if="this.account" :href="'https://singular.rmrk.app/space/' + this.account + '?tab=owned&owner=yes'" target="_blank" rel="noopener noreferrer">Check your NFTs</a>
               <a v-else href="#step-1" @click.prevent="jump('#step-1')">Connect account to check NFTs</a>
               <section class="small m-b-0">or</section>
               <Button @click.native="jump('#step-1')" size="mid" class="m-t-0">Buy more</Button>
-            </template> 
-          </div>
+            </template>
 
-          <div class="banner-telescope" aria-hidden="true">
+            <div class="banner-telescope" aria-hidden="true">
               <img aria-hidden="true" src="i/banner-telescope-pod-1.png" class="banner-telescope-pod-1" />
               <img aria-hidden="true" src="i/banner-telescope-pod-2.png" class="banner-telescope-pod-2" />
               <img aria-hidden="true" src="i/banner-telescope-head.png" class="banner-telescope-head" />
             </div>
+          </div>
 
           <div class="banner-top-art" aria-hidden="true">
             <div class="banner-grass"></div>
@@ -148,7 +148,7 @@
           <div class="tokenSection-info">
             <h4>Your balance <span>{{ balance }} $STRGZN</span></h4>
             <p>1 $STRGZN = {{ pricePerToken }} USD</p>
-            <p>With 1 $STRGZN you can<br/> get 1 telescope NFT</p>
+            <p>With 1 $STRGZN you can get 1 telescope NFT</p>
           </div>
 
           <div class="tokenSection-form">
@@ -500,15 +500,15 @@ export default {
     justify-content: center;
     align-content: center;
 
-    padding: var(--padding);
+    padding: calc(var(--padding) * 4) var(--padding) var(--padding);
 
     position: relative;
   }
 
   .banner-top-content {
     text-align: center;
-    position: relative;
-    z-index: 1;
+    /* position: relative;
+    z-index: 1; */
   }
 
   .banner-top-content a {
@@ -544,6 +544,7 @@ export default {
     right: 0;
     bottom: 0;
     z-index: 0;
+    pointer-events: none;
   }
 
   .banner-top-art * {
@@ -562,6 +563,12 @@ export default {
     bottom: 0;
     left: 0;
     width: 150px;
+  }
+
+  .banner-telescope {
+    pointer-events: none;
+    height: 454px;
+    width: 280px;
   }
 
   .banner-telescope, .banner-telescope > * {
@@ -599,11 +606,41 @@ export default {
     right: 80px
   }
 
+  .banner.on {
+      grid-template-rows: 1fr;
+  }
+
+  .banner.on .banner-telescope {
+    bottom: 0;
+  }
+
+  .banner.on .banner-grass { height: 78px; }
+  .banner.on .banner-sights { bottom: 70px; }
   
-  @media screen and (max-width: 1100px) {
+  @media screen and (max-width: 1060px) {
     .banner-telescope {
-      position: static;
+      position: relative;
+      bottom: 0;
+      left: 0;
+      margin-top: 60px;
+      margin-left: auto;
+      margin-right: auto;
     }
+
+    .banner-top {
+      padding: calc(var(--padding) * 5) calc(var(--padding) * 0.2) var(--padding);
+    }
+
+    .banner-top-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .banner-grass {
+      height: 131px;
+    }
+
+    .banner-stone, .banner-sights { display: none; }
   }
 
   
@@ -740,9 +777,13 @@ export default {
     display: grid;
     grid-template-columns: 1.5fr 2fr;
     gap: calc(var(--space) * 3);
-    background: url("/i/telescope-shadow.png") no-repeat 0 100%;
+    background: url("/i/telescope-shadow.png") no-repeat 100% 100%;
     background-size: 260px;
     min-height: 480px;
+  }
+
+  .tokenSection h4 span {
+    display: block;
   }
 
   .tokenSection-info, .tokenSection-info h4 {
@@ -756,7 +797,7 @@ export default {
   .tokenSection-form {
     text-align: center;
     background-color: var(--color-blue-darkest);
-    padding: calc(var(--space) * 2) calc(var(--space) * 3);
+    padding: calc(var(--space) * 2) var(--space);
     border-radius: 20px;
     max-width: 350px;
   }
@@ -764,11 +805,38 @@ export default {
   .tokenSection-form h4 {
     text-transform: uppercase;
   }
-
-  @media screen and (min-width: 500px) {
-    .tokenSection h4 span {
-      display: block;
+  
+  @media screen and (max-width: 1200px) {
+    .tokenSection {
+      grid-template-columns: 1fr;
     }
+
+    .tokenSection h4 span {
+      display: inline;
+    }
+
+    .tokenSection-info, .tokenSection-form {
+      /* max-width: 500px; */
+      margin: 0 auto;
+    }
+
+    .tokenSection-info, .tokenSection-info h4 {
+      text-align: center;
+    }
+  }
+
+  @media screen and (max-width: 900px) {
+    .tokenSection{
+      background: none
+    }
+
+  }
+
+  @media screen and (max-width: 570px) {
+    .tokenSection-info, .tokenSection-form {
+      max-width: auto
+    }
+
   }
   /* end of Token purchase section */
 

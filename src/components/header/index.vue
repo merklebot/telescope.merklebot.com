@@ -87,7 +87,7 @@ export default {
     z-index: 999;
 
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr;
   }
 
   header > *:nth-child(2) {

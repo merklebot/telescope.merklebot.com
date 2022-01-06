@@ -199,6 +199,7 @@ select {
   padding-left: calc(var(--inputNumbers-tog-size) + 10px);
   padding-right: calc(var(--inputNumbers-tog-size) + 10px);
   text-align: center;
+  width: 100%;
 }
 
 
@@ -231,8 +232,8 @@ ul.dashed li {
 
 .layout, .layout-mid, .layout-narrow, .layout-sm {
   box-sizing: border-box;
-  padding-left: var(--padding);
-  padding-right: var(--padding);
+  /* padding-left: var(--padding);
+  padding-right: var(--padding); */
   margin-left: auto;
   margin-right: auto;
 }
