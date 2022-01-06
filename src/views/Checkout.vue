@@ -7,7 +7,7 @@
             <div class="layout-narrow">
               <p>Connect to our autonomous telescope in the dark night of Atacama desert in Chile, select an astronomical object and mint unique NFTs in a few clicks.</p>
             </div>
-            <Button v-on:click.native="start">Start</Button>
+            <Button @click.native="jump('#start')">Start</Button>
           </div>
 
           <div class="banner-telescope" aria-hidden="true">
@@ -38,7 +38,7 @@
         </div>
       </section>
 
-      <section class="section-blue-mid">
+      <section id="step-1" class="section-blue-mid">
         <div class="layout-narrow">
           <h3>1. Create or choose your account</h3>
 
@@ -143,7 +143,7 @@
           <div class="tokenSection-form">
             <h4>Purchase tokens</h4>
 
-            <p v-if="accounts.length < 1 || !isReady" class="error-title text-small">Please connect the account first</p>
+            <p v-if="accounts.length < 1 || !isReady" class="error-title text-small">Please <a href="#step-1" @click.prevent="jump('#step-1')">connect</a> the account first</p>
 
             <form @onChange="onChange" @submit.prevent="handleSubmit" :class="{
               disabled: accounts.length < 1 || !isReady,
@@ -398,10 +398,10 @@ export default {
       this.proccess = false;
     },
 
-    /* Start button */
-    start() {
+    /* Jump by anchor */
+    jump(anchor) {
       window.scrollTo({
-          top: document.querySelector("#start").offsetTop,
+          top: document.querySelector(anchor).offsetTop,
           behavior: "smooth"
       })
     },
