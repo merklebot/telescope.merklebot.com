@@ -266,7 +266,9 @@ ul.dashed li {
   .grid-4, .grid-2 { grid-template-columns: 1fr; }
 }
 
-.p-b-0 { padding-bottom: 0; }
+.p-b-0 { padding-bottom: 0 !important; }
+.m-b-0 { margin-bottom: 0 !important; }
+.m-t-0 { margin-top: 0 !important; }
 
 .videoEmbed {
   position: relative;
@@ -291,6 +293,11 @@ ul.dashed li {
 section
 {
   padding: calc(var(--padding) * 2) var(--padding);
+}
+
+section.small
+{
+  padding: calc( var(--padding) * 0.5 ) 0;
 }
 
 section section {

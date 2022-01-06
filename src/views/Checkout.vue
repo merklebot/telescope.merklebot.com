@@ -7,7 +7,19 @@
             <div class="layout-narrow">
               <p>Connect to our autonomous telescope in the dark night of Atacama desert in Chile, select an astronomical object and mint unique NFTs in a few clicks.</p>
             </div>
-            <Button @click.native="jump('#start')">Start</Button>
+            
+            <template v-if="!isReady && error === null && connectAccountClicked">
+              <span class="loader"></span>
+            </template>
+          
+            <Button v-if="!isReady && !connectAccountClicked" @click.native="jump('#start')">Start</Button>
+            
+            <template v-if="isReady && accounts.length > 0">
+              <a v-if="this.account" :href="'https://singular.rmrk.app/space/' + this.account + '?tab=owned&owner=yes'" target="_blank" rel="noopener noreferrer">Check your NFTs</a>
+              <a v-else href="#step-1" @click.prevent="jump('#step-1')">Connect account to check NFTs</a>
+              <section class="small m-b-0">or</section>
+              <Button @click.native="jump('#step-1')" size="mid" class="m-t-0">Buy more</Button>
+            </template> 
           </div>
 
           <div class="banner-telescope" aria-hidden="true">
@@ -82,7 +94,6 @@
                     </p>
                   </form>
                 </section>
-                <Button v-on:click.native="openSingularUI">Check my NFTs</Button>
               </template>
             <template v-else>
                <section>
@@ -406,14 +417,14 @@ export default {
       })
     },
 
-    openSingularUI() {
-      if (!this.account) {
-        alert("Please select your account first.")
-        return
-      }
-      const url = `https://singular.rmrk.app/space/${this.account}?tab=owned&owner=yes`
-      window.open(url)
-    },
+    // openSingularUI() {
+    //   if (!this.account) {
+    //     alert("Please select your account first.")
+    //     return
+    //   }
+    //   const url = `https://singular.rmrk.app/space/${this.account}?tab=owned&owner=yes`
+    //   window.open(url)
+    // },
 
     /* Gets telescope time in Atacama(Chile) */
     getCurrentHour(){
@@ -473,43 +484,6 @@ export default {
 </script>
 
 <style scoped>
-
-  /* Token purchase section */
-  .tokenSection {
-    display: grid;
-    grid-template-columns: 1.5fr 2fr;
-    gap: calc(var(--space) * 3);
-    background: url("/i/telescope-shadow.png") no-repeat 0 100%;
-    background-size: 260px;
-    min-height: 480px;
-  }
-
-  .tokenSection-info, .tokenSection-info h4 {
-    text-align: right;
-  }
-
-  .tokenSection-info {
-    font-size: 80%;
-  }
-
-  .tokenSection-form {
-    text-align: center;
-    background-color: var(--color-blue-darkest);
-    padding: calc(var(--space) * 2) calc(var(--space) * 3);
-    border-radius: 20px;
-    max-width: 350px;
-  }
-
-  .tokenSection-form h4 {
-    text-transform: uppercase;
-  }
-
-  @media screen and (min-width: 500px) {
-    .tokenSection h4 span {
-      display: block;
-    }
-  }
-  /* end of Token purchase section */
 
   .banner {
     min-height: 100vh;
@@ -575,10 +549,6 @@ export default {
   .banner-top-art * {
     position: absolute;
   }
-
-  /* .banner-top-art *:not(.banner-grass) {
-    z-index: 1;
-  } */
 
   .banner-grass{
     height: 32px;
@@ -684,7 +654,7 @@ export default {
   /* Day time change */
 
   .banner-top {
-    --daychange-duration: 10s;
+    --daychange-duration: 6s;
 
     background-position: 50% 0;
     background-size: 100% 600%;
@@ -764,5 +734,42 @@ export default {
   }
 
   /* end of Day time change */
+
+    /* Token purchase section */
+  .tokenSection {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr;
+    gap: calc(var(--space) * 3);
+    background: url("/i/telescope-shadow.png") no-repeat 0 100%;
+    background-size: 260px;
+    min-height: 480px;
+  }
+
+  .tokenSection-info, .tokenSection-info h4 {
+    text-align: right;
+  }
+
+  .tokenSection-info {
+    font-size: 80%;
+  }
+
+  .tokenSection-form {
+    text-align: center;
+    background-color: var(--color-blue-darkest);
+    padding: calc(var(--space) * 2) calc(var(--space) * 3);
+    border-radius: 20px;
+    max-width: 350px;
+  }
+
+  .tokenSection-form h4 {
+    text-transform: uppercase;
+  }
+
+  @media screen and (min-width: 500px) {
+    .tokenSection h4 span {
+      display: block;
+    }
+  }
+  /* end of Token purchase section */
 
 </style>
