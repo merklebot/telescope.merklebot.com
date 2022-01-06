@@ -163,47 +163,12 @@
             </form>
           </div>
         </section>
-
-          <!-- <section>
-            <ul class="dashed">
-              <li>Price: 1 $STRGZN for 1 telescope NFT</li>
-              <li>Your balance is: {{ balance }} $STRGZN</li>
-              <li>
-                Purchase amount: <input class="input" v-model.number="quantityRaw" value="quantity"/> $STRGZN
-              </li>
-            </ul>
-          </section>
-
-          <form @onChange="onChange" @submit.prevent="handleSubmit" :class="{
-          disabled: accounts.length < 1 || !isReady,
-        }">
-            <p>
-              <Button class="container-full">
-                <span class="text">Pay {{ totalPaymentUSD }} USD</span>
-                <img class="label" alt="with Stripe" src="i/stripe.svg" />
-              </Button>
-            </p>
-          </form> -->
       </section>
 
 
 
-          <div>
-
-
-     
+    <div>
       <astronomicalObjectCard :accounts="this.accounts"  :isReady="this.isReady" :balance="this.balance"/>
-      <!-- <Card :class="{'disabled': accounts.length < 1 || balance < 1 || !isReady}">
-        <h2>3. Schedule your time</h2>
-
-        <template v-if="isReady">
-         <div
-            v-show="status"
-            class="meetings-iframe-container"
-            data-src="https://meetings.hubspot.com/strelka?embed=true"
-          ></div>
-        </template>
-      </Card> -->
     </div>
 
 
@@ -248,7 +213,6 @@ export default {
 
       // How much STRGZN tokens user selected to purchase
       quantity: 50, // filtered value
-      quantityRaw: 50, // raw user input
       minBuy: 1,
       maxBuy: 100,
 
@@ -279,34 +243,6 @@ export default {
         await this.connectAccount()
       }
 
-      // const provider = getProvider();
-      // provider.on("error", () => {
-      //   this.error = "Disconnected provider";
-      //   this.isReady = false;
-      // });
-      // provider.on("connect", () => {
-      //   this.isReady = true;
-      // });
-      // this.api = await getInstance();
-      // this.accounts = await getAccounts(this.api);
-      // if (this.accounts) {
-      //   this.accountDefault = this.accounts[0].address;
-      // }
-
-      // if (this.accounts.length === 0) {
-      //   this.error = "Not found account";
-      // }
-      // this.isReady = true;
-      // this.status = true;
-
-      // this.unsubscribe = await this.api.query.assets.account(
-      //   config.ID_ASSET,
-      //   this.account,
-      //   ({ balance: currentFree }) => {
-      //     this.balance = currentFree.toNumber();
-      //   }
-      // );
-
     } catch (error) {
       this.error = error.message;
     }
@@ -330,14 +266,6 @@ export default {
     }
   },
   watch: {
-    // quantityRaw: function (newValue) {
-    //   if (newValue && newValue >= 1 && newValue <= 100) {
-    //     this.quantity = newValue.toFixed(0)
-    //   } else if (newValue > 100) {
-    //     this.quantity = 100
-    //   }
-    // },
-
     status: async function(newValue, oldValue) {
       if (oldValue === false && newValue === true) {
         await loadScript(
