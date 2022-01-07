@@ -61,9 +61,6 @@ export default {
 };
 </script>
 
-
-
-
 <style scoped>
 
   /* Global CSS variables taken from App.vue */
@@ -125,6 +122,21 @@ export default {
     max-width: 100%;
     border: 2px solid var(--header-textcolor);
     border-radius: var(--space);
+  }
+
+  /* for narrow screens tips have different style */
+  @media screen and (max-width: 480px) {
+    .nav-expand {
+      position: static;
+    }
+
+    .nav-expand .nav-expand-content {
+      min-width: 300px;
+
+      left: var(--space);
+      right: var(--space);
+      top: calc(var(--space) * 4);
+    }
   }
 
   /* end of Nav details expand */

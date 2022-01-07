@@ -1,9 +1,9 @@
 <template>
-    <div>
-        <Card>
-        <div class="layout-narrow">
-          <h3>3. Enjoy the stars</h3>
-          <p>Choose an astronomical object below and hit the submit button. The telescope will start moving and will mint your NFT in a few minutes.</p>
+  <section class="stars">
+    <div class="layout-narrow">
+      <h3>3. Enjoy the stars</h3>
+      <p class="hyphens">Choose an astronomical object below and hit the submit button. The telescope will start moving and will mint your NFT in a few minutes.</p>
+
           <form>
             <p>
               <select class="container-full" @change="astronomicalObjChange">
@@ -53,15 +53,18 @@
             </div>
           </div>
 
-          <br />
-          <Button @click.native="onSubmit" :class="{
-            disabled: accounts.length < 1 || !isReady || balance < 1
-          }">Submit</Button>
+          <Button @click.native="onSubmit" :class="{ disabled: accounts.length < 1 || !isReady || balance < nftPrice }">Submit</Button>
           
-        </div>
-      </Card>
     </div>
+  </section>
+    
 </template>
+
+<style scoped>
+  .stars {
+    background-image: linear-gradient(var(--color-blue-darkest), #001E49, #00323C);
+  }
+</style>
 
 <script>
 import { telescopeIsFree, astronomicalObject, createNFT, serviceStatus } from "../../services/api";
@@ -73,6 +76,7 @@ export default {
     return {
       astronomicalObj: [],
       astronomicalObjSelected: null,
+      nftPrice: config.NFT_PRICE
     };
   },
     props: {

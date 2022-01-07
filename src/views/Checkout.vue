@@ -176,14 +176,8 @@
         </section>
       </section>
 
-
-
-    <div>
       <astronomicalObjectCard :accounts="this.accounts"  :isReady="this.isReady" :balance="this.balance"/>
-    </div>
-
-
-    
+  
   </div>  
 
 </template>
@@ -224,8 +218,6 @@ export default {
 
       // How much STRGZN tokens user selected to purchase
       quantity: 50, // filtered value
-      minBuy: 1,
-      maxBuy: 100,
 
       // USD price per one STRGZN
       pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(2),
@@ -324,7 +316,7 @@ export default {
 
   methods: {
     setQuantity(change) {
-        if ( (this.quantity + change) >=  this.minBuy &&  (this.quantity + change) <=  this.maxBuy ){
+        if ( (this.quantity + change) >=  config.MIN_TOKENS_BUY &&  (this.quantity + change) <=  config.MAX_TOKENS_BUY ){
           this.quantity += change
         }
     },
@@ -484,6 +476,8 @@ export default {
 </script>
 
 <style scoped>
+
+  /* Global CSS variables taken from App.vue */
 
   .banner {
     min-height: 100vh;
