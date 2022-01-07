@@ -24,114 +24,13 @@
                 <li>{{astr.kind}}</li>
                 <li>{{astr.catalog_name}}</li>
               </ul>
+
+              <div v-if="astr !== astronomicalObjSelected">
+                <a href="javascript:;" @click.prevent.stop="setObjFromDetails(astr)">Select this object</a>
+              </div>
             </div>
           </details>
         </div>
-
-        <!-- <div class="obj">
-          <details tabindex="0">
-            <summary>
-              <div></div>
-            </summary>
-            <div class="obj-expand">
-              <ul>
-                <li><b>-</b></li>
-                <li>-</li>
-                <li>-</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-
-        <div class="obj">
-          <details tabindex="0">
-            <summary>
-              <div></div>
-            </summary>
-            <div class="obj-expand">
-              <ul>
-                <li><b>-</b></li>
-                <li>-</li>
-                <li>-</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-
-        <div class="obj">
-          <details tabindex="0">
-            <summary>
-              <div></div>
-            </summary>
-            <div class="obj-expand">
-              <ul>
-                <li><b>-</b></li>
-                <li>-</li>
-                <li>-</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-
-        <div class="obj">
-          <details tabindex="0">
-            <summary>
-              <div></div>
-            </summary>
-            <div class="obj-expand">
-              <ul>
-                <li><b>-</b></li>
-                <li>-</li>
-                <li>-</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-
-        <div class="obj">
-          <details tabindex="0">
-            <summary>
-              <div></div>
-            </summary>
-            <div class="obj-expand">
-              <ul>
-                <li><b>-</b></li>
-                <li>-</li>
-                <li>-</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-
-        <div class="obj">
-          <details tabindex="0">
-            <summary>
-              <div></div>
-            </summary>
-            <div class="obj-expand">
-              <ul>
-                <li><b>-</b></li>
-                <li>-</li>
-                <li>-</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-
-        <div class="obj">
-          <details tabindex="0">
-            <summary>
-              <div></div>
-            </summary>
-            <div class="obj-expand">
-              <ul>
-                <li><b>-</b></li>
-                <li>-</li>
-                <li>-</li>
-              </ul>
-            </div>
-          </details>
-        </div> -->
 
       </div>
 
@@ -139,58 +38,22 @@
 
       
     <section class="layout-narrow">
-
-          <!-- <div v-if="astronomicalObjSelected === null">
-            <div v-if="this.astronomicalObj[0]">
-              <div
-                v-if="
-                  this.astronomicalObj[0].friendly_name ===
-                    this.astronomicalObj[0].catalog_name
-                "
-              >
-                <div>{{ this.astronomicalObj[0].friendly_name }}</div>
-                <div>{{ this.astronomicalObj[0].kind }}</div>
-              </div>
-              <div v-else>
-                <div>{{ this.astronomicalObj[0].friendly_name }}</div>
-                <div>{{ this.astronomicalObj[0].catalog_name }}</div>
-                <div>{{ this.astronomicalObj[0].kind }}</div>
-              </div>
-            </div>
-          </div>
-          <div v-else>
-            <div v-for="(astr, key) in astronomicalObj" :key="key">
-              <div v-if="astronomicalObjSelected === astr">
-                <div v-if="astr.catalog_name === astr.friendly_name">
+        <form>
+          <p>
+            <select class="container-full" v-model="astronomicalObjSelected">
+                <option
+                    v-for="(astr, key) in astronomicalObj"
+                    :key="key"
+                    :value="astr"
+                  >
                   {{ astr.friendly_name }}
-                </div>
-                <div v-else>
-                  {{ astr.friendly_name }}
-                  <br />
-                  {{ astr.catalog_name }}
-                </div>
-                {{ astr.kind }}
-              </div>
-            </div>
-          </div> -->
-
-          <form>
-            <p>
-              <select class="container-full" v-model="astronomicalObjSelected">
-              <!-- <select class="container-full" @change="astronomicalObjChange"> -->
-                  <option
-                      v-for="(astr, key) in astronomicalObj"
-                      :key="key"
-                      :value="astr"
-                    >
-                    {{ astr.friendly_name }}
-                  </option>
-                  <option v-if="astronomicalObj.length === 0">Loading...</option>
-              </select>
-            </p>
-        
-            <Button @click.native="onSubmit" :class="{ disabled: accounts.length < 1 || !isReady || balance < nftPrice }" class="container-full">Submit</Button>
-          </form>
+                </option>
+                <option v-if="astronomicalObj.length === 0">Loading...</option>
+            </select>
+          </p>
+      
+          <Button @click.native="onSubmit" :class="{ disabled: accounts.length < 1 || !isReady || balance < nftPrice }" class="container-full">Submit</Button>
+        </form>
     </section>
   
   </section>
@@ -283,6 +146,7 @@
 
   .obj-expand {
     background-color: var(--color-white);
+    border: 1px solid var(--color-blue-darkest);
     padding: var(--space);
     border-radius: calc(var(--space) * 0.5);
     color: var(--color-blue-darkest);
@@ -315,11 +179,12 @@
     border-bottom: 1px dashed var(--color-blue-darkest);
     padding-bottom: 0;
   }
-/* 
-  @media screen and (max-width: 700px) {
-    .obj summary { width: 2rem; height: 2rem; }
-    .obj-expand:before { left: 1rem; }
-  } */
+
+  .obj-select a {
+    font-size: 80%;
+    color: var(--color-lilac);
+    font-weight: bold;
+  }
 
   @media screen and (min-width: 500px) {
     .obj summary { width: 4rem; height: 4rem; }
@@ -390,6 +255,11 @@ export default {
 
     makeClassName(str) {
       return str.split(' ').join('')
+    },
+
+    setObjFromDetails(obj) {
+      this.astronomicalObjSelected = obj
+      event.target.closest('details').open = false
     }
   }
 }
