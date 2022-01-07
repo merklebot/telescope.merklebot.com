@@ -18,7 +18,7 @@
               <a v-if="this.account" :href="'https://singular.rmrk.app/space/' + this.account + '?tab=owned&owner=yes'" target="_blank" rel="noopener noreferrer">Check your NFTs</a>
               <a v-else href="#step-1" @click.prevent="jump('#step-1')">Connect account to check NFTs</a>
               <section class="small m-b-0">or</section>
-              <Button @click.native="jump('#step-1')" size="mid" class="m-t-0">Buy more</Button>
+              <Button @click.native="jump('#step-1')" size="mid" class="m-t-0">Buy NFT</Button>
             </template>
 
             <div class="banner-telescope" aria-hidden="true">
@@ -216,11 +216,9 @@ export default {
         "message": "",
       },
 
-      // How much STRGZN tokens user selected to purchase
-      quantity: 50, // filtered value
-
       // USD price per one STRGZN
-      pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(2),
+      // changed here number of decimals from 2 to 0
+      pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(),
 
       time: "00:00:00",
       hourStartNight: "06",
@@ -289,6 +287,12 @@ export default {
   },
 
   computed: {
+    quantity() {
+      // How much STRGZN tokens user selected to purchase
+      // Better to set here minimum possible
+      return this.pricePerToken
+    },
+
     totalPaymentUSD: {
       get() {
         return (this.quantity * this.pricePerToken).toFixed(2)

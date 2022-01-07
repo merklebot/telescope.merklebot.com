@@ -46,17 +46,18 @@ export default {
 
 
     // Close all opened details on body click
+   
     document.body.onclick = (e) => {
-        const current = e.target.parentNode; //save clicked element to detect if it is our current detail
+        const current = e.target.closest('details[tabindex="0"]'); //save clicked element to detect if it is our current detail
 
-        document.body.querySelectorAll('details')
+        document.body.querySelectorAll('details[tabindex="0"]')
             .forEach((e) => {
                 if(e !== current){ //we need this condition not to break details behavior
                     e.open = false
                 }
         })
-
     }
+
   }
 };
 </script>

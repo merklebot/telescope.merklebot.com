@@ -39,7 +39,7 @@ sub { vertical-align: sub; }
 
 /* G - variables */
 
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600;900&family=Roboto+Mono:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600;900&family=Roboto+Mono:wght@400;600&display=swap');
 
 :root {
   --space: 1rem;
@@ -53,6 +53,7 @@ sub { vertical-align: sub; }
   --color-cyan: #C7FFDF;
   --color-lilac: #5681FF;
   --color-orange: #E0850A;
+  --color-yellow: #fff784;
   --color-blue-darkest: #01011C;
   --color-blue: #222274;
   --color-blue-mid: #0F0F50;

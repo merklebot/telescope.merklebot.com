@@ -4,7 +4,7 @@ import router from "./router";
 import "./ui";
 import Fragment from "vue-fragment";
 import Vuex from 'vuex'; // for some global data
-import { checkAddress } from "@polkadot/util-crypto";
+// import { checkAddress } from "@polkadot/util-crypto";
 import VueHead from 'vue-head'; // for injecting to <head/>
 import VueMoment from 'vue-moment'
 import moment from 'moment-timezone'
@@ -19,21 +19,21 @@ Vue.use(VueMoment, {
 
 const store = new Vuex.Store({
   state: {
-    accountActive: localStorage.accountActive ? localStorage.accountActive : '', // checkout
-    email: localStorage.email ? localStorage.email : '', // checkout
+    // accountActive: localStorage.accountActive ? localStorage.accountActive : '',
+    // email: localStorage.email ? localStorage.email : '',
   },
   mutations: {
-    setAccountActive(state, address) {
-      if(checkAddress(address, 2)[0]){
-        state.accountActive = address
-        localStorage.setItem('accountActive', state.accountActive)
-      }
-    },
+    // setAccountActive(state, address) {
+    //   if(checkAddress(address, 2)[0]){
+    //     state.accountActive = address
+    //     localStorage.setItem('accountActive', state.accountActive)
+    //   }
+    // },
 
-    setEmail(state, value) {
-      state.email = value
-      localStorage.setItem('email', state.email)
-    },
+    // setEmail(state, value) {
+    //   state.email = value
+    //   localStorage.setItem('email', state.email)
+    // },
   }
 });
 
