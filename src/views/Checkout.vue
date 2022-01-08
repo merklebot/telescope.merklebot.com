@@ -104,7 +104,7 @@
             </template>
           </template>
 
-          <template v-else-if="error && connectAccountClicked">
+          <template v-else-if="error">
             <template v-if="error === 'NOT_FOUND_EXTENSION'">
               <section>
                 <p class="error-title">Extension not found</p>
@@ -197,7 +197,8 @@ export default {
   data() {
     return {
       isReady: false,
-      connectAccountClicked: localStorage.getItem('connectAccountClicked') || false, // need to be refactored @positivecrash
+      connectAccountClicked: false, // need to be refactored @positivecrash
+      // connectAccountClicked: localStorage.getItem('connectAccountClicked') || false, // need to be refactored @positivecrash
       error: null,
       api: null,
       unsubscribe: null,
@@ -243,7 +244,7 @@ export default {
     totalPaymentUSD() {
       return (this.quantity * this.pricePerToken).toFixed(2)
     },
-    
+
     account: {
       get() {
         return this.$store.state.accountActive
@@ -274,7 +275,7 @@ export default {
 
     async connectAccount() {
       if (!this.connectAccountClicked) {
-        localStorage.setItem('connectAccountClicked', true)
+        // localStorage.setItem('connectAccountClicked', true)
         this.connectAccountClicked = true
       }
 

@@ -6,17 +6,11 @@ import Fragment from "vue-fragment";
 import Vuex from 'vuex'; // for some global data
 // import { checkAddress } from "@polkadot/util-crypto";
 import VueHead from 'vue-head'; // for injecting to <head/>
-import VueMoment from 'vue-moment'
-import moment from 'moment-timezone'
 import axios from "axios"
 
 Vue.use(Fragment.Plugin);
 Vue.use(Vuex);
 Vue.use(VueHead);
-
-Vue.use(VueMoment, {
-  moment,
-});
 
 const store = new Vuex.Store({
   state: {

@@ -52,7 +52,7 @@
             </select>
           </p>
       
-          <Button @click.native="onSubmit" :class="{ disabled: accounts.length < 1 || !isReady || balance < nftPrice }" class="container-full">Submit</Button>
+          <Button @click.native="onSubmit" :class="{ disabled: accounts.length < 0 || !isReady || balance < 1 }" class="container-full">Submit</Button>
         </form>
     </section>
   
