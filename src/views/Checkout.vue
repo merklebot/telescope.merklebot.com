@@ -133,7 +133,7 @@
       </section>
 
 
-      <section class="section-blue-dark p-b-0">
+      <section id="step-2" class="section-blue-dark p-b-0">
         <div class="layout-narrow">
           <h3>2. Get telescope tokens</h3>
 
@@ -152,7 +152,7 @@
           <div class="tokenSection-form">
             <h4>Purchase tokens</h4>
 
-            <p v-if="accounts.length < 1 || !isReady" class="error-title text-small">Please <a href="#step-1" @click.prevent="jump('#step-1')">connect</a> the account first</p>
+            <p v-if="accounts.length < 1 || !isReady" class="error-title text-small">Please <a href="#step-1" @click.prevent="jump('#step-1')">connect your Polkadot account</a></p>
 
             <form @onChange="onChange" @submit.prevent="handleSubmit" :class="{
               disabled: accounts.length < 1 || !isReady,

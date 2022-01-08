@@ -32,6 +32,15 @@
           </details>
         </div>
 
+        <!-- <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
+        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
+        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
+        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
+        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
+        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
+        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
+        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div> -->
+
       </div>
 
     </section>
@@ -52,7 +61,22 @@
             </select>
           </p>
       
-          <Button @click.native="onSubmit" :class="{ disabled: accounts.length < 0 || !isReady || balance < 1 }" class="container-full">Submit</Button>
+          <p>
+            <Button @click.native="onSubmit" :class="{ disabled: accounts.length < 0 || !isReady || balance < 1 || $store.state.service.status === 'off'}" class="container-full">Submit</Button>
+          </p>
+
+          <p class="error-title text-small">
+            <template v-if="accounts.length < 0 || !isReady">
+              Please <a href="#step-1" @click.prevent="jump('#step-1')">connect your account</a>
+            </template>
+            <template v-else-if="balance < 1">
+              Please <a href="#step-2" @click.prevent="jump('#step-2')">buy $STRGZN tokens</a>
+            </template>
+            <template v-else-if="$store.state.service.status === 'off'">
+              Please wait for the telescope to turn on
+            </template>
+          </p>
+
         </form>
     </section>
   
@@ -135,13 +159,13 @@
 
   .obj:nth-child(1) { top: 60%; left: 40%; }
   .obj:nth-child(2) { top: 10%; left: 60%; }
-  .obj:nth-child(3) { top: 30%; left: 90%; }
-  .obj:nth-child(4) { top: 50%; left: 5%; }
-  .obj:nth-child(5) { top: 20%; left: 30%; }
-  .obj:nth-child(6) { top: 46%; left: 20%; }
-  .obj:nth-child(7) { top: 90%; left: 60%; }
+  .obj:nth-child(3) { top: 30%; left: 25%; }
+  .obj:nth-child(4) { top: 92%; left: 33%; }
+  .obj:nth-child(5) { top: 70%; left: 53%; }
+  .obj:nth-child(6) { top: 21%; left: 46%; }
+  .obj:nth-child(7) { top: 90%; left: 66%; }
   .obj:nth-child(8) { top: 14%; left: 80%; }
-  .obj:nth-child(9) { top: 100%; left: 33%; }
+  .obj:nth-child(9) { top: 8%; left: 19%; }
   .obj:nth-child(10) { top: 59%; left: 72%; }
 
   .obj-expand {
@@ -256,7 +280,15 @@ export default {
     setObjFromDetails(obj) {
       this.astronomicalObjSelected = obj
       event.target.closest('details').open = false
-    }
+    },
+
+    jump(anchor) {
+      /* Jump to anchor */
+      window.scrollTo({
+          top: document.querySelector(anchor).offsetTop,
+          behavior: "smooth"
+      })
+    },
   }
 }
 </script>
