@@ -189,8 +189,6 @@ import { getProvider, getInstance, getAccounts } from "../services/substrate";
 import config from "../config";
 import { loadScript } from "../utils/tools";
 
-import moment from 'moment-timezone';
-
 export default {
   components: {
     astronomicalObjectCard: () => import('../components/includes/AstronomicalObjectCard.vue'),
@@ -199,7 +197,7 @@ export default {
   data() {
     return {
       isReady: false,
-      connectAccountClicked: localStorage.getItem('connectAccountClicked') || false,
+      connectAccountClicked: localStorage.getItem('connectAccountClicked') || false, // need to be refactored @positivecrash
       error: null,
       api: null,
       unsubscribe: null,
@@ -207,7 +205,8 @@ export default {
       accounts: [],
       accountDefault: "",
 
-      status: false,
+      // ? didn't find usage, only watch state @positivecrash
+      // status: false,
 
       // MOVED TO VUEX (main.js) by @positivecrash
       // Contains information if telescope is in operations or not.
@@ -219,14 +218,8 @@ export default {
       // },
 
       // USD price per one STRGZN
-      // changed here number of decimals from 2 to 0
+      // changed here number of decimals from 2 to 0 @positivecrash
       pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(),
-
-      time: "00:00:00",
-      hourStartNight: "18",
-      hourEndNight: "06",
-      currentHour: "00",
-      dayStatusName: "day"
 
     };
   },
@@ -254,24 +247,16 @@ export default {
 
 
   mounted() {
-  
-      var self = this
-      this.time = this.countdown(this.currentTime())
-      this.currentHour = this.getCurrentHour()
-
-      setInterval(() => {
-        self.time = self.countdown(self.currentTime())
-        self.currentHour = self.getCurrentHour()
-      }, 10000)
-
       // Get service status & message with setinterval 10000 included. Vuex, main.js
       this.$store.dispatch("getService")
   },
+
   destroyed() {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
   },
+
   watch: {
     status: async function(newValue, oldValue) {
       if (oldValue === false && newValue === true) {
@@ -286,20 +271,18 @@ export default {
         newValue: newValue,
         oldValue: oldValue,
       });
-    },
-    currentHour: function(){
-      this.dayStatusName = this.dayStatus()
     }
   },
 
   computed: {
     quantity() {
       // How much STRGZN tokens user selected to purchase
-      // Better to set here minimum possible
+      // Better to set here minimum possible by default
       return this.pricePerToken
     },
 
     service() {
+      // Gets Vuex global state
       return this.$store.state.service
     },
 
@@ -330,9 +313,10 @@ export default {
 
   methods: {
     setQuantity(change) {
-        if ( (this.quantity + change) >=  config.MIN_TOKENS_BUY &&  (this.quantity + change) <=  config.MAX_TOKENS_BUY ){
-          this.quantity += change
-        }
+      // This is for input[number] controls - +
+      if ( (this.quantity + change) >=  config.MIN_TOKENS_BUY &&  (this.quantity + change) <=  config.MAX_TOKENS_BUY ){
+        this.quantity += change
+      }
     },
 
     async connectAccount() {
@@ -415,61 +399,13 @@ export default {
       this.proccess = false;
     },
 
-    /* Jump by anchor */
     jump(anchor) {
+      /* Jump to anchor */
       window.scrollTo({
           top: document.querySelector(anchor).offsetTop,
           behavior: "smooth"
       })
-    },
-
-    /* Gets telescope time in Atacama(Chile) */
-    getCurrentHour(){
-      return new Date().toLocaleString("en-US", { timeZone: "America/Santiago", hour: 'numeric', hour12: false })
-    },
-    currentTime(){
-      return new Date().toLocaleString("en-US", { timeZone: "America/Santiago", hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false })
-    },
-
-    /* Gets how long left tonight */
-    countdown(currentTime) {
-      var 
-          startNight = moment.duration(this.hourStartNight + ':00:00'),
-          timer = startNight.subtract(currentTime),
-          timeString = '';
-
-          if(timer.hours() > 0) {
-            timeString += timer.hours() + ' hours '
-          }
-
-          if(timer.minutes() >= 0) {
-            timeString += timer.minutes() + ' minute(s) '
-          }
-
-          // timeString += timer.seconds() + ' seconds'
-
-      return timeString
-    },
-
-    /* Gets time of day, For frontend purposes */
-    dayStatus() {
-
-      if(this.currentHour >= (this.hourEndNight + 1) && this.currentHour < (this.hourStartNight - 1)) {
-        return 'day'
-      }
-
-      if (this.currentHour >= this.hourStartNight || this.currentHour <= this.hourEndNight) {
-        return 'night'
-      }
-
-      if( this.currentHour > this.hourEndNight && this.currentHour <= (this.hourEndNight + 1) ) {
-        return 'dawn'
-      }
-
-      if ( this.currentHour >= (this.hourStartNight - 1) && this.currentHour < this.hourStartNight ) {
-        return 'sunset'
-      }
-    },
+    }
 
   },
 };

@@ -7,14 +7,6 @@
   </Card>
 </template>
 
-<script>
-export default {
-  components: {
-    Spot: () => import('../components/includes/Spot.vue')
-  },
-}
-</script>
-
 <style scoped>
   .spot {
     margin: var(--space) auto;

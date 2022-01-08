@@ -1,1 +1,0 @@
-../../../external/github.com/merklebot/robonomics-wiki/docs/en/spot-lesson2.md
