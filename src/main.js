@@ -21,28 +21,32 @@ Vue.use(VueMoment, {
 const store = new Vuex.Store({
   state: {
     service: null,
+    serviceCounter: null,
     // accountActive: localStorage.accountActive ? localStorage.accountActive : '',
     // email: localStorage.email ? localStorage.email : '',
   },
   mutations: {
-    setService(state, data) {
-      state.service = data
-      console.log("[Vuex setService] Service status:", { "status": data.status, "message": data.message })
+    setService(state) {
+      axios.get("https://api.merklebot.com/beyond-the-sky/status").then(response => {
+        state.service = response.data
+        console.log("[Vuex setService] Service status:", { "status": response.data.status, "message": response.data.message })
+      })
     }
   },
   actions: {
-    getService({ commit }) {
+    getService({ state, commit }) {
       
-      axios.get("https://api.merklebot.com/beyond-the-sky/status").then(response => {
-        commit('setService', response.data)
-      })
+      commit('setService')
 
-      setInterval(() => {
-        axios.get("https://api.merklebot.com/beyond-the-sky/status").then(response => {
-          commit('setService', response.data)
-        })
+      state.serviceCounter = setInterval(() => {
+        commit('setService')
       }, 10000)
+    },
+
+    stopService({ state }) {
+      clearInterval(state.serviceCounter)
     }
+
     // setAccountActive(state, address) {
     //   if(checkAddress(address, 2)[0]){
     //     state.accountActive = address

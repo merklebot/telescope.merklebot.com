@@ -1,7 +1,7 @@
 <template>
   <div>
       <div class="banner" :class="service.status">
-        <div class="banner-top" :class="dayStatusName">
+        <div class="banner-top" :class="dayTimeClass">
           <div class="banner-top-content">
             <h1>Connecting Universe to Metaverse!</h1>
             <div class="layout-narrow">
@@ -224,56 +224,6 @@ export default {
     };
   },
 
-  async created() {
-    try {
-      // MOVED TO VUEX (main.js) by @positivecrash
-      // // Poll telescope status
-      // setImmediate(async () => {
-      //   this.serviceStatus = await serviceStatus()
-      // })
-      // setInterval(async () => {
-      //   this.serviceStatus = await serviceStatus()
-      //   console.log("Service status:", { "status": this.serviceStatus.status, "message": this.serviceStatus.message })
-      // }, 10000)
-
-      if(this.connectAccountClicked) {
-        await this.connectAccount()
-      }
-
-    } catch (error) {
-      this.error = error.message;
-    }
-  },
-
-
-  mounted() {
-      // Get service status & message with setinterval 10000 included. Vuex, main.js
-      this.$store.dispatch("getService")
-  },
-
-  destroyed() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
-  },
-
-  watch: {
-    status: async function(newValue, oldValue) {
-      if (oldValue === false && newValue === true) {
-        await loadScript(
-          "https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js"
-        );
-      }
-    },
-    account: function(newValue, oldValue) {
-      this.onChange({
-        name: "account",
-        newValue: newValue,
-        oldValue: oldValue,
-      });
-    }
-  },
-
   computed: {
     quantity() {
       // How much STRGZN tokens user selected to purchase
@@ -286,11 +236,14 @@ export default {
       return this.$store.state.service
     },
 
-    totalPaymentUSD: {
-      get() {
-        return (this.quantity * this.pricePerToken).toFixed(2)
-      }
+    dayTimeClass() {
+      return this.dayTime()
     },
+
+    totalPaymentUSD() {
+      return (this.quantity * this.pricePerToken).toFixed(2)
+    },
+    
     account: {
       get() {
         return this.$store.state.accountActive
@@ -405,8 +358,77 @@ export default {
           top: document.querySelector(anchor).offsetTop,
           behavior: "smooth"
       })
-    }
+    },
 
+    dayTime() {
+
+      //This is for banner gradient visualization, just relay on message
+
+      if ( this.service.message.includes('Daytime') ) {
+        return 'day'
+      }
+
+      if ( this.service.message.includes('Night') ) {
+        return 'night'
+      }
+    }
+  },
+
+  async created() {
+    try {
+      // MOVED TO VUEX (main.js) by @positivecrash
+      // // Poll telescope status
+      // setImmediate(async () => {
+      //   this.serviceStatus = await serviceStatus()
+      // })
+      // setInterval(async () => {
+      //   this.serviceStatus = await serviceStatus()
+      //   console.log("Service status:", { "status": this.serviceStatus.status, "message": this.serviceStatus.message })
+      // }, 10000)
+
+      if(this.connectAccountClicked) {
+        await this.connectAccount()
+      }
+
+    } catch (error) {
+      this.error = error.message;
+    }
+  },
+
+
+  mounted() {
+      // Get service status & message with setinterval 10000 included. Vuex, main.js
+      this.$store.dispatch("getService")
+  },
+
+  beforeDestroy () {
+    this.$store.dispatch("stopService")
+  },
+
+  destroyed() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  },
+
+  watch: {
+    status: async function(newValue, oldValue) {
+      if (oldValue === false && newValue === true) {
+        await loadScript(
+          "https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js"
+        );
+      }
+    },
+    account: function(newValue, oldValue) {
+      this.onChange({
+        name: "account",
+        newValue: newValue,
+        oldValue: oldValue,
+      });
+    },
+    service: function() {
+      this.dayTimeClass = this.dayTime()
+    }
   },
 };
 </script>
@@ -603,20 +625,20 @@ export default {
     background-image: linear-gradient(#00519b, #ccc1ff, #5681ff, #c7ffdf, #00519b);
   }
 
-  .banner-top.sunset {
+  /* .banner-top.sunset {
     background-image: linear-gradient(#5681ff, #c7ffdf, #9265ab, #ffc888, #5681ff);
-  }
+  } */
 
   .banner-top.night {
     background-image: linear-gradient(#9265ab, #ffc888, #000008, #00819d, #9265ab);
     animation-name: DayTimeTextLight;
   }
-
+/* 
   .banner-top.dawn {
     background-image: linear-gradient(#000008, #00819d, #00519b, #ccc1ff, #000008);
     color: var(--color-cyan);
     animation-name: DayTimeTextDark;
-  }
+  } */
 
   @keyframes DayTime {
     to{
