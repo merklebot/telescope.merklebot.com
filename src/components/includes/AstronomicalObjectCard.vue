@@ -25,7 +25,7 @@
                 <li>{{astr.catalog_name}}</li>
               </ul>
 
-              <div v-if="astr !== astronomicalObjSelected">
+              <div class="obj-select" v-if="astr !== astronomicalObjSelected">
                 <a href="javascript:;" @click.prevent.stop="setObjFromDetails(astr)">Select this object</a>
               </div>
             </div>
@@ -142,7 +142,7 @@
   .obj:nth-child(7) { top: 90%; left: 60%; }
   .obj:nth-child(8) { top: 14%; left: 80%; }
   .obj:nth-child(9) { top: 100%; left: 33%; }
-  .obj:nth-child(10) { top: 59%; left: 50%; }
+  .obj:nth-child(10) { top: 59%; left: 72%; }
 
   .obj-expand {
     background-color: var(--color-white);
@@ -225,10 +225,6 @@ export default {
     console.log("Default object selected:", this.astronomicalObjSelected);
   },
   methods:{
-    // astronomicalObjChange(e) {
-    //   const selected = e.target.value
-    //   this.astronomicalObjSelected = this.astronomicalObj.find(element => element.friendly_name === selected);
-    // },
     async onSubmit() {
       // console.log(this.$store.state.accountActive, this.astronomicalObjSelected, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET)
       const telescopeStaus = await telescopeIsFree();

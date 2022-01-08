@@ -52,6 +52,7 @@ sub { vertical-align: sub; }
   --color-white: #fff;
   --color-cyan: #C7FFDF;
   --color-lilac: #5681FF;
+  --color-green: rgb(103, 163, 7);
   --color-orange: #E0850A;
   --color-yellow: #fff784;
   --color-blue-darkest: #01011C;

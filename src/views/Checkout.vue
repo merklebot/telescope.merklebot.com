@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div class="banner" :class="telescopeOn()?'on':'off'">
+      <div class="banner" :class="service.status">
         <div class="banner-top" :class="dayStatusName">
           <div class="banner-top-content">
             <h1>Connecting Universe to Metaverse!</h1>
@@ -35,11 +35,9 @@
           </div>
         </div>
         <div class="banner-bottom">
-          <div class="telecopePause layout-narrow" v-if="!telescopeOn()">
-             <div class="telecopePause-content" v-if="dayStatusName !== 'night'">
-                <p class="telecopePause-title">Telescope is Waiting for night…</p>
-                <p>{{ time }} left</p>
-              </div>
+          <div class="layout-narrow">
+            <div class="service-status">Telescope {{service.status}}</div>
+            <div class="service-message">{{service.message}}</div>
           </div>
         </div>
       </div>
@@ -183,7 +181,9 @@
 </template>
 
 <script>
-import { checkout, serviceStatus } from "../services/api";
+import { checkout } from "../services/api";
+// MOVED TO VUEX (main.js) by @positivecrash
+// import { checkout, serviceStatus } from "../services/api";
 import stripe from "../services/stripe";
 import { getProvider, getInstance, getAccounts } from "../services/substrate";
 import config from "../config";
@@ -206,23 +206,25 @@ export default {
       balance: 0,
       accounts: [],
       accountDefault: "",
+
       status: false,
 
+      // MOVED TO VUEX (main.js) by @positivecrash
       // Contains information if telescope is in operations or not.
       // Possible "status" values are: "off" and "on".
       // Additonally "message" says why it works or not right now.
-      serviceStatus: {
-        "status": undefined,
-        "message": "",
-      },
+      // serviceStatus: {
+      //   "status": undefined,
+      //   "message": "",
+      // },
 
       // USD price per one STRGZN
       // changed here number of decimals from 2 to 0
       pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(),
 
       time: "00:00:00",
-      hourStartNight: "06",
-      hourEndNight: "02",
+      hourStartNight: "18",
+      hourEndNight: "06",
       currentHour: "00",
       dayStatusName: "day"
 
@@ -231,14 +233,15 @@ export default {
 
   async created() {
     try {
-      // Poll telescope status
-      setImmediate(async () => {
-        this.serviceStatus = await serviceStatus()
-      })
-      setInterval(async () => {
-        this.serviceStatus = await serviceStatus()
-        console.log("Service status:", { "status": this.serviceStatus.status, "message": this.serviceStatus.message })
-      }, 10000)
+      // MOVED TO VUEX (main.js) by @positivecrash
+      // // Poll telescope status
+      // setImmediate(async () => {
+      //   this.serviceStatus = await serviceStatus()
+      // })
+      // setInterval(async () => {
+      //   this.serviceStatus = await serviceStatus()
+      //   console.log("Service status:", { "status": this.serviceStatus.status, "message": this.serviceStatus.message })
+      // }, 10000)
 
       if(this.connectAccountClicked) {
         await this.connectAccount()
@@ -260,6 +263,9 @@ export default {
         self.time = self.countdown(self.currentTime())
         self.currentHour = self.getCurrentHour()
       }, 10000)
+
+      // Get service status & message with setinterval 10000 included. Vuex, main.js
+      this.$store.dispatch("getService")
   },
   destroyed() {
     if (this.unsubscribe) {
@@ -291,6 +297,10 @@ export default {
       // How much STRGZN tokens user selected to purchase
       // Better to set here minimum possible
       return this.pricePerToken
+    },
+
+    service() {
+      return this.$store.state.service
     },
 
     totalPaymentUSD: {
@@ -413,15 +423,6 @@ export default {
       })
     },
 
-    // openSingularUI() {
-    //   if (!this.account) {
-    //     alert("Please select your account first.")
-    //     return
-    //   }
-    //   const url = `https://singular.rmrk.app/space/${this.account}?tab=owned&owner=yes`
-    //   window.open(url)
-    // },
-
     /* Gets telescope time in Atacama(Chile) */
     getCurrentHour(){
       return new Date().toLocaleString("en-US", { timeZone: "America/Santiago", hour: 'numeric', hour12: false })
@@ -470,11 +471,6 @@ export default {
       }
     },
 
-    telescopeOn() {
-      /* && this.serviceStatus.status on */
-      if( this.dayStatus() === 'night' ) { return true }
-    },
-
   },
 };
 </script>
@@ -486,27 +482,25 @@ export default {
   .banner {
     min-height: 100vh;
     display: grid;
-    grid-template-rows: 5fr 1fr;
+    grid-template-rows: 1fr 10rem;
     overflow: hidden;
   }
 
   .banner-top {
     color: var(--color-blue-darkest);
+    padding: calc(var(--padding) * 4) var(--padding) var(--padding);
+    position: relative;
+  }
 
+  .banner-top, .banner-bottom {
     display: flex;
     align-items: center;
     justify-content: center;
     align-content: center;
-
-    padding: calc(var(--padding) * 4) var(--padding) var(--padding);
-
-    position: relative;
   }
 
   .banner-top-content {
     text-align: center;
-    /* position: relative;
-    z-index: 1; */
   }
 
   .banner-top-content a {
@@ -532,8 +526,6 @@ export default {
   .banner-top-content button {
     margin-top: var(--space)
   }
-
-
 
   .banner-top-art {
     position: absolute;
@@ -603,19 +595,15 @@ export default {
     bottom: 10px;
     right: 80px
   }
-
-  .banner.on {
-      grid-template-rows: 1fr;
-  }
-
-  .banner.on .banner-telescope {
-    bottom: 0;
-  }
-
-  .banner.on .banner-grass { height: 78px; }
-  .banner.on .banner-sights { bottom: 70px; }
   
   @media screen and (max-width: 1060px) {
+    .banner-top {
+      padding-top: calc(var(--padding) * 5);
+    }
+    .banner-top-content {
+      position: relative;
+      z-index: 1;
+    }
     .banner-telescope {
       position: relative;
       bottom: 0;
@@ -624,66 +612,45 @@ export default {
       margin-left: auto;
       margin-right: auto;
     }
-
-    .banner-top {
-      padding: calc(var(--padding) * 5) calc(var(--padding) * 0.2) var(--padding);
-    }
-
-    .banner-top-content {
-      position: relative;
-      z-index: 1;
-    }
-
     .banner-grass {
       height: 131px;
     }
-
     .banner-stone, .banner-sights { display: none; }
   }
 
-  
-  /* Section with telescope status (pause) */
-  .telecopePause {
+  /* Service status */
+
+  .service-status {
     font-family: var(--font-highlight);
     font-weight: 900;
-    display: grid;
-    grid-template-columns: 1fr 4fr;
-    gap: var(--padding);
-    text-align: left;
   }
 
-  .telecopePause:before {
+  .service-status:before {
+    margin-right: var(--space);
+  }
+
+  .on .service-status {
+    color: var(--color-green)
+  }
+
+  .on .service-status:before {
+    content: "✓";
+  }
+
+  .off .service-status {
+    color: var(--color-red)
+  }
+
+  .off .service-status:before {
     content: "||";
-    font-size: 4rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
-  .telecopePause-title {
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .telecopePause-content {
-    align-self: center;
-    padding: var(--padding) 0;
-  }
-
-  .telecopePause-content p {
-    margin-bottom: calc(var(--space) * 0.5);
-  }
-
-  .banner .telecopePause {
-    height: 100%;
+  .service-message {
+    font-size: 80%;
     color: var(--color-lilac);
+    opacity: 0.8;
   }
-
-  .banner .telecopePause:before {
-    background-color: var(--color-blue-mid)
-  }
-
-  /* end of Section with telescope status (pause) */
+  /* end of Service status */
 
 
   /* Day time change */
