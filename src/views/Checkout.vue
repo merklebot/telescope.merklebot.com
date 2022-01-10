@@ -364,14 +364,17 @@ export default {
 
       //This is for banner gradient visualization, just relay on message
 
-      if ( this.service.message.includes('Daytime') ) {
-        return 'day'
-      }
+      if( this.service.message ) {
+        if ( this.service.message.includes('Daytime') ) {
+          return 'day'
+        }
 
-      if ( this.service.message.includes('Night') ) {
-        return 'night'
+        if ( this.service.message.includes('Night') ) {
+          return 'night'
+        }
       }
     }
+    
   },
 
   async created() {
