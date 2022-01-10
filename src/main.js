@@ -14,7 +14,7 @@ Vue.use(VueHead);
 
 const store = new Vuex.Store({
   state: {
-    service: null,
+    service: [],
     serviceCounter: null,
     // accountActive: localStorage.accountActive ? localStorage.accountActive : '',
     // email: localStorage.email ? localStorage.email : '',
