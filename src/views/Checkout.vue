@@ -206,8 +206,7 @@ export default {
       accounts: [],
       accountDefault: "",
 
-      // ? didn't find usage, only watch state @positivecrash
-      // status: false,
+      status: false,
 
       // MOVED TO VUEX (main.js) by @positivecrash
       // Contains information if telescope is in operations or not.
