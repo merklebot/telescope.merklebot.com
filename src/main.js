@@ -16,7 +16,7 @@ const store = new Vuex.Store({
   state: {
     service: [],
     serviceCounter: null,
-    // accountActive: localStorage.accountActive ? localStorage.accountActive : '',
+    accountActive: null,
     // email: localStorage.email ? localStorage.email : '',
   },
   mutations: {
@@ -25,7 +25,13 @@ const store = new Vuex.Store({
         state.service = response.data
         console.log("[Vuex setService] Service status:", { "status": response.data.status, "message": response.data.message })
       })
-    }
+    },
+    setAccountActive(state, address) {
+      // if(checkAddress(address, 2)[0]){
+        state.accountActive = address
+        // localStorage.setItem('accountActive', state.accountActive)
+      // }
+    },
   },
   actions: {
     getService({ state, commit }) {
@@ -39,15 +45,7 @@ const store = new Vuex.Store({
 
     stopService({ state }) {
       clearInterval(state.serviceCounter)
-    }
-
-    // setAccountActive(state, address) {
-    //   if(checkAddress(address, 2)[0]){
-    //     state.accountActive = address
-    //     localStorage.setItem('accountActive', state.accountActive)
-    //   }
-    // },
-
+    },
     // setEmail(state, value) {
     //   state.email = value
     //   localStorage.setItem('email', state.email)
