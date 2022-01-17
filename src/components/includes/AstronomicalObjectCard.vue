@@ -84,28 +84,35 @@ import config from "../../config";
 export default {
   data() {
     return {
-      nftPrice: null
+      nftPrice: null,
+      astronomicalObjSelected: this.$store.state.astronomicalObjects[0] ? this.$store.state.astronomicalObjects[0] : []
     };
   },
+
   props: {
     isReady: Boolean,
     accounts: Array,
     balance: Number,
   },
+
   components: {
     Button: () => import('../includes/Button.vue'),
   },
+
   computed: {
     astronomicalObj(){
       return this.$store.state.astronomicalObjects ? this.$store.state.astronomicalObjects : []
-    },
-
-    astronomicalObjSelected(){
-      return this.$store.state.astronomicalObjects[0] ? this.$store.state.astronomicalObjects[0] : []
     }
   },
+  
   async created(){
     this.nftPrice = await pricePerNFT();
+  },
+
+  watch: {
+    astronomicalObj: function(){
+      this.astronomicalObjSelected = this.$store.state.astronomicalObjects[0]
+    }
   },
 
   methods:{
