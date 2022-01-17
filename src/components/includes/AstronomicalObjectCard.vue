@@ -2,7 +2,6 @@
   <section id="step-3" class="wrapper">
     <div class="layout-narrow">
       <h3>3. Enjoy the stars</h3>
-      <!-- {{$store.state.astronomicalObjects}} -->
       <p class="hyphens">Choose an astronomical object below and hit the submit button. The telescope will start moving and will mint your NFT in a few minutes.</p>
     </div>
       
@@ -78,14 +77,13 @@
 
 <script>
 // import { telescopeIsFree, astronomicalObject, createNFT, serviceStatus, pricePerNFT } from "../../services/api";
-import { astronomicalObject, createNFT, pricePerNFT } from "../../services/api";
+import { createNFT, pricePerNFT } from "../../services/api";
 import { sendAsset } from "../../services/substrate";
 import config from "../../config";
 
 export default {
   data() {
     return {
-      astronomicalObj: [],
       astronomicalObjSelected: null,
       nftPrice: null
     };
@@ -98,8 +96,12 @@ export default {
   components: {
     Button: () => import('../includes/Button.vue'),
   },
+  computed: {
+    astronomicalObj(){
+      return this.$store.state.astronomicalObjects
+    }
+  },
   async created(){
-    this.astronomicalObj = await astronomicalObject();
     this.astronomicalObjSelected = this.astronomicalObj[0];
     this.nftPrice = await pricePerNFT();
     console.log("Default object selected:", this.astronomicalObjSelected);

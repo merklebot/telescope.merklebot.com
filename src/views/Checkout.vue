@@ -209,22 +209,15 @@ export default {
 
       status: false,
 
-      // MOVED TO VUEX (main.js) by @positivecrash
-      // Contains information if telescope is in operations or not.
-      // Possible "status" values are: "off" and "on".
-      // Additonally "message" says why it works or not right now.
-      // serviceStatus: {
-      //   "status": undefined,
-      //   "message": "",
-      // },
-
       // USD price per one STRGZN
       // changed here number of decimals from 2 to 0 @positivecrash
       pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(),
 
       // How much STRGZN tokens user selected to purchase
       // Better to set here minimum possible by default
-      quantity: parseInt(config.PRICE_PER_LESSON_CENTS / 100)
+      quantity: parseInt(config.PRICE_PER_LESSON_CENTS / 100),
+
+      dayTimeClass: null
 
     };
   },
@@ -234,11 +227,7 @@ export default {
       // Gets Vuex global state
       return this.$store.state.service
     },
-
-    dayTimeClass() {
-      return this.dayTime()
-    },
-
+    
     totalPaymentUSD() {
       return (this.quantity * this.pricePerToken).toFixed(2)
     },
@@ -355,7 +344,7 @@ export default {
 
     dayTime() {
 
-      //This is for banner gradient visualization, just relay on message
+      /* This is for banner gradient visualization, just relay on message */
 
       if( this.service.message ) {
         if ( this.service.message.includes('Daytime') ) {
@@ -432,11 +421,14 @@ export default {
 
 
   mounted() {
-      // Get service status & message with setinterval 10000 included. Vuex, main.js
+      // Get service status & message, astronomical objects with setinterval 10000 included. Vuex, main.js
       this.$store.dispatch("watchApiData")
+
+      this.dayTimeClass = this.dayTime()
   },
 
   beforeDestroy () {
+    // Unsubscribe for "watchApiData". Vuex, main.js
     this.$store.dispatch("stopApiData")
   },
 

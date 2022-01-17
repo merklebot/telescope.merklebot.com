@@ -25,12 +25,13 @@ const store = new Vuex.Store({
     getService(state) {
       axios.get("https://api.merklebot.com/beyond-the-sky/status").then(response => {
         state.service = response.data
-        console.log("[Vuex setService] Service status:", { "status": response.data.status, "message": response.data.message })
+        console.log("[Vuex getService]:", { "status": response.data.status, "message": response.data.message })
       })
     },
     getAstronomicalObjects(state) {
       axios.get("https://api.merklebot.com/beyond-the-sky/astronomical-objects").then(response => {
         state.astronomicalObjects = response.data
+        console.log("[Vuex getAstronomicalObjects]:", response.data)
       })
     },
     setAccountActive(state, address) {
