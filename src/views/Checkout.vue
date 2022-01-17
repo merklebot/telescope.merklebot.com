@@ -158,7 +158,7 @@
             <form @onChange="onChange" @submit.prevent="handleSubmit" :class="{
               disabled: accounts.length < 1 || !isReady,
             }">
-              <div class="inputNumbers">
+              <div class="inputNumbers m-b-space">
                 <div class="less" @click="setQuantity(-1)">-</div>
                 <input type="number" v-model.number="quantity" value="quantity" required />
                 <div class="more" @click="setQuantity(+1)">+</div>
@@ -247,14 +247,14 @@ export default {
       return this.$store.state.accountActive
     },
 
-    email: {
-      get() {
-        return this.$store.state.email;
-      },
-      set(value) {
-        this.$store.commit("setEmail", value);
-      },
-    },
+    // email: {
+    //   get() {
+    //     return this.$store.state.email;
+    //   },
+    //   set(value) {
+    //     this.$store.commit("setEmail", value);
+    //   },
+    // },
   },
 
   methods: {
@@ -333,7 +333,7 @@ export default {
       try {
         const session = await checkout({
           account,
-          quantity,
+          quantity
         });
         const r = await stripe.redirectToCheckout({ sessionId: session.id });
         if (r.error) {
@@ -433,11 +433,11 @@ export default {
 
   mounted() {
       // Get service status & message with setinterval 10000 included. Vuex, main.js
-      this.$store.dispatch("getService")
+      this.$store.dispatch("watchApiData")
   },
 
   beforeDestroy () {
-    this.$store.dispatch("stopService")
+    this.$store.dispatch("stopApiData")
   },
 
   destroyed() {

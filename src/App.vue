@@ -359,5 +359,8 @@ section section {
   color: var(--color-red)
 }
 
+.m-b-space {
+  margin-bottom: var(--space);
+}
 </style>
 

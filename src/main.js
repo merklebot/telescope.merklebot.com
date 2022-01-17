@@ -15,16 +15,22 @@ Vue.use(VueHead);
 const store = new Vuex.Store({
   state: {
     service: [],
-    serviceCounter: null,
+    astronomicalObjects: [],
+    watcherApiData: null,
     accountActive: null,
-    // email: localStorage.email ? localStorage.email : '',
-    user: []
+    email: localStorage.email ? localStorage.email : '',
+    // user: []
   },
   mutations: {
-    setService(state) {
+    getService(state) {
       axios.get("https://api.merklebot.com/beyond-the-sky/status").then(response => {
         state.service = response.data
         console.log("[Vuex setService] Service status:", { "status": response.data.status, "message": response.data.message })
+      })
+    },
+    getAstronomicalObjects(state) {
+      axios.get("https://api.merklebot.com/beyond-the-sky/astronomical-objects").then(response => {
+        state.astronomicalObjects = response.data
       })
     },
     setAccountActive(state, address) {
@@ -33,24 +39,26 @@ const store = new Vuex.Store({
         // localStorage.setItem('accountActive', state.accountActive)
       // }
     },
+    setEmail(state, value) {
+      state.email = value
+      localStorage.setItem('email', state.email)
+    },
   },
   actions: {
-    getService({ state, commit }) {
+    watchApiData({ state, commit }) {
       
-      commit('setService')
+      commit('getService')
+      commit('getAstronomicalObjects')
 
-      state.serviceCounter = setInterval(() => {
-        commit('setService')
+      state.watcherApiData = setInterval(() => {
+        commit('getService')
+        commit('getAstronomicalObjects')
       }, 10000)
     },
 
-    stopService({ state }) {
-      clearInterval(state.serviceCounter)
-    },
-    // setEmail(state, value) {
-    //   state.email = value
-    //   localStorage.setItem('email', state.email)
-    // },
+    stopApiData({ state }) {
+      clearInterval(state.watcherApiData)
+    }
   }
 });
 
