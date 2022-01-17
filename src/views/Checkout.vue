@@ -18,7 +18,7 @@
               <a v-if="this.account" :href="'https://singular.rmrk.app/space/' + this.account + '?tab=owned&owner=yes'" target="_blank" rel="noopener noreferrer">Check your NFTs</a>
               <a v-else href="#step-1" @click.prevent="jump('#step-1')">Connect account to check NFTs</a>
               <section class="small m-b-0">or</section>
-              <Button @click.native="jump('#step-1')" size="mid" class="m-t-0">Buy NFT</Button>
+              <Button @click.native="jump('#step-1')" size="medium" class="m-t-0">Buy NFT</Button>
             </template>
 
             <div class="banner-telescope" aria-hidden="true">
@@ -165,7 +165,7 @@
 
               <h5>Total: {{ totalPaymentUSD }} USD</h5>
 
-              <Button class="container-full" size="mid">
+              <Button class="container-full" size="medium">
                 <span class="text">Pay with</span>
                 <img class="label" alt="Stripe" src="i/stripe.svg" />
               </Button>

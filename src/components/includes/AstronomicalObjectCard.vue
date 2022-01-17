@@ -32,15 +32,6 @@
           </details>
         </div>
 
-        <!-- <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
-        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
-        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
-        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
-        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
-        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
-        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div>
-        <div class="obj"><details tabindex="0"><summary><div></div></summary><div class="obj-expand"><ul><li><b>-</b></li><li>-</li><li>-</li></ul></div></details></div> -->
-
       </div>
 
     </section>
@@ -263,6 +254,8 @@ export default {
         alert("Out of service. Please try again later.");
         return;
       }
+      // console.log('sendAsset this.$store.state.accountActive ' + this.$store.state.accountActive)
+      // console.log('sendAsset config.ID_ASSET ' + config.ID_ASSET)
       const success = await sendAsset(this.$store.state.accountActive, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
       if (!success) {
         console.log("Tokens not sent. Success:", success);
