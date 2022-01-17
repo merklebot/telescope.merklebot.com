@@ -8,18 +8,19 @@
               <p>Connect to our autonomous telescope in the dark night of Atacama desert in Chile, select an astronomical object and mint unique NFTs in a few clicks.</p>
             </div>
             
-            <template v-if="!isReady && error === null && connectAccountClicked">
+            <!-- <template v-if="!isReady && error === null && connectAccountClicked">
               <span class="loader"></span>
-            </template>
+            </template> -->
 
-            <Button v-if="!connectAccountClicked || (!isReady && error !== null)" @click.native="jump('#start')">Start</Button>
+            <!-- <Button v-if="!connectAccountClicked || (!isReady && error !== null)" @click.native="jump('#start')">Start</Button> -->
+            <Button v-if="!isReady && error !== null" @click.native="jump('#start')">Start</Button>
             
-            <template v-if="isReady && accounts.length > 0">
+            <!-- <template v-if="isReady && accounts.length > 0">
               <a v-if="this.account" :href="'https://singular.rmrk.app/space/' + this.account + '?tab=owned&owner=yes'" target="_blank" rel="noopener noreferrer">Check your NFTs</a>
               <a v-else href="#step-1" @click.prevent="jump('#step-1')">Connect account to check NFTs</a>
               <section class="small m-b-0">or</section>
               <Button @click.native="jump('#step-1')" size="medium" class="m-t-0">Buy NFT</Button>
-            </template>
+            </template> -->
 
             <div class="banner-telescope" aria-hidden="true">
               <img aria-hidden="true" src="i/banner-telescope-pod-1.png" class="banner-telescope-pod-1" />
@@ -63,11 +64,11 @@
             >
           </p>
 
-          <section v-if="!isReady && !connectAccountClicked">
+          <!-- <section v-if="!isReady && !connectAccountClicked">
             <Button v-on:click.native="connectAccount">Connect account</Button>
-          </section>
+          </section> -->
 
-          <template v-if="!isReady && error === null && connectAccountClicked">
+          <template v-if="!isReady && error === null">
             <section>
               <span class="loader"></span>
               <i>Checking Polkadot.js extension</i>
@@ -272,45 +273,45 @@ export default {
       }
     },
 
-    async connectAccount() {
-      if (!this.connectAccountClicked) {
-        // localStorage.setItem('connectAccountClicked', true)
-        this.connectAccountClicked = true
-      }
+    // async connectAccount() {
+    //   if (!this.connectAccountClicked) {
+    //     // localStorage.setItem('connectAccountClicked', true)
+    //     this.connectAccountClicked = true
+    //   }
 
-      try {
-        const provider = getProvider();
-        provider.on("error", () => {
-          this.error = "Disconnected provider";
-          this.isReady = false;
-        });
-        provider.on("connect", () => {
-          this.isReady = true;
-        });
-        this.api = await getInstance();
-        this.accounts = await getAccounts(this.api);
-        if (this.accounts) {
-          this.accountDefault = this.accounts[0].address;
-        }
+    //   try {
+    //     const provider = getProvider();
+    //     provider.on("error", () => {
+    //       this.error = "Disconnected provider";
+    //       this.isReady = false;
+    //     });
+    //     provider.on("connect", () => {
+    //       this.isReady = true;
+    //     });
+    //     this.api = await getInstance();
+    //     this.accounts = await getAccounts(this.api);
+    //     if (this.accounts) {
+    //       this.accountDefault = this.accounts[0].address;
+    //     }
 
-        if (this.accounts.length === 0) {
-          this.error = "Not found account";
-        }
-        this.isReady = true;
-        this.status = true;
+    //     if (this.accounts.length === 0) {
+    //       this.error = "Not found account";
+    //     }
+    //     this.isReady = true;
+    //     this.status = true;
 
-        this.unsubscribe = await this.api.query.assets.account(
-          config.ID_ASSET,
-          this.account,
-          ({ balance: currentFree }) => {
-            this.balance = currentFree.toNumber();
-          }
-        );
+    //     this.unsubscribe = await this.api.query.assets.account(
+    //       config.ID_ASSET,
+    //       this.account,
+    //       ({ balance: currentFree }) => {
+    //         this.balance = currentFree.toNumber();
+    //       }
+    //     );
 
-      } catch (error) {
-        this.error = error.message;
-      }
-    },
+    //   } catch (error) {
+    //     this.error = error.message;
+    //   }
+    // },
 
     addressShort(address) {
       return address.slice(0, 6) + "..." + address.slice(-4);
@@ -378,24 +379,58 @@ export default {
   },
 
   async created() {
+    // try {
+    //   // MOVED TO VUEX (main.js) by @positivecrash
+    //   // // Poll telescope status
+    //   // setImmediate(async () => {
+    //   //   this.serviceStatus = await serviceStatus()
+    //   // })
+    //   // setInterval(async () => {
+    //   //   this.serviceStatus = await serviceStatus()
+    //   //   console.log("Service status:", { "status": this.serviceStatus.status, "message": this.serviceStatus.message })
+    //   // }, 10000)
+
+    //   if(this.connectAccountClicked) {
+    //     await this.connectAccount()
+    //   }
+
+    // } catch (error) {
+    //   this.error = error.message;
+    // }
+
+
     try {
-      // MOVED TO VUEX (main.js) by @positivecrash
-      // // Poll telescope status
-      // setImmediate(async () => {
-      //   this.serviceStatus = await serviceStatus()
-      // })
-      // setInterval(async () => {
-      //   this.serviceStatus = await serviceStatus()
-      //   console.log("Service status:", { "status": this.serviceStatus.status, "message": this.serviceStatus.message })
-      // }, 10000)
+        const provider = getProvider();
+        provider.on("error", () => {
+          this.error = "Disconnected provider";
+          this.isReady = false;
+        });
+        provider.on("connect", () => {
+          this.isReady = true;
+        });
+        this.api = await getInstance();
+        this.accounts = await getAccounts(this.api);
+        if (this.accounts) {
+          this.accountDefault = this.accounts[0].address;
+        }
 
-      if(this.connectAccountClicked) {
-        await this.connectAccount()
+        if (this.accounts.length === 0) {
+          this.error = "Not found account";
+        }
+        this.isReady = true;
+        this.status = true;
+
+        this.unsubscribe = await this.api.query.assets.account(
+          config.ID_ASSET,
+          this.account,
+          ({ balance: currentFree }) => {
+            this.balance = currentFree.toNumber();
+          }
+        );
+
+      } catch (error) {
+        this.error = error.message;
       }
-
-    } catch (error) {
-      this.error = error.message;
-    }
   },
 
 
