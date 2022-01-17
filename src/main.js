@@ -18,6 +18,7 @@ const store = new Vuex.Store({
     serviceCounter: null,
     accountActive: null,
     // email: localStorage.email ? localStorage.email : '',
+    user: []
   },
   mutations: {
     setService(state) {

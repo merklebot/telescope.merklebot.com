@@ -245,16 +245,10 @@ export default {
       return (this.quantity * this.pricePerToken).toFixed(2)
     },
 
-    account: {
-      get() {
-        return this.$store.state.accountActive
-          ? this.$store.state.accountActive
-          : this.accountDefault;
-      },
-      set(value) {
-        this.$store.commit("setAccountActive", value);
-      },
+    account() {
+      return this.$store.state.accountActive
     },
+
     email: {
       get() {
         return this.$store.state.email;
@@ -410,8 +404,13 @@ export default {
         });
         this.api = await getInstance();
         this.accounts = await getAccounts(this.api);
+
         if (this.accounts) {
           this.accountDefault = this.accounts[0].address;
+        }
+
+        if(!this.$store.state.accountActive) {
+          this.$store.commit("setAccountActive", this.accountDefault)
         }
 
         if (this.accounts.length === 0) {
