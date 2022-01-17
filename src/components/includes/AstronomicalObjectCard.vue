@@ -12,8 +12,13 @@
         <h4>Choose one from {{ this.astronomicalObj.length }} astronomical objects</h4>
       </div>
 
+      <!-- {{astronomicalObjSelected.friendly_name}}<br/>
+      {{astronomicalObj[0]}}<br/>
+      {{astronomicalObjSelected}}<br/>
+      {{astronomicalObj[0].catalog_name === astronomicalObjSelected.catalog_name}} -->
+
       <div class="objects layout-mid">
-        <div class="obj" v-for="(astr, key) in astronomicalObj" :key="key" :class="{'active': astr === astronomicalObjSelected}">
+        <div class="obj" v-for="(astr, key) in astronomicalObj" :key="key" :class="{'active': astr.catalog_name === astronomicalObjSelected.catalog_name}">
           <details tabindex="0">
             <summary>
               <div :class="makeClassName(astr.kind)"></div>
@@ -25,7 +30,7 @@
                 <li>{{astr.catalog_name}}</li>
               </ul>
 
-              <div class="obj-select" v-if="astr !== astronomicalObjSelected">
+              <div class="obj-select" v-if="astr.catalog_name !== astronomicalObjSelected.catalog_name">
                 <a href="javascript:;" @click.prevent.stop="setObjFromDetails(astr)">Select this object</a>
               </div>
             </div>
@@ -85,7 +90,7 @@ export default {
   data() {
     return {
       nftPrice: null,
-      astronomicalObjSelected: this.$store.state.astronomicalObjects[0] ? this.$store.state.astronomicalObjects[0] : []
+      astronomicalObjSelected: []
     };
   },
 
@@ -104,18 +109,25 @@ export default {
       return this.$store.state.astronomicalObjects ? this.$store.state.astronomicalObjects : []
     }
   },
-  
+
   async created(){
     this.nftPrice = await pricePerNFT();
   },
 
   watch: {
     astronomicalObj: function(){
-      this.astronomicalObjSelected = this.$store.state.astronomicalObjects[0]
+      if( this.astronomicalObj.length > 0 ) {
+        if( this.astronomicalObjSelected.length === 0 || this.getSelectedIndex() < 0) {
+          this.astronomicalObjSelected = this.astronomicalObj[0]
+        }
+      }
     }
   },
 
   methods:{
+    getSelectedIndex(){
+      return this.astronomicalObj.findIndex(({ catalog_name }) => catalog_name === this.astronomicalObjSelected.catalog_name)
+    },
     async onSubmit() {
       // console.log('onSubmit test ' + this.$store.state.accountActive, this.astronomicalObjSelected, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET)
       
