@@ -222,16 +222,14 @@ export default {
       // changed here number of decimals from 2 to 0 @positivecrash
       pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(),
 
+      // How much STRGZN tokens user selected to purchase
+      // Better to set here minimum possible by default
+      quantity: parseInt(config.PRICE_PER_LESSON_CENTS / 100)
+
     };
   },
 
   computed: {
-    quantity() {
-      // How much STRGZN tokens user selected to purchase
-      // Better to set here minimum possible by default
-      return this.pricePerToken
-    },
-
     service() {
       // Gets Vuex global state
       return this.$store.state.service
@@ -263,7 +261,7 @@ export default {
     setQuantity(change) {
       // This is for input[number] controls - +
       if ( (this.quantity + change) >=  config.MIN_TOKENS_BUY &&  (this.quantity + change) <=  config.MAX_TOKENS_BUY ){
-        this.quantity += change
+        return this.quantity += change
       }
     },
 
