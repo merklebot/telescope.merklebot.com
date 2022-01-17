@@ -84,7 +84,6 @@ import config from "../../config";
 export default {
   data() {
     return {
-      astronomicalObjSelected: null,
       nftPrice: null
     };
   },
@@ -98,14 +97,17 @@ export default {
   },
   computed: {
     astronomicalObj(){
-      return this.$store.state.astronomicalObjects
+      return this.$store.state.astronomicalObjects ? this.$store.state.astronomicalObjects : []
+    },
+
+    astronomicalObjSelected(){
+      return this.$store.state.astronomicalObjects[0] ? this.$store.state.astronomicalObjects[0] : []
     }
   },
   async created(){
-    this.astronomicalObjSelected = this.astronomicalObj[0];
     this.nftPrice = await pricePerNFT();
-    console.log("Default object selected:", this.astronomicalObjSelected);
   },
+
   methods:{
     async onSubmit() {
       // console.log('onSubmit test ' + this.$store.state.accountActive, this.astronomicalObjSelected, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET)
