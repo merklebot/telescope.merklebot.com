@@ -262,8 +262,8 @@ export default {
         return;
       }
       createNFT(this.astronomicalObjSelected.catalog_name, this.$store.state.accountActive);
-      const { open } = window.tf.createPopup(config.TYPEFORM_ID);
-      open();
+      // const { open } = window.tf.createPopup(config.TYPEFORM_ID);
+      // open();
     },
 
     makeClassName(str) {
