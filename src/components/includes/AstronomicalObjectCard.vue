@@ -213,7 +213,8 @@
 </style>
 
 <script>
-import { telescopeIsFree, astronomicalObject, createNFT, serviceStatus, pricePerNFT } from "../../services/api";
+// import { telescopeIsFree, astronomicalObject, createNFT, serviceStatus, pricePerNFT } from "../../services/api";
+import { astronomicalObject, createNFT, pricePerNFT } from "../../services/api";
 import { sendAsset } from "../../services/substrate";
 import config from "../../config";
 
@@ -241,21 +242,29 @@ export default {
   },
   methods:{
     async onSubmit() {
-      // console.log(this.$store.state.accountActive, this.astronomicalObjSelected, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET)
-      const telescopeStaus = await telescopeIsFree();
-      console.log("Telescope status:", telescopeStaus);
-      if (!telescopeStaus.isFree) {
-        alert("Our telescope is busy. Please try again in 2-3 minutes.");
-        return;
-      }
-      const status = await serviceStatus();
-      console.log("Service status:", status);
-      if (status.status !== "on") {
+      console.log('onSubmit Test ' + this.$store.state.accountActive, this.astronomicalObjSelected, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET)
+      
+      /* Temprorary commented for debug */
+      // const telescopeStaus = await telescopeIsFree();
+      // console.log("Telescope status:", telescopeStaus);
+      // if (!telescopeStaus.isFree) {
+      //   alert("Our telescope is busy. Please try again in 2-3 minutes.");
+      //   return;
+      // }
+
+      /* Moved to Vuex */
+      // const status = await serviceStatus();
+      // console.log("Service status:", status);
+      // if (status.status !== "on") {
+      //   alert("Out of service. Please try again later.");
+      //   return;
+      // }
+
+      if(this.$store.state.service.status !== "on") {
         alert("Out of service. Please try again later.");
         return;
       }
-      // console.log('sendAsset this.$store.state.accountActive ' + this.$store.state.accountActive)
-      // console.log('sendAsset config.ID_ASSET ' + config.ID_ASSET)
+
       const success = await sendAsset(this.$store.state.accountActive, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
       if (!success) {
         console.log("Tokens not sent. Success:", success);
