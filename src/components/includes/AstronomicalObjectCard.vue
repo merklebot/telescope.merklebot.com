@@ -1,5 +1,5 @@
 <template>
-  <section class="wrapper">
+  <section id="step-3" class="wrapper">
     <div class="layout-narrow">
       <h3>3. Enjoy the stars</h3>
       <p class="hyphens">Choose an astronomical object below and hit the submit button. The telescope will start moving and will mint your NFT in a few minutes.</p>
@@ -74,6 +74,90 @@
   </section>
     
 </template>
+
+<script>
+// import { telescopeIsFree, astronomicalObject, createNFT, serviceStatus, pricePerNFT } from "../../services/api";
+import { astronomicalObject, createNFT, pricePerNFT } from "../../services/api";
+import { sendAsset } from "../../services/substrate";
+import config from "../../config";
+
+export default {
+  data() {
+    return {
+      astronomicalObj: [],
+      astronomicalObjSelected: null,
+      nftPrice: null
+    };
+  },
+  props: {
+    isReady: Boolean,
+    accounts: Array,
+    balance: Number,
+  },
+  components: {
+    Button: () => import('../includes/Button.vue'),
+  },
+  async created(){
+    this.astronomicalObj = await astronomicalObject();
+    this.astronomicalObjSelected = this.astronomicalObj[0];
+    this.nftPrice = await pricePerNFT();
+    console.log("Default object selected:", this.astronomicalObjSelected);
+  },
+  methods:{
+    async onSubmit() {
+      // console.log('onSubmit test ' + this.$store.state.accountActive, this.astronomicalObjSelected, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET)
+      
+      /* Temprorary commented for debug */
+      // const telescopeStaus = await telescopeIsFree();
+      // console.log("Telescope status:", telescopeStaus);
+      // if (!telescopeStaus.isFree) {
+      //   alert("Our telescope is busy. Please try again in 2-3 minutes.");
+      //   return;
+      // }
+
+      /* Moved to Vuex */
+      // const status = await serviceStatus();
+      // console.log("Service status:", status);
+      // if (status.status !== "on") {
+      //   alert("Out of service. Please try again later.");
+      //   return;
+      // }
+
+      // if(this.$store.state.service.status !== "on") {
+      //   alert("Out of service. Please try again later.");
+      //   return;
+      // }
+
+      const success = await sendAsset(this.$store.state.accountActive, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
+      if (!success) {
+        console.log("Tokens not sent. Success:", success);
+        return;
+      }
+      createNFT(this.astronomicalObjSelected.catalog_name, this.$store.state.accountActive);
+      // const { open } = window.tf.createPopup(config.TYPEFORM_ID);
+      // open();
+    },
+
+    makeClassName(str) {
+      return str.split(' ').join('')
+    },
+
+    setObjFromDetails(obj) {
+      this.astronomicalObjSelected = obj
+      event.target.closest('details').open = false
+    },
+
+    jump(anchor) {
+      /* Jump to anchor */
+      window.scrollTo({
+          top: document.querySelector(anchor).offsetTop,
+          behavior: "smooth"
+      })
+    },
+  }
+}
+</script>
+
 
 <style scoped>
   .wrapper {
@@ -211,86 +295,3 @@
     .obj-expand:before { left: 2.5rem; }
   }
 </style>
-
-<script>
-// import { telescopeIsFree, astronomicalObject, createNFT, serviceStatus, pricePerNFT } from "../../services/api";
-import { astronomicalObject, createNFT, pricePerNFT } from "../../services/api";
-import { sendAsset } from "../../services/substrate";
-import config from "../../config";
-
-export default {
-    data() {
-    return {
-      astronomicalObj: [],
-      astronomicalObjSelected: null,
-      nftPrice: null
-    };
-  },
-    props: {
-    isReady: Boolean,
-    accounts: Array,
-    balance: Number,
-  },
-  components: {
-    Button: () => import('../includes/Button.vue'),
-  },
-  async created(){
-    this.astronomicalObj = await astronomicalObject();
-    this.astronomicalObjSelected = this.astronomicalObj[0];
-    this.nftPrice = await pricePerNFT();
-    console.log("Default object selected:", this.astronomicalObjSelected);
-  },
-  methods:{
-    async onSubmit() {
-      console.log('onSubmit Test ' + this.$store.state.accountActive, this.astronomicalObjSelected, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET)
-      
-      /* Temprorary commented for debug */
-      // const telescopeStaus = await telescopeIsFree();
-      // console.log("Telescope status:", telescopeStaus);
-      // if (!telescopeStaus.isFree) {
-      //   alert("Our telescope is busy. Please try again in 2-3 minutes.");
-      //   return;
-      // }
-
-      /* Moved to Vuex */
-      // const status = await serviceStatus();
-      // console.log("Service status:", status);
-      // if (status.status !== "on") {
-      //   alert("Out of service. Please try again later.");
-      //   return;
-      // }
-
-      if(this.$store.state.service.status !== "on") {
-        alert("Out of service. Please try again later.");
-        return;
-      }
-
-      const success = await sendAsset(this.$store.state.accountActive, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
-      if (!success) {
-        console.log("Tokens not sent. Success:", success);
-        return;
-      }
-      createNFT(this.astronomicalObjSelected.catalog_name, this.$store.state.accountActive);
-      // const { open } = window.tf.createPopup(config.TYPEFORM_ID);
-      // open();
-    },
-
-    makeClassName(str) {
-      return str.split(' ').join('')
-    },
-
-    setObjFromDetails(obj) {
-      this.astronomicalObjSelected = obj
-      event.target.closest('details').open = false
-    },
-
-    jump(anchor) {
-      /* Jump to anchor */
-      window.scrollTo({
-          top: document.querySelector(anchor).offsetTop,
-          behavior: "smooth"
-      })
-    },
-  }
-}
-</script>
