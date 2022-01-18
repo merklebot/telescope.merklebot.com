@@ -234,8 +234,13 @@ export default {
       return (this.quantity * this.pricePerToken).toFixed(2)
     },
 
-    account() {
-      return this.$store.state.accountActive
+    account: {
+      get() {
+        return this.$store.state.accountActive
+      },
+      set(value) {
+        this.$store.commit("setAccountActive", value)
+      },
     },
 
     // email: {
