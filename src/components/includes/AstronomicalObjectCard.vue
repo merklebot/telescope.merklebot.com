@@ -18,7 +18,7 @@
       {{astronomicalObj[0].catalog_name === astronomicalObjSelected.catalog_name}} -->
 
       <div class="objects layout-mid">
-        <div class="obj" v-for="(astr, key) in astronomicalObj" :key="key" :class="{'active': astr.catalog_name === astronomicalObjSelected.catalog_name}">
+        <div class="obj" v-for="(astr, key) in astronomicalObj" :key="key" :class="{'active': astr.friendly_name === astronomicalObjSelected.friendly_name}">
           <details tabindex="0">
             <summary>
               <div :class="makeClassName(astr.kind)"></div>
@@ -30,7 +30,7 @@
                 <li>{{astr.catalog_name}}</li>
               </ul>
 
-              <div class="obj-select" v-if="astr.catalog_name !== astronomicalObjSelected.catalog_name">
+              <div class="obj-select" v-if="astr.friendly_name !== astronomicalObjSelected.friendly_name">
                 <a href="javascript:;" @click.prevent.stop="setObjFromDetails(astr)">Select this object</a>
               </div>
             </div>
