@@ -245,7 +245,7 @@ ul.dashed li {
 
 .container-full { width: 100%; }
 
-.disabled {
+.disabled, *[disabled] {
   opacity: 0.4;
   pointer-events: none;
 }

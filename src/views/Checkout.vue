@@ -166,7 +166,7 @@
 
               <h5>Total: {{ totalPaymentUSD }} USD</h5>
 
-              <Button class="container-full" size="medium">
+              <Button class="container-full" size="medium" :disabled="!checkoutStatus">
                 <span class="text">Pay with</span>
                 <img class="label" alt="Stripe" src="i/stripe.svg" />
               </Button>
@@ -217,7 +217,9 @@ export default {
       // Better to set here minimum possible by default
       quantity: parseInt(config.PRICE_PER_LESSON_CENTS / 100),
 
-      dayTimeClass: null
+      dayTimeClass: null,
+
+      checkoutStatus: true
 
     };
   },
@@ -313,6 +315,9 @@ export default {
       }
     },
     handleSubmit() {
+      // disabling button on click
+      this.checkoutStatus = false
+
       if (this.account) {
         this.checkout(this.account, this.quantity);
       }
@@ -332,6 +337,7 @@ export default {
         console.log("Checkout error:", error);
       }
       this.proccess = false;
+      this.checkoutStatus = true
     },
 
     jump(anchor) {

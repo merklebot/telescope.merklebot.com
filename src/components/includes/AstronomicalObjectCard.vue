@@ -58,7 +58,7 @@
           </p>
       
           <p>
-            <Button @click.native="onSubmit" :class="{ disabled: !submitStatus }" class="container-full">Submit</Button>
+            <Button @click.native="onSubmit" :disabled="!submitStatus" class="container-full">Submit</Button>
           </p>
 
           <p class="error-title text-small" v-if="submitMessage" v-html="submitMessage" />
