@@ -145,7 +145,12 @@
 
         <section class="tokenSection layout-sm">
           <div class="tokenSection-info">
-            <h4>Your balance <span>{{ balance }} $STRGZN</span></h4>
+            <h4>
+              Your balance 
+              <span :class="{'text-green':balance>0}">{{ balance }} $STRGZN</span>
+              <div v-if="checkoutComplite==='success'" class="text-green">Payment successful</div>
+              <div v-if="checkoutComplite==='error'" class="text-red">Payment error, please <a :href="$discord" target="_blank" rel="noopener noreferrer">contact us</a></div>
+            </h4>
             <p>1 $STRGZN = {{ pricePerToken }} USD</p>
             <p>With 1 $STRGZN you can get 1 telescope NFT</p>
           </div>
@@ -183,8 +188,6 @@
 
 <script>
 import { checkout } from "../services/api";
-// MOVED TO VUEX (main.js) by @positivecrash
-// import { checkout, serviceStatus } from "../services/api";
 import stripe from "../services/stripe";
 import { getProvider, getInstance, getAccounts } from "../services/substrate";
 import config from "../config";
@@ -219,7 +222,9 @@ export default {
 
       dayTimeClass: null,
 
-      checkoutStatus: true
+      checkoutStatus: true,
+
+      checkoutComplite: false
 
     };
   },
@@ -430,12 +435,23 @@ export default {
       }
   },
 
-
   mounted() {
       // Get service status & message, astronomical objects with setinterval 10000 included. Vuex, main.js
       this.$store.dispatch("watchApiData")
 
+      /* Set class for top banner */
       this.dayTimeClass = this.dayTime()
+
+      /* Settimeout for payment messages */
+      if(this.$route.query.checkout) {
+        this.checkoutComplite = this.$route.query.checkout
+
+        setTimeout(() => {
+          if( this.checkoutComplite === 'success') {
+            this.checkoutComplite = false
+          } 
+        }, 10000);
+      }
   },
 
   beforeDestroy () {

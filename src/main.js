@@ -72,6 +72,7 @@ const store = new Vuex.Store({
 });
 
 Vue.config.productionTip = false;
+Vue.prototype.$discord = "https://discord.com/invite/5UWNGNaAUf";
 
 new Vue({
   router,

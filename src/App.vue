@@ -362,5 +362,13 @@ section section {
 .m-b-space {
   margin-bottom: var(--space);
 }
+
+.text-green {
+  color: var(--color-green)
+}
+
+.text-red {
+  color: var(--color-red)
+}
 </style>
 
