@@ -50,3 +50,7 @@ export async function createNFT(name, owner) {
   })
   console.log("Сreate NFT response:", resp)
 }
+
+export async function getCustomerEmailByAccountAddress(accountAddress) {
+  return "customer@example.com"
+}
