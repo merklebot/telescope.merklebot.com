@@ -58,20 +58,10 @@
           </p>
       
           <p>
-            <Button @click.native="onSubmit" :class="{ disabled: accounts.length < 0 || !isReady || balance < 1 || $store.state.service.status === 'off'}" class="container-full">Submit</Button>
+            <Button @click.native="onSubmit" :class="{ disabled: !submitStatus }" class="container-full">Submit</Button>
           </p>
 
-          <p class="error-title text-small">
-            <template v-if="accounts.length < 0 || !isReady">
-              Please <a href="#step-1" @click.prevent="jump('#step-1')">connect your account</a>
-            </template>
-            <template v-else-if="balance < 1">
-              Please <a href="#step-2" @click.prevent="jump('#step-2')">buy $STRGZN tokens</a>
-            </template>
-            <template v-else-if="$store.state.service.status === 'off'">
-              Please wait for the telescope to turn on
-            </template>
-          </p>
+          <p class="error-title text-small" v-if="submitMessage" v-html="submitMessage" />
 
         </form>
     </section>
@@ -90,7 +80,9 @@ export default {
   data() {
     return {
       nftPrice: null,
-      astronomicalObjSelected: []
+      astronomicalObjSelected: [],
+      submitStatus: true,
+      submitMessage: null
     };
   },
 
@@ -126,37 +118,50 @@ export default {
 
   methods:{
     getSelectedIndex(){
+      /* For checking if selected object is still available for telescope */
       return this.astronomicalObj.findIndex(({ catalog_name }) => catalog_name === this.astronomicalObjSelected.catalog_name)
     },
     async onSubmit() {
       // console.log('onSubmit test ' + this.$store.state.accountActive, this.astronomicalObjSelected, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET)
+
+      /* Onclick first actions */
+      this.submitMessage = null
+      this.submitStatus = false
       
-      /* Temprorary commented for debug */
-      // const telescopeStaus = await telescopeIsFree();
-      // console.log("Telescope status:", telescopeStaus);
-      // if (!telescopeStaus.isFree) {
-      //   alert("Our telescope is busy. Please try again in 2-3 minutes.");
-      //   return;
-      // }
+      /* First check - Update message */
+      if (this.$store.state.service.status === 'off') {
+        this.submitMessage =  'Please wait for the telescope to turn on'
+      }
 
-      /* Moved to Vuex */
-      // const status = await serviceStatus();
-      // console.log("Service status:", status);
-      // if (status.status !== "on") {
-      //   alert("Out of service. Please try again later.");
-      //   return;
-      // }
+      if (!this.$store.state.telescope) {
+        this.submitMessage =  'Our telescope is busy. Please try again in 2-3 minutes.'
+      }
 
-      // if(this.$store.state.service.status !== "on") {
-      //   alert("Out of service. Please try again later.");
-      //   return;
-      // }
+      if(this.accounts.length < 0 || !this.isReady) {
+        this.submitMessage =  'Please <a href="#step-1">connect your account</a>'
+      }
 
+      if(this.balance < 1) {
+        this.submitMessage =  'Please <a href="#step-2">buy $STRGZN tokens</a>'
+      }
+
+      /* First check - Quit if this happens: */
+      if (
+        this.$store.state.service.status === 'off' ||
+        !this.$store.state.telescope ||
+        this.accounts.length < 0 || !this.isReady || 
+        this.balance < 1) {
+
+        return
+      }
+
+      /* Send tokens */
       const success = await sendAsset(this.$store.state.accountActive, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
       if (!success) {
-        console.log("Tokens not sent. Success:", success);
-        return;
+        this.submitMessage =  'Tokens not sent. Please, contact us or try later'
+        return
       }
+
       createNFT(this.astronomicalObjSelected.catalog_name, this.$store.state.accountActive);
       // const { open } = window.tf.createPopup(config.TYPEFORM_ID);
       // open();
@@ -177,7 +182,7 @@ export default {
           top: document.querySelector(anchor).offsetTop,
           behavior: "smooth"
       })
-    },
+    }
   }
 }
 </script>

@@ -15,6 +15,7 @@ Vue.use(VueHead);
 const store = new Vuex.Store({
   state: {
     service: [],
+    telescope: [],
     astronomicalObjects: [],
     watcherApiData: null,
     accountActive: null,
@@ -26,6 +27,11 @@ const store = new Vuex.Store({
       axios.get("https://api.merklebot.com/beyond-the-sky/status").then(response => {
         state.service = response.data
         console.log("[Vuex getService]:", { "status": response.data.status, "message": response.data.message })
+      })
+    },
+    getTelescope(state) {
+      axios.get("https://api.merklebot.com/beyond-the-sky/telescopes/{telescope_id}/is_free").then(response => {
+        state.telescope = response.data
       })
     },
     getAstronomicalObjects(state) {
@@ -50,10 +56,12 @@ const store = new Vuex.Store({
       
       commit('getService')
       commit('getAstronomicalObjects')
+      commit('getTelescope')
 
       state.watcherApiData = setInterval(() => {
         commit('getService')
         commit('getAstronomicalObjects')
+        commit('getTelescope')
       }, 10000)
     },
 
