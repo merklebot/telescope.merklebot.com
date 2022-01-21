@@ -20,7 +20,6 @@ const store = new Vuex.Store({
     watcherApiData: null,
     accountActive: null,
     email: localStorage.email ? localStorage.email : '',
-    // user: []
   },
   mutations: {
     getService(state) {
