@@ -7,13 +7,24 @@
             <div class="layout-narrow">
               <p>Connect to our autonomous telescope in the dark night of Atacama desert in Chile, select an astronomical object and mint unique NFTs in a few clicks.</p>
             </div>
-            
-            <!-- <template v-if="!isReady && error === null && connectAccountClicked">
-              <span class="loader"></span>
-            </template> -->
 
-            <!-- <Button v-if="!connectAccountClicked || (!isReady && error !== null)" @click.native="jump('#start')">Start</Button> -->
-            <Button v-if="!isReady && error !== null" @click.native="jump('#start')">Start</Button>
+            <!-- {{$store.state.app.status}}<br/>
+            {{$store.state.polkadot.accounts}}<br/> -->
+
+            <template v-if="$store.state.app.status === 'start'">
+                <span class="loader"></span>
+            </template>
+            <template v-else-if="$store.state.app.status === 'start clicked' || $store.state.app.status === 'extension error'">
+              <Button @click.native="jump('#start')">Start</Button>
+            </template>
+            <template v-else>
+              <template v-if="balance > 0">
+                <Button @click.native="jump('#step-3')" size="medium" color="green">Buy or check your NFT</Button>
+              </template>
+              <template v-if="balance === 0">
+                <Button @click.native="jump('#step-2')" size="medium" color="orange">Get your NFT</Button>
+              </template>
+            </template>
             
             <!-- <template v-if="isReady && accounts.length > 0">
               <a v-if="this.account" :href="'https://singular.rmrk.app/space/' + this.account + '?tab=owned&owner=yes'" target="_blank" rel="noopener noreferrer">Check your NFTs</a>
@@ -64,72 +75,59 @@
             >
           </p>
 
-          <!-- <section v-if="!isReady && !connectAccountClicked">
-            <Button v-on:click.native="connectAccount">Connect account</Button>
-          </section> -->
 
-          <template v-if="!isReady && error === null">
-            <section>
+          <section v-if="$store.state.app.status === 'start'">
+            <Button v-on:click.native="$store.commit('setAppStatus', 'start clicked')">Connect account</Button>
+          </section>
+
+          <section v-else>
+
+            <template v-if="$store.state.app.status === 'start clicked'">
               <span class="loader"></span>
               <i>Checking Polkadot.js extension</i>
-            </section>
-          </template>
-
-          <template v-if="isReady">
-              <template v-if="accounts.length > 0">
-                <section>
-                  <form>
-                    <p>
-                      <select class="container-full" v-model="account">
-                        <option
-                          v-for="(account, key) in accounts"
-                          :key="key"
-                          :value="account.address"
-                        >
-                          {{ account.meta.name }} –
-                          {{ addressShort(account.address) }}
-                        </option>
-                      </select>
-                    </p>
-                  </form>
-                </section>
-              </template>
-            <template v-else>
-               <section>
-                <p class="error-title">Account not found</p>
-                <p class="error-text">Please create an account or switch on account's visibility in
-                <a href="https://polkadot.js.org/extension/" target="_blank"
-                  >Polkadot.js extension</a
-                >. Then reload this page.</p>
-              </section>
             </template>
-          </template>
 
-          <template v-else-if="error">
-            <template v-if="error === 'NOT_FOUND_EXTENSION'">
-              <section>
-                <p class="error-title">Extension not found</p>
-                <p class="error-text">Please install
-                <a href="https://polkadot.js.org/extension/" target="_blank"
-                  >Polkadot.js extension</a
-                >, create and add Web3 account. Then reload this page.</p>
-              </section>
-            </template>
-            <template v-else-if="!accounts || accounts.length < 1">
-              <section>
-                <p class="error-title">You currently don't have any accounts</p>
-                <p class="error-text">Please create an account
+            <template v-if="$store.state.app.status === 'extension error'">
+              <p class="error-title">{{ $store.state.polkadot.message }}</p>
+              <p class="error-text">
+                <template v-if="$store.state.polkadot.message === 'NOT_FOUND_EXTENSION'">
+                  Please install
+                  <a href="https://polkadot.js.org/extension/" target="_blank"
+                    >Polkadot.js extension</a
+                  >, create and add Web3 account. Then reload this page.
+                </template>
+
+                <template v-else-if="$store.state.polkadot.message === 'accounts not found'">
+                  Please create an account
                   or switch on account's visibility in
-                  <a href="https://polkadot.js.org/extension/" target="_blank">Polkadot.js extension</a>. Then reload this page.</p>
-              </section>
+                  <a href="https://polkadot.js.org/extension/" target="_blank">Polkadot.js extension</a>. Then reload this page.
+                </template>
+
+                <template v-else>
+                  Polkadot.js extension error, please try to reload page, if error still occurs <a :href="$discord" target="_blank" rel="noopener noreferrer">contact us</a>
+                </template>
+              </p>
             </template>
-            <template v-else>
-              <section>
-                <p class="error-title">Some error occured</p>
-                <p class="error-text">{{ error }}</p>
-              </section>
+
+            <template v-if="$store.state.app.status === 'extension ready'">
+              <form>
+                  <p>
+                    <select class="container-full" v-model="account">
+                      <option
+                        v-for="(account, key) in $store.state.polkadot.accounts"
+                        :key="key"
+                        :value="account.address"
+                      >
+                        {{ account.meta.name }} –
+                        {{ addressShort(account.address) }}
+                      </option>
+                    </select>
+                  </p>
+                </form>
             </template>
-          </template>
+
+          </section>
+
         </div>
       </section>
 
@@ -158,11 +156,17 @@
           <div class="tokenSection-form">
             <h4>Purchase tokens</h4>
 
-            <p v-if="accounts.length < 1 || !isReady" class="error-title text-small">Please <a href="#step-1" @click.prevent="jump('#step-1')">connect your Polkadot account</a></p>
+            <p 
+              v-if="$store.state.app.status !== 'extension ready'" 
+              class="error-title text-small">
+              
+              Please <a href="#step-1" @click.prevent="jump('#step-1')">connect your Polkadot account</a>
+            </p>
 
-            <form @onChange="onChange" @submit.prevent="handleSubmit" :class="{
-              disabled: accounts.length < 1 || !isReady,
-            }">
+            <form 
+              @onChange="onChange" 
+              @submit.prevent="handleSubmit" 
+              :class="{disabled: $store.state.app.status !== 'extension ready'}">
               <div class="inputNumbers m-b-space">
                 <div class="less" @click="setQuantity(-1)">-</div>
                 <input type="number" v-model.number="quantity" value="quantity" required />
@@ -180,7 +184,7 @@
         </section>
       </section>
 
-      <astronomicalObjectCard :accounts="this.accounts"  :isReady="this.isReady" :balance="this.balance"/>
+      <astronomicalObjectCard :balance="this.balance"/>
   
   </div>  
 
@@ -189,7 +193,6 @@
 <script>
 import { checkout } from "../services/api";
 import stripe from "../services/stripe";
-import { getProvider, getInstance, getAccounts } from "../services/substrate";
 import config from "../config";
 import { loadScript } from "../utils/tools";
 
@@ -200,9 +203,6 @@ export default {
   },
   data() {
     return {
-      isReady: false,
-      connectAccountClicked: false, // need to be refactored @positivecrash
-      // connectAccountClicked: localStorage.getItem('connectAccountClicked') || false, // need to be refactored @positivecrash
       error: null,
       api: null,
       unsubscribe: null,
@@ -241,10 +241,10 @@ export default {
 
     account: {
       get() {
-        return this.$store.state.accountActive
+        return this.$store.state.app.account
       },
       set(value) {
-        this.$store.commit("setAccountActive", value)
+        this.$store.dispatch("setAccountActive", value)
       },
     },
 
@@ -265,46 +265,6 @@ export default {
         return this.quantity += change
       }
     },
-
-    // async connectAccount() {
-    //   if (!this.connectAccountClicked) {
-    //     // localStorage.setItem('connectAccountClicked', true)
-    //     this.connectAccountClicked = true
-    //   }
-
-    //   try {
-    //     const provider = getProvider();
-    //     provider.on("error", () => {
-    //       this.error = "Disconnected provider";
-    //       this.isReady = false;
-    //     });
-    //     provider.on("connect", () => {
-    //       this.isReady = true;
-    //     });
-    //     this.api = await getInstance();
-    //     this.accounts = await getAccounts(this.api);
-    //     if (this.accounts) {
-    //       this.accountDefault = this.accounts[0].address;
-    //     }
-
-    //     if (this.accounts.length === 0) {
-    //       this.error = "Not found account";
-    //     }
-    //     this.isReady = true;
-    //     this.status = true;
-
-    //     this.unsubscribe = await this.api.query.assets.account(
-    //       config.ID_ASSET,
-    //       this.account,
-    //       ({ balance: currentFree }) => {
-    //         this.balance = currentFree.toNumber();
-    //       }
-    //     );
-
-    //   } catch (error) {
-    //     this.error = error.message;
-    //   }
-    // },
 
     addressShort(address) {
       return address.slice(0, 6) + "..." + address.slice(-4);
@@ -375,67 +335,7 @@ export default {
     
   },
 
-  async created() {
-    // try {
-    //   // MOVED TO VUEX (main.js) by @positivecrash
-    //   // // Poll telescope status
-    //   // setImmediate(async () => {
-    //   //   this.serviceStatus = await serviceStatus()
-    //   // })
-    //   // setInterval(async () => {
-    //   //   this.serviceStatus = await serviceStatus()
-    //   //   console.log("Service status:", { "status": this.serviceStatus.status, "message": this.serviceStatus.message })
-    //   // }, 10000)
-
-    //   if(this.connectAccountClicked) {
-    //     await this.connectAccount()
-    //   }
-
-    // } catch (error) {
-    //   this.error = error.message;
-    // }
-
-
-    try {
-        const provider = getProvider();
-        provider.on("error", () => {
-          this.error = "Disconnected provider";
-          this.isReady = false;
-        });
-        provider.on("connect", () => {
-          this.isReady = true;
-        });
-        this.api = await getInstance();
-        this.accounts = await getAccounts(this.api);
-
-        if (this.accounts) {
-          this.accountDefault = this.accounts[0].address;
-        }
-
-        if(!this.$store.state.accountActive) {
-          this.$store.commit("setAccountActive", this.accountDefault)
-        }
-
-        if (this.accounts.length === 0) {
-          this.error = "Not found account";
-        }
-        this.isReady = true;
-        this.status = true;
-
-        this.unsubscribe = await this.api.query.assets.account(
-          config.ID_ASSET,
-          this.account,
-          ({ balance: currentFree }) => {
-            this.balance = currentFree.toNumber();
-          }
-        );
-
-      } catch (error) {
-        this.error = error.message;
-      }
-  },
-
-  mounted() {
+  async mounted() {
       // Get service status & message, astronomical objects with setinterval 10000 included. Vuex, main.js
       this.$store.dispatch("watchApiData")
 

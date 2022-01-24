@@ -4,18 +4,12 @@
       <h3>3. Enjoy the stars</h3>
       <p class="hyphens">Choose an astronomical object below and hit the submit button. The telescope will start moving and will mint your NFT in a few minutes.</p>
     </div>
-      
 
     <section>
 
       <div class="layout-narrow">
         <h4>Choose one from {{ this.astronomicalObj.length }} astronomical objects</h4>
       </div>
-
-      <!-- {{astronomicalObjSelected.friendly_name}}<br/>
-      {{astronomicalObj[0]}}<br/>
-      {{astronomicalObjSelected}}<br/>
-      {{astronomicalObj[0].catalog_name === astronomicalObjSelected.catalog_name}} -->
 
       <div class="objects layout-mid">
         <div class="obj" v-for="(astr, key) in astronomicalObj" :key="key" :class="{'active': astr.friendly_name === astronomicalObjSelected.friendly_name}">
@@ -58,7 +52,7 @@
           </p>
       
           <p>
-            <Button @click.native="onSubmit" :disabled="!submitStatus" class="container-full">Submit</Button>
+            <Button @click.native.prevent="onSubmit" :disabled="!submitStatus" class="container-full">Submit</Button>
           </p>
 
           <p class="error-title text-small" v-if="submitMessage" v-html="submitMessage" />
@@ -71,7 +65,6 @@
 </template>
 
 <script>
-// import { telescopeIsFree, astronomicalObject, createNFT, serviceStatus, pricePerNFT } from "../../services/api";
 import { createNFT, pricePerNFT } from "../../services/api";
 import { sendAsset } from "../../services/substrate";
 import config from "../../config";
@@ -87,8 +80,6 @@ export default {
   },
 
   props: {
-    isReady: Boolean,
-    accounts: Array,
     balance: Number,
   },
 
@@ -113,6 +104,15 @@ export default {
           this.astronomicalObjSelected = this.astronomicalObj[0]
         }
       }
+    },
+    submitStatus: function() {
+      /* Set button active after some time out (even if there are errors) */
+      if( !this.submitStatus ) {
+        setTimeout(() => {
+          this.submitStatus = true
+          this.submitMessage = null
+        }, 10000);
+      }
     }
   },
 
@@ -129,40 +129,41 @@ export default {
       this.submitStatus = false
       
       /* First check - Update message */
-      if (this.$store.state.service.status === 'off') {
-        this.submitMessage =  'Please wait for the telescope to turn on'
-      }
 
       if (!this.$store.state.telescope) {
         this.submitMessage =  'Our telescope is busy. Please try again in 2-3 minutes.'
       }
 
-      if(this.accounts.length < 0 || !this.isReady) {
-        this.submitMessage =  'Please <a href="#step-1">connect your account</a>'
+      if (this.$store.state.service.status === 'off') {
+        this.submitMessage =  'Please wait for the telescope to turn on'
       }
 
       if(this.balance < 1) {
         this.submitMessage =  'Please <a href="#step-2">buy $STRGZN tokens</a>'
       }
 
+      if(!this.$store.state.app.account || this.$store.state.app.status !== 'extension ready') {
+        this.submitMessage =  'Please <a href="#step-1">connect your account</a>'
+      }
+
       /* First check - Quit if this happens: */
       if (
         this.$store.state.service.status === 'off' ||
         !this.$store.state.telescope ||
-        this.accounts.length < 0 || !this.isReady || 
+        !this.$store.state.app.account || this.$store.state.app.status !== 'extension ready' || 
         this.balance < 1) {
 
         return
       }
 
       /* Send tokens */
-      const success = await sendAsset(this.$store.state.accountActive, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
+      const success = await sendAsset(this.$store.state.app.account, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
       if (!success) {
         this.submitMessage =  'Tokens not sent. Please, contact us or try later'
         return
       }
 
-      createNFT(this.astronomicalObjSelected.catalog_name, this.$store.state.accountActive);
+      createNFT(this.astronomicalObjSelected.catalog_name, this.$store.state.app.account);
       // const { open } = window.tf.createPopup(config.TYPEFORM_ID);
       // open();
     },

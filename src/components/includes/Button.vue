@@ -20,13 +20,22 @@ export default {
           return ['none', 'stripe'].indexOf(value) !== -1;
         }
     },
+
+    color: {
+        type: String,
+        default: 'blue',
+        validator: function (value) {
+          return ['blue', 'orange', 'green'].indexOf(value) !== -1;
+        }
+    },
   },
 
   computed: {
     classes() {
       return {
         [`${this.size}`]: true,
-        [`label-${this.label}`]: true
+        [`label-${this.label}`]: true,
+        [`${this.color}`]: true
       };
     },
   }
@@ -79,5 +88,19 @@ export default {
 
   .label:last-child {
     margin-right: 0;
+  }
+
+  button.orange {
+    background-color: var(--color-orange);
+  }
+  button.orange:hover {
+    background-color: var(--color-red);
+  }
+
+  button.green {
+    background-color: var(--color-green);
+  }
+  button.green:hover {
+    background-color: var(--color-green);
   }
 </style>

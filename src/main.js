@@ -6,7 +6,9 @@ import Fragment from "vue-fragment";
 import Vuex from 'vuex'; // for some global data
 // import { checkAddress } from "@polkadot/util-crypto";
 import VueHead from 'vue-head'; // for injecting to <head/>
-import axios from "axios"
+import axios from "axios";
+
+import { getProvider, getInstance, getAccounts } from "./services/substrate";
 
 Vue.use(Fragment.Plugin);
 Vue.use(Vuex);
@@ -18,8 +20,16 @@ const store = new Vuex.Store({
     telescope: [],
     astronomicalObjects: [],
     watcherApiData: null,
-    accountActive: null,
-    email: localStorage.email ? localStorage.email : '',
+    polkadot: {
+      message: 'init',
+      api: null,
+      accounts: null
+    },
+    app: {
+      status: 'start',
+      account: localStorage.account ? localStorage.account : null,
+      email: localStorage.email ? localStorage.email : null
+    }
   },
   mutations: {
     getService(state) {
@@ -39,23 +49,22 @@ const store = new Vuex.Store({
         console.log("[Vuex getAstronomicalObjects]:", response.data)
       })
     },
-    setAccountActive(state, address) {
-      // if(checkAddress(address, 2)[0]){
-        state.accountActive = address
-        // localStorage.setItem('accountActive', state.accountActive)
-      // }
-    },
     setEmail(state, value) {
-      state.email = value
-      localStorage.setItem('email', state.email)
+      state.app.email = value
+      localStorage.setItem('email', state.app.email)
     },
+    setAppStatus(state, value) {
+      state.app.status = value
+    }
+
   },
   actions: {
-    watchApiData({ state, commit }) {
+    async watchApiData({ state, commit, dispatch }) {
       
       commit('getService')
       commit('getAstronomicalObjects')
       commit('getTelescope')
+      dispatch("polkadotConnect")
 
       state.watcherApiData = setInterval(() => {
         commit('getService')
@@ -66,6 +75,76 @@ const store = new Vuex.Store({
 
     stopApiData({ state }) {
       clearInterval(state.watcherApiData)
+    },
+
+    setAccountActive({ state }, address) {
+
+      /* Check if address is in the extention list */
+      let accountExists = false
+      if(state.polkadot.accounts) {
+        for (const value of state.polkadot.accounts) {
+          if(value.address == address) {
+            accountExists = true
+          }
+        }
+      }
+
+      if(accountExists){
+        state.app.account = address
+        localStorage.setItem('account', state.app.account)
+      }
+    },
+
+    async polkadotConnect({ state, dispatch }) {
+      try {
+        /* Provider */
+        const provider = getProvider()
+        provider.on("error", () => {
+          state.polkadot.message = 'provider not connected'
+          state.app.status = 'extension error'
+        });
+        provider.on("connect", () => {
+          state.polkadot.message = 'provider connected'
+        });
+
+        /* Api */
+        state.polkadot.api = await getInstance()
+        if ( state.polkadot.api ) {
+          state.polkadot.message = 'api connected'
+        } else {
+          state.polkadot.message = 'api not connected'
+          state.app.status = 'extension error'
+        }
+
+        /* Accounts */
+        state.polkadot.accounts = await getAccounts(state.polkadot.api)
+        
+        if ( state.polkadot.accounts.length > 0 ) {
+          state.polkadot.message = 'accounts found'
+        } else {
+          state.polkadot.message = 'accounts not found'
+          state.app.status = 'extension error'
+        }
+      } catch (error) {
+
+        /* Catch other errors */
+        state.polkadot.message = error.message
+        state.app.status = 'extension error'
+
+      } finally {
+
+        /* Ready if we have not any errors during trying */
+        if(state.app.status !== 'extension error') {
+          state.app.status = 'extension ready'
+        }
+
+        /* Set active account */
+        if ( state.app.account ) {
+          dispatch("setAccountActive", state.app.account)
+        } else {
+          dispatch("setAccountActive", state.polkadot.accounts[0].address)
+        }
+      }
     }
   }
 });

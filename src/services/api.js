@@ -19,20 +19,20 @@ export async function setAccount(data) {
   return { result: false };
 }
 
-export async function astronomicalObject(){
-  const response = await axios.get(`https://api.merklebot.com/beyond-the-sky/astronomical-objects`)
-  return response.data
-}
+// export async function astronomicalObject(){
+//   const response = await axios.get(`https://api.merklebot.com/beyond-the-sky/astronomical-objects`)
+//   return response.data
+// }
 
-export async function serviceStatus() {
-  const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/status")
-  return { "status": resp.data.status, "message": resp.data.message }
-}
+// export async function serviceStatus() {
+//   const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/status")
+//   return { "status": resp.data.status, "message": resp.data.message }
+// }
 
-export async function telescopeIsFree() {
-  const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/telescopes/{telescope_id}/is_free")
-  return { "isFree": resp.data }
-}
+// export async function telescopeIsFree() {
+//   const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/telescopes/{telescope_id}/is_free")
+//   return { "isFree": resp.data }
+// }
 
 export async function pricePerNFT() {
   const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/price")

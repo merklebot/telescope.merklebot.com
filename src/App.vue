@@ -351,12 +351,12 @@ section section {
 .error-title, .error-text {
   font-weight: 900;
   font-family: var(--font-highlight);
+  color: var(--color-red);
 }
 
 .error-title {
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--color-red)
 }
 
 .m-b-space {
