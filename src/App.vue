@@ -232,13 +232,21 @@ ul.dashed li:not(:last-child) {
   margin-bottom: var(--space);
 }
 
-ul.tablelike li {
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: var(--space);
-  text-align: left;
+@media screen and (min-width: 451px) {
+  ul.tablelike li {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: var(--space);
+    text-align: left;
+  }
 }
 
+@media screen and (max-width: 450px) {
+  ul.tablelike li > * {
+    display: block;
+    margin-bottom: var(--space);
+  }
+}
 
 .layout, .layout-mid, .layout-narrow, .layout-sm {
   box-sizing: border-box;

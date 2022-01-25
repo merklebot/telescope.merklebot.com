@@ -38,12 +38,13 @@
           </div>
 
           <div class="banner-top-art" aria-hidden="true">
+            <Stars />
             <img aria-hidden="true" src="i/cloud-1.png" class="cloud cloud-1" />
             <img aria-hidden="true" src="i/cloud-2.png" class="cloud cloud-2" />
             <img aria-hidden="true" src="i/cloud-3.png" class="cloud cloud-3" />
             <div class="banner-grass"></div>
             <img aria-hidden="true" src="i/banner-stone.png" class="banner-stone" />
-            <img aria-hidden="true" src="i/banner-sights.png" class="banner-sights" />
+            <img aria-hidden="true" src="i/banner-sights.png" class="banner-sights" />   
           </div>
           
         </div>
@@ -199,7 +200,8 @@ import config from "../config";
 export default {
   components: {
     astronomicalObjectCard: () => import('../components/includes/AstronomicalObjectCard.vue'),
-    Button: () => import('../components/includes/Button.vue')
+    Button: () => import('../components/includes/Button.vue'),
+    Stars: () => import('../components/includes/Stars.vue')
   },
   data() {
     return {
@@ -593,9 +595,18 @@ export default {
     animation-name: DayTimeTextLight;
   }
 
+  .banner-top .sky {
+    display: none;
+  }
+
+  .banner-top.night:not(.cloudy) .sky {
+    display: block;
+  }
+
   .banner-top.cloudy .cloud{
     display: block;
   }
+
 /* 
   .banner-top.dawn {
     background-image: linear-gradient(#000008, #00819d, #00519b, #ccc1ff, #000008);

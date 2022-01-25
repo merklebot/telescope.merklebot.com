@@ -76,7 +76,7 @@
       </ul>
     </section>
       
-    <section class="layout-narrow">
+    <section class="order-form layout-narrow">
         <form>
           <p>
             <select class="container-full" v-model="astronomicalObjSelected">
@@ -99,6 +99,8 @@
 
         </form>
     </section>
+
+    <Stars/>
   
   </section>
     
@@ -122,6 +124,7 @@ export default {
 
   components: {
     Button: () => import('../includes/Button.vue'),
+    Stars: () => import('../includes/Stars.vue')
   },
 
   computed: {
@@ -238,7 +241,23 @@ export default {
 
 <style scoped>
   .wrapper {
-    background-image: linear-gradient(var(--color-blue-darkest), #001E49, #00323C);
+    /* background-image: linear-gradient(var(--color-blue-darkest), #001E49, #00323C); */
+    background-image: 
+    radial-gradient(
+      ellipse
+      farthest-corner at 45px 45px,
+      var(--color-blue) 0%,
+      var(--color-blue-darkest) 30%,
+      #000 55%,
+      var(--color-blue) 90%
+    );
+    position: relative;
+    border-top: var(--space) solid var(--color-blue)
+  }
+
+  .order-form, .order {
+    position: relative;
+    z-index: 1;
   }
 
   select {
@@ -249,6 +268,7 @@ export default {
     position: relative;
     width: 100%;
     height: 300px;
+    z-index: 2;
     /* margin-bottom: calc(var(--padding) * 2); */
   }
 
