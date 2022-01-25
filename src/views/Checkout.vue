@@ -16,10 +16,7 @@
               <Button @click.native="jump('#start')">Start</Button>
             </template>
 
-            <template v-else>
-
-            <template v-if="$store.state.app.account">
-              
+            <template v-else-if="$store.state.app.account">
                 <div><Button @click.native="jump('#step-2')" size="medium" color="orange">Buy NFT</Button></div>
 
                 <div>or</div>
@@ -31,10 +28,6 @@
                 target="_blank" rel="noopener noreferrer">
                   Check your NFT
                 </Button></div>
-  
-
-            </template>
-              
             </template>
 
             <div class="banner-telescope" aria-hidden="true">
