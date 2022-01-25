@@ -38,10 +38,14 @@
           </div>
 
           <div class="banner-top-art" aria-hidden="true">
+            <img aria-hidden="true" src="i/cloud-1.png" class="cloud cloud-1" />
+            <img aria-hidden="true" src="i/cloud-2.png" class="cloud cloud-2" />
+            <img aria-hidden="true" src="i/cloud-3.png" class="cloud cloud-3" />
             <div class="banner-grass"></div>
             <img aria-hidden="true" src="i/banner-stone.png" class="banner-stone" />
             <img aria-hidden="true" src="i/banner-sights.png" class="banner-sights" />
           </div>
+          
         </div>
         <div class="banner-bottom">
           <div class="layout-narrow">
@@ -309,6 +313,10 @@ export default {
         if ( this.service.message.includes('Night') ) {
           return 'night'
         }
+
+        if ( this.service.message.includes('cloudy') ) {
+          return 'cloudy'
+        }
       }
     }
     
@@ -379,6 +387,7 @@ export default {
 
   .banner-top-content {
     text-align: center;
+    z-index: 1;
   }
 
   .banner-top-content a {
@@ -413,6 +422,7 @@ export default {
     bottom: 0;
     z-index: 0;
     pointer-events: none;
+    overflow: hidden;
   }
 
   .banner-top-art * {
@@ -473,6 +483,38 @@ export default {
     bottom: 10px;
     right: 80px
   }
+
+  .cloud-1 {
+    bottom: 50px;
+    left: calc(50% - 350px);
+    transform: translateY(-10%);
+  }
+
+  .cloud-2 {
+    bottom: 120px;
+    left: -30px;
+    transform: translateX(-10%);
+  }
+
+  .cloud-3 {
+    bottom: 120px;
+    right: -30px;
+    transform: translateX(10%);
+  }
+
+  .cloud {
+    display: none;
+    opacity: 0;
+    animation: cloud 2s cubic-bezier(0.165, 0.84, 0.44, 1) 0.5s forwards;
+  }
+
+  @keyframes cloud {
+    to {
+      opacity: 1;
+      transform: translateX(0) translateY(0);
+    }
+  }
+  
   
   @media screen and (max-width: 1060px) {
     .banner-top {
@@ -553,6 +595,10 @@ export default {
     background-image: linear-gradient(#9265ab, #ffc888, #000008, #00819d, #9265ab);
     animation-name: DayTimeTextLight;
   }
+
+  .banner-top.cloudy .cloud{
+    display: block;
+  }
 /* 
   .banner-top.dawn {
     background-image: linear-gradient(#000008, #00819d, #00519b, #ccc1ff, #000008);
@@ -589,11 +635,11 @@ export default {
   .night .banner-stone, .night .banner-grass, .night .banner-sights {
     animation: Darken 3s ease var(--daychange-duration) forwards;
   }
-
+/* 
   .dawn .banner-telescope-head {
     transform: rotate(0deg);
     animation: TelescopeOff 3s ease calc(var(--daychange-duration) * 0.5) forwards;
-  }
+  } */
 
   @keyframes Darken {
     to {
