@@ -49,9 +49,11 @@ export async function createNFT(name, owner) {
     }
   })
   console.log("Сreate NFT response:", resp)
+  return resp
 }
 
 export async function getCustomerEmailByAccountAddress(accountAddress) {
+  /* not used now */
   console.log(accountAddress) // delete this when function will be ready
   return "customer@example.com"
 }

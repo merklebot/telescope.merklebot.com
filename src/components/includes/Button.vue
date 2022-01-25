@@ -1,5 +1,11 @@
 <template>
-    <button :class="classes"><slot/></button>
+    <component 
+      :is="href ? 'a' : 'button'"
+      v-bind:href="href"
+      :class="classes"
+    >
+      <slot/>
+    </component>
 </template>
 
 <script>
@@ -28,11 +34,17 @@ export default {
           return ['blue', 'orange', 'green'].indexOf(value) !== -1;
         }
     },
+
+    href: {
+      type: String,
+      default: null
+    }
   },
 
   computed: {
     classes() {
       return {
+        [`button`]: true,
         [`${this.size}`]: true,
         [`label-${this.label}`]: true,
         [`${this.color}`]: true
@@ -43,7 +55,7 @@ export default {
 </script>
 
 <style scoped>
-  button {
+  .button {
     border: 0;
     cursor: pointer;
 
@@ -55,18 +67,25 @@ export default {
     padding: 1rem 2rem;
     min-width: 300px;
     border-radius: 2rem;
-    
-    background-color: var(--color-lilac);
-    color: var(--color-cyan);
 
     transition: all 0.2s linear;
   }
 
-  button:hover {
-    background-color: var(--color-orange);
+  .button, a.button {
+    background-color: var(--color-lilac);
+    color: var(--color-cyan);
   }
 
-  button.mid {
+  a.button {
+    text-decoration: none;
+  }
+
+  .button:hover, a.button:hover {
+    background-color: var(--color-orange);
+    color: var(--color-cyan);
+  }
+
+  .button.mid {
     font-size: var(--font-size);
     padding: 0.8rem 1rem;
     min-width: auto;
@@ -90,17 +109,17 @@ export default {
     margin-right: 0;
   }
 
-  button.orange {
+  .button.orange {
     background-color: var(--color-orange);
   }
-  button.orange:hover {
+  .button.orange:hover {
     background-color: var(--color-red);
   }
 
-  button.green {
+  .button.green {
     background-color: var(--color-green);
   }
-  button.green:hover {
-    background-color: var(--color-green);
+  .button.green:hover {
+    background-color: var(--color-red);
   }
 </style>

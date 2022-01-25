@@ -52,6 +52,7 @@ sub { vertical-align: sub; }
   --color-white: #fff;
   --color-cyan: #C7FFDF;
   --color-lilac: #5681FF;
+  --color-lilac-rgb: 86, 129, 255;
   --color-green: rgb(103, 163, 7);
   --color-orange: #E0850A;
   --color-yellow: #fff784;
@@ -140,10 +141,10 @@ input[type=number] {
 select, input:not([type=submit]):not([type=button]) {
   font-family: var(--font-text);
   font-size: var(--font-size);
-  /* background-color: var(--color-blue); */
-  /* color: var(--color-cyan); */
-  background-color: #fff;
-  color: var(--color-lilac);
+  background-color: var(--color-blue);
+  color: var(--color-cyan);
+  /* background-color: #fff; */
+  /* color: var(--color-lilac); */
   border: 2px solid var(--color-lilac);
   border-radius: 2rem;
   padding: 0.5rem 2rem;
@@ -225,10 +226,17 @@ ul.dashed {
   margin: var(--padding) 0;
 }
 
-ul.dashed li {
+ul.dashed li:not(:last-child) {
   padding: 0 0 var(--space);
   border-bottom: 1px dashed var(--color-cyan);
   margin-bottom: var(--space);
+}
+
+ul.tablelike li {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: var(--space);
+  text-align: left;
 }
 
 
@@ -370,5 +378,22 @@ section section {
 .text-red {
   color: var(--color-red)
 }
+
+.title-checked {
+  font-family: var(--font-highlight);
+  font-weight: 900;
+}
+
+.title-checked:before {
+  content: "✓";
+  margin-right: var(--space);
+}
+
+/* .line > * {
+  margin-bottom: calc(var(--space) * 0.5)
+}
+.line > *:not(:last-child) {
+  margin-right: var(--space)
+} */
 </style>
 

@@ -30,11 +30,51 @@
             </div>
           </details>
         </div>
-
       </div>
-
     </section>
 
+    <section class="order layout-narrow" v-if="$store.state.app.account && astronomicalObjSelected && nftStatus">
+      <h2>Your order</h2>
+      <ul class="dashed tablelike">
+        <li>
+          <span>Account:</span>
+          <span v-html="addressShort($store.state.app.account)" />
+        </li>
+        <li>
+          <span>Object:</span>
+          <span>{{ astronomicalObjSelected.friendly_name }} - {{ astronomicalObjSelected.kind }}</span>
+        </li>
+        <li>
+          <span>Status:</span>
+
+          <div v-if="nftStatus === 'waiting'">
+            <p>
+              <span class="loader"></span>
+              <span>{{nftStatus}}</span>
+            </p>
+            <p><a 
+              :href="'https://singular.rmrk.app/space/' + $store.state.app.account + '?tab=owned&owner=yes'" 
+              target="_blank" rel="noopener noreferrer">
+              Check your NFT(s)
+            </a></p>
+          </div>
+
+          <div v-if="nftStatus === 'done'">
+            <p class="title-checked">{{nftStatus}}</p>
+            <p><a 
+              :href="'https://singular.rmrk.app/space/' + $store.state.app.account + '?tab=owned&owner=yes'" 
+              target="_blank" rel="noopener noreferrer">
+              Check your NFT(s)
+            </a></p>
+            <p><a 
+              :href="'https://twitter.com/intent/tweet?text=✨%20Just%20got%20my%20%23NFT%20with%20' + astronomicalObjSelected.kind + '%20' + astronomicalObjSelected.friendly_name + '%20from%20online%20telescope%20in%20Atacama%20desert&url=https%3A%2F%2Frobonomics.network%2F'" 
+              target="_blank" rel="noopener noreferrer">
+              Share on Twitter
+            </a></p>
+          </div>
+        </li>
+      </ul>
+    </section>
       
     <section class="layout-narrow">
         <form>
@@ -75,12 +115,9 @@ export default {
       nftPrice: null,
       astronomicalObjSelected: [],
       submitStatus: true,
-      submitMessage: null
+      submitMessage: null,
+      nftStatus: null
     };
-  },
-
-  props: {
-    balance: Number,
   },
 
   components: {
@@ -138,7 +175,7 @@ export default {
         this.submitMessage =  'Please wait for the telescope to turn on'
       }
 
-      if(this.balance < 1) {
+      if(this.$store.state.app.balance < 1) {
         this.submitMessage =  'Please <a href="#step-2">buy $STRGZN tokens</a>'
       }
 
@@ -151,10 +188,12 @@ export default {
         this.$store.state.service.status === 'off' ||
         !this.$store.state.telescope ||
         !this.$store.state.app.account || this.$store.state.app.status !== 'extension ready' || 
-        this.balance < 1) {
+        this.$store.state.app.balance < 1) {
 
         return
       }
+
+      this.nftStatus = 'waiting'
 
       /* Send tokens */
       const success = await sendAsset(this.$store.state.app.account, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
@@ -163,7 +202,11 @@ export default {
         return
       }
 
-      createNFT(this.astronomicalObjSelected.catalog_name, this.$store.state.app.account);
+      const responce = createNFT(this.astronomicalObjSelected.catalog_name, this.$store.state.app.account);
+      if( responce.status == 200 ) {
+        this.submitStatus = true
+        this.nftStatus = 'done'
+      }
       // const { open } = window.tf.createPopup(config.TYPEFORM_ID);
       // open();
     },
@@ -183,7 +226,11 @@ export default {
           top: document.querySelector(anchor).offsetTop,
           behavior: "smooth"
       })
-    }
+    },
+
+    addressShort(address) {
+      return address.slice(0, 6) + "..." + address.slice(-4);
+    },
   }
 }
 </script>
@@ -323,5 +370,34 @@ export default {
   @media screen and (min-width: 1200px) {
     .obj summary { width: 5rem; height: 5rem; }
     .obj-expand:before { left: 2.5rem; }
+  }
+
+
+  /* Order block */
+  .order {
+    background-color: rgba(var(--color-lilac-rgb), 0.5);
+    border: 2px solid var(--color-lilac);
+    border-radius: 2rem;
+    color: var(--color-white);
+    padding: calc(var(--space) * 2);
+    margin-top: calc(var(--space) * 3);
+    font-weight: bold;
+  }
+
+  .order h2 {
+    text-transform: none;
+    font-size: 3rem;
+  }
+
+  .order a {
+    color: var(--color-yellow)
+  }
+
+  .order a:hover {
+    color: var(--color-orange)
+  }
+
+  .order .loader {
+    border-color: var(--color-white);
   }
 </style>

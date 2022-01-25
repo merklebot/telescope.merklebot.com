@@ -8,30 +8,34 @@
               <p>Connect to our autonomous telescope in the dark night of Atacama desert in Chile, select an astronomical object and mint unique NFTs in a few clicks.</p>
             </div>
 
-            <!-- {{$store.state.app.status}}<br/>
-            {{$store.state.polkadot.accounts}}<br/> -->
-
             <template v-if="$store.state.app.status === 'start'">
                 <span class="loader"></span>
             </template>
+
             <template v-else-if="$store.state.app.status === 'start clicked' || $store.state.app.status === 'extension error'">
               <Button @click.native="jump('#start')">Start</Button>
             </template>
+
             <template v-else>
-              <template v-if="balance > 0">
-                <Button @click.native="jump('#step-3')" size="medium" color="green">Buy or check your NFT</Button>
-              </template>
-              <template v-if="balance === 0">
-                <Button @click.native="jump('#step-2')" size="medium" color="orange">Get your NFT</Button>
-              </template>
+
+            <template v-if="$store.state.app.account">
+              
+                <div><Button @click.native="jump('#step-2')" size="medium" color="orange">Buy NFT</Button></div>
+
+                <div>or</div>
+
+                <div><Button 
+                :href="'https://singular.rmrk.app/space/' + $store.state.app.account + '?tab=owned&owner=yes'" 
+                size="medium" 
+                color="green"
+                target="_blank" rel="noopener noreferrer">
+                  Check your NFT
+                </Button></div>
+  
+
             </template>
-            
-            <!-- <template v-if="isReady && accounts.length > 0">
-              <a v-if="this.account" :href="'https://singular.rmrk.app/space/' + this.account + '?tab=owned&owner=yes'" target="_blank" rel="noopener noreferrer">Check your NFTs</a>
-              <a v-else href="#step-1" @click.prevent="jump('#step-1')">Connect account to check NFTs</a>
-              <section class="small m-b-0">or</section>
-              <Button @click.native="jump('#step-1')" size="medium" class="m-t-0">Buy NFT</Button>
-            </template> -->
+              
+            </template>
 
             <div class="banner-telescope" aria-hidden="true">
               <img aria-hidden="true" src="i/banner-telescope-pod-1.png" class="banner-telescope-pod-1" />
@@ -145,7 +149,7 @@
           <div class="tokenSection-info">
             <h4>
               Your balance 
-              <span :class="{'text-green':balance>0}">{{ balance }} $STRGZN</span>
+              <span :class="{'text-green': $store.state.app.balance > 0}">{{ $store.state.app.balance }} $STRGZN</span>
               <div v-if="checkoutComplite==='success'" class="text-green">Payment successful</div>
               <div v-if="checkoutComplite==='error'" class="text-red">Payment error, please <a :href="$discord" target="_blank" rel="noopener noreferrer">contact us</a></div>
             </h4>
@@ -163,8 +167,7 @@
               Please <a href="#step-1" @click.prevent="jump('#step-1')">connect your Polkadot account</a>
             </p>
 
-            <form 
-              @onChange="onChange" 
+            <form  
               @submit.prevent="handleSubmit" 
               :class="{disabled: $store.state.app.status !== 'extension ready'}">
               <div class="inputNumbers m-b-space">
@@ -184,7 +187,7 @@
         </section>
       </section>
 
-      <astronomicalObjectCard :balance="this.balance"/>
+      <astronomicalObjectCard />
   
   </div>  
 
@@ -204,9 +207,6 @@ export default {
   data() {
     return {
       error: null,
-      api: null,
-      unsubscribe: null,
-      balance: 0,
       accounts: [],
       accountDefault: "",
 
@@ -270,20 +270,6 @@ export default {
       return address.slice(0, 6) + "..." + address.slice(-4);
     },
 
-    async onChange({ name, newValue }) {
-      if (name === "account") {
-        if (this.unsubscribe) {
-          this.unsubscribe();
-        }
-        this.unsubscribe = await this.api.query.assets.account(
-          config.ID_ASSET,
-          newValue,
-          ({ balance: currentFree }) => {
-            this.balance = currentFree.toNumber();
-          }
-        );
-      }
-    },
     handleSubmit() {
       // disabling button on click
       this.checkoutStatus = false
@@ -359,12 +345,6 @@ export default {
     this.$store.dispatch("stopApiData")
   },
 
-  destroyed() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
-  },
-
   watch: {
     status: async function(newValue, oldValue) {
       if (oldValue === false && newValue === true) {
@@ -372,13 +352,6 @@ export default {
           "https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js"
         );
       }
-    },
-    account: function(newValue, oldValue) {
-      this.onChange({
-        name: "account",
-        newValue: newValue,
-        oldValue: oldValue,
-      });
     },
     service: function() {
       this.dayTimeClass = this.dayTime()

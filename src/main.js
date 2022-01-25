@@ -9,6 +9,7 @@ import VueHead from 'vue-head'; // for injecting to <head/>
 import axios from "axios";
 
 import { getProvider, getInstance, getAccounts } from "./services/substrate";
+import config from "./config";
 
 Vue.use(Fragment.Plugin);
 Vue.use(Vuex);
@@ -28,8 +29,10 @@ const store = new Vuex.Store({
     app: {
       status: 'start',
       account: localStorage.account ? localStorage.account : null,
+      balance: 0,
+      balanceUnsubscribe: null,
       email: localStorage.email ? localStorage.email : null
-    }
+    },
   },
   mutations: {
     getService(state) {
@@ -75,14 +78,18 @@ const store = new Vuex.Store({
 
     stopApiData({ state }) {
       clearInterval(state.watcherApiData)
+
+      if ( state.app.balanceUnsubscribe ) {
+        state.app.balanceUnsubscribe();
+      }
     },
 
-    setAccountActive({ state }, address) {
+    async setAccountActive({ state }, address) {
 
       /* Check if address is in the extention list */
       let accountExists = false
-      if(state.polkadot.accounts) {
-        for (const value of state.polkadot.accounts) {
+      if(state.astronomicalObjects) {
+        for (const value of state.astronomicalObjects) {
           if(value.address == address) {
             accountExists = true
           }
@@ -90,8 +97,23 @@ const store = new Vuex.Store({
       }
 
       if(accountExists){
+
+        /* Set active account */
         state.app.account = address
         localStorage.setItem('account', state.app.account)
+
+        /* Get balance for active account, unsubscribe for previous if exists */
+        if ( state.app.balanceUnsubscribe ) {
+          state.app.balanceUnsubscribe();
+        }
+       
+        state.app.balanceUnsubscribe = await state.polkadot.api.query.assets.account(
+          config.ID_ASSET,
+          state.app.account,
+          ({ balance: currentFree }) => {
+            state.app.balance = currentFree.toNumber();
+          }
+        )
       }
     },
 
