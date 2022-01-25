@@ -194,7 +194,7 @@
 import { checkout } from "../services/api";
 import stripe from "../services/stripe";
 import config from "../config";
-import { loadScript } from "../utils/tools";
+// import { loadScript } from "../utils/tools";
 
 export default {
   components: {
@@ -204,10 +204,7 @@ export default {
   data() {
     return {
       error: null,
-      accounts: [],
-      accountDefault: "",
-
-      status: false,
+      // status: false,
 
       // USD price per one STRGZN
       // changed here number of decimals from 2 to 0 @positivecrash
@@ -347,13 +344,13 @@ export default {
   },
 
   watch: {
-    status: async function(newValue, oldValue) {
-      if (oldValue === false && newValue === true) {
-        await loadScript(
-          "https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js"
-        );
-      }
-    },
+    // status: async function(newValue, oldValue) {
+    //   if (oldValue === false && newValue === true) {
+    //     await loadScript(
+    //       "https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js"
+    //     );
+    //   }
+    // },
     service: function() {
       this.dayTimeClass = this.dayTime()
     }
