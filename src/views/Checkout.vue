@@ -331,7 +331,7 @@ export default {
       /* Settimeout for payment messages */
       if(this.$route.query.checkout) {
         this.checkoutComplite = this.$route.query.checkout
-
+        
         setTimeout(() => {
           if( this.checkoutComplite === 'success') {
             this.checkoutComplite = false

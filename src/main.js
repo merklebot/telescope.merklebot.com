@@ -88,8 +88,8 @@ const store = new Vuex.Store({
 
       /* Check if address is in the extention list */
       let accountExists = false
-      if(state.astronomicalObjects) {
-        for (const value of state.astronomicalObjects) {
+      if(state.polkadot.accounts) {
+        for (const value of state.polkadot.accounts) {
           if(value.address == address) {
             accountExists = true
           }
