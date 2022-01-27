@@ -1,9 +1,10 @@
-<template lang="pug">
-  .sky
-    .stars
-    .stars1
-    .stars2
-    .shooting-stars
+<template>
+    <div class="sky">
+        <div class="stars"></div>
+        <div class="stars1"></div>
+        <div class="stars2"></div>
+        <div class="shooting-stars"></div>
+    </div>
 </template>
 
 <style scoped>
