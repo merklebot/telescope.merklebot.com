@@ -61,16 +61,33 @@
 
           <div v-if="nftStatus === 'done'">
             <p class="title-checked">{{nftStatus}}</p>
-            <p><a 
-              :href="'https://singular.rmrk.app/space/' + $store.state.app.account + '?tab=owned&owner=yes'" 
-              target="_blank" rel="noopener noreferrer">
-              Check your NFT(s)
-            </a></p>
-            <p><a 
-              :href="'https://twitter.com/intent/tweet?text=✨%20Just%20got%20my%20%23NFT%20with%20' + astronomicalObjSelected.kind + '%20' + astronomicalObjSelected.friendly_name + '%20from%20online%20telescope%20in%20Atacama%20desert&url=https%3A%2F%2Frobonomics.network%2F'" 
-              target="_blank" rel="noopener noreferrer">
-              Share on Twitter
-            </a></p>
+          </div>
+        </li>
+
+        <li v-if="nftStatus === 'done'">
+          <span>Your next steps:</span>
+
+          <div>
+            <p class="order-servicelinks">
+              <a 
+                :href="'https://singular.rmrk.app/space/' + $store.state.app.account + '?tab=owned&owner=yes'" 
+                target="_blank" rel="noopener noreferrer"
+                title="Check your NFT(s)">
+                <i-singular class="logo" />
+              </a>
+              <a 
+                :href="'https://twitter.com/intent/tweet?text=✨%20Just%20got%20my%20%23NFT%20with%20' + astronomicalObjSelected.kind + '%20' + astronomicalObjSelected.friendly_name + '%20from%20online%20telescope%20in%20Atacama%20desert&url=https%3A%2F%2Frobonomics.network%2F'" 
+                target="_blank" rel="noopener noreferrer"
+                title="Share on Twitter">
+                <i-twitter class="logo" />
+              </a>
+              <a 
+              :href="$discord" 
+                target="_blank" rel="noopener noreferrer"
+                title="Chat with us in Discord">
+                <i-discord class="logo" />
+              </a>
+            </p>
           </div>
         </li>
       </ul>
@@ -124,7 +141,10 @@ export default {
 
   components: {
     Button: () => import('../includes/Button.vue'),
-    Stars: () => import('../includes/Stars.vue')
+    Stars: () => import('../includes/Stars.vue'),
+    iSingular: () => import('../icons/iSingular.vue'),
+    iTwitter: () => import('../icons/iTwitter.vue'),
+    iDiscord: () => import('../icons/iDiscord.vue')
   },
 
   computed: {
@@ -419,5 +439,15 @@ export default {
 
   .order .loader {
     border-color: var(--color-white);
+  }
+
+  .order-servicelinks > * {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: calc(var(--space) * 1.5);
+  }
+
+  .order-servicelinks .logo {
+    max-height: 30px;
   }
 </style>
