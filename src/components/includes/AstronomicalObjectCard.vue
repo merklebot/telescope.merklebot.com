@@ -76,7 +76,7 @@
                 <i-singular class="logo" />
               </a>
               <a 
-                :href="'https://twitter.com/intent/tweet?text=✨%20Just%20got%20my%20%23NFT%20with%20' + astronomicalObjSelected.kind + '%20' + astronomicalObjSelected.friendly_name + '%20from%20online%20telescope%20in%20Atacama%20desert&url=https%3A%2F%2Frobonomics.network%2F'" 
+                :href="'https://twitter.com/intent/tweet?text=✨%20Just%20got%20my%20%23NFT%20with%20' + astronomicalObjSelected.kind + '%20' + astronomicalObjSelected.friendly_name + '%20from%20online%20telescope%20in%20Atacama%20desert&url=https%3A%2F%2Ftelescope.merklebot.com'" 
                 target="_blank" rel="noopener noreferrer"
                 title="Share on Twitter">
                 <i-twitter class="logo" />
