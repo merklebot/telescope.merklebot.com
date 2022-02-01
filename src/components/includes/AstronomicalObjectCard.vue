@@ -211,7 +211,7 @@ export default {
         this.$store.state.service.status === 'off' ||
         !this.$store.state.telescope ||
         !this.$store.state.app.account || this.$store.state.app.status !== 'extension ready' || 
-        this.$store.state.app.balance < 1) {
+        this.$store.state.app.balance < 25) {
 
         return
       }
@@ -219,7 +219,7 @@ export default {
       this.nftStatus = 'waiting'
 
       /* Send tokens */
-      const success = await sendAsset(this.$store.state.app.account, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 1);
+      const success = await sendAsset(this.$store.state.app.account, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 25);
       if (!success) {
         this.submitMessage =  'Tokens not sent. Please, contact us or try later'
         return

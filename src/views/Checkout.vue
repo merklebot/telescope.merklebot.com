@@ -152,7 +152,7 @@
               <div v-if="checkoutComplite==='error'" class="text-red">Payment error, please <a :href="$discord" target="_blank" rel="noopener noreferrer">contact us</a></div>
             </h4>
             <p>1 $STRGZN = {{ pricePerToken }} USD</p>
-            <p>With 1 $STRGZN you can get 1 telescope NFT</p>
+            <p>1 space NFT = 25 $STRGZN</p>
           </div>
 
           <div class="tokenSection-form">
