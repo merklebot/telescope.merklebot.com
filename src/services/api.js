@@ -52,6 +52,18 @@ export async function createNFT(name, owner) {
   return resp
 }
 
+export async function createNftOrder(customerAccountAddress, astronmicalObjectCatalogName) {
+  const resp = await axios.post(`${config.API_SERVER}/nft/orders`, {
+    customer: {
+      account_address: customerAccountAddress,
+    },
+    astronomical_object: {
+      catalog_name: astronmicalObjectCatalogName,
+    },
+  })
+  return resp
+}
+
 export async function getCustomerEmailByAccountAddress(accountAddress) {
   /* not used now */
   console.log(accountAddress) // delete this when function will be ready

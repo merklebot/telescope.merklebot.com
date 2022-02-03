@@ -124,7 +124,7 @@
 </template>
 
 <script>
-import { createNFT, pricePerNFT } from "../../services/api";
+import { createNftOrder, pricePerNFT } from "../../services/api";
 import { sendAsset } from "../../services/substrate";
 import config from "../../config";
 
@@ -225,10 +225,13 @@ export default {
         return
       }
 
-      const responce = createNFT(this.astronomicalObjSelected.catalog_name, this.$store.state.app.account);
-      if( responce.status == 200 ) {
-        this.submitStatus = true
-        this.nftStatus = 'done'
+      const response = await createNftOrder(this.$store.state.app.account, this.astronomicalObjSelected.catalog_name)
+      console.log(response)
+      if(response.status == 200) {
+        setTimeout(() => {
+          this.submitStatus = true
+          this.nftStatus = 'done'
+        }, 5 * 60 * 1000) // probably an NFT is fine in 5 minutes
       }
       // const { open } = window.tf.createPopup(config.TYPEFORM_ID);
       // open();
