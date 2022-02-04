@@ -26,6 +26,7 @@ jobs:
       - run: npm run build
         env:
           VUE_APP_API_SERVER: ${{ secrets.VUE_APP_API_SERVER }}
+          VUE_APP_API_SERVER_LONG_POLLING_TIMEOUT_SEC: ${{ secrets.VUE_APP_API_SERVER_LONG_POLLING_TIMEOUT_SEC }}
           VUE_APP_STRIPE_KEY: ${{ secrets.VUE_APP_STRIPE_KEY }}
           VUE_APP_PRICE_PER_LESSON_CENTS: ${{ secrets.VUE_APP_PRICE_PER_LESSON_CENTS }}
           VUE_APP_ACCESS_TOKEN_ASSET_ID: ${{ secrets.VUE_APP_ACCESS_TOKEN_ASSET_ID }}

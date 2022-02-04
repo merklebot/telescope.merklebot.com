@@ -10,6 +10,7 @@ import axios from "axios";
 
 import { getProvider, getInstance, getAccounts } from "./services/substrate";
 import config from "./config";
+import { readServiceStatus } from "./services/api"
 
 Vue.use(Fragment.Plugin);
 Vue.use(Vuex);
@@ -17,7 +18,7 @@ Vue.use(VueHead);
 
 const store = new Vuex.Store({
   state: {
-    service: [],
+    service: { message: null, status: null },
     telescope: [],
     astronomicalObjects: [],
     watcherApiData: null,
@@ -35,12 +36,6 @@ const store = new Vuex.Store({
     },
   },
   mutations: {
-    getService(state) {
-      axios.get("https://api.merklebot.com/beyond-the-sky/status").then(response => {
-        state.service = response.data
-        console.log("[Vuex getService]:", { "status": response.data.status, "message": response.data.message })
-      })
-    },
     getTelescope(state) {
       axios.get("https://api.merklebot.com/beyond-the-sky/telescopes/{telescope_id}/is_free").then(response => {
         state.telescope = response.data
@@ -58,19 +53,19 @@ const store = new Vuex.Store({
     },
     setAppStatus(state, value) {
       state.app.status = value
-    }
-
+    },
+    setServiceStatus(state, value) {
+      state.service = value
+      console.log("[Vuex setServiceStatus]:", { "status": state.service.status, "message": state.service.message })
+    },
   },
   actions: {
     async watchApiData({ state, commit, dispatch }) {
-      
-      commit('getService')
       commit('getAstronomicalObjects')
       commit('getTelescope')
       dispatch("polkadotConnect")
 
       state.watcherApiData = setInterval(() => {
-        commit('getService')
         commit('getAstronomicalObjects')
         commit('getTelescope')
       }, 10000)
@@ -167,8 +162,11 @@ const store = new Vuex.Store({
           dispatch("setAccountActive", state.polkadot.accounts[0].address)
         }
       }
-    }
-  }
+    },
+    setServiceStatus({ commit }, new_status) {
+      commit('setServiceStatus', new_status)
+    },
+  },
 });
 
 Vue.config.productionTip = false;
@@ -177,5 +175,18 @@ Vue.prototype.$discord = "https://discord.com/invite/5UWNGNaAUf";
 new Vue({
   router,
   render: h => h(App),
-  store
+  store,
+  created: function () {
+    const subscribeServiceStatus = async () => {
+      let status = await readServiceStatus(
+        this.$store.state.service.status,
+        this.$store.state.service.message,
+        config.API_SERVER_LONG_POLLING_TIMEOUT,
+      )
+      this.$store.dispatch('setServiceStatus', status)
+      await new Promise(r => setTimeout(r, 5000))
+      await subscribeServiceStatus() // ToDo: are recursive promises ok?
+    }
+    subscribeServiceStatus()
+  }
 }).$mount("#app");

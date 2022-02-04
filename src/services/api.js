@@ -24,15 +24,31 @@ export async function setAccount(data) {
 //   return response.data
 // }
 
-// export async function serviceStatus() {
-//   const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/status")
-//   return { "status": resp.data.status, "message": resp.data.message }
-// }
-
 // export async function telescopeIsFree() {
 //   const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/telescopes/{telescope_id}/is_free")
 //   return { "isFree": resp.data }
 // }
+
+/**
+ * Service status update long-polling. Be careful awaitng that while it may take up to 10 minutes by default.
+ *
+ * @export
+ * @param {string} [status_known=null]
+ * @param {string} [message_known=null]
+ * @param {number} [timeout=600]
+ * @return {*}
+ */
+export async function readServiceStatus(status_known = null, message_known = null, timeout = 600 * 1000) {
+  timeout = timeout / 1000 // ms to seconds
+  const resp = await axios.get(`${config.API_SERVER}/status/update`, {
+    params: {
+      status_known,
+      message_known,
+      timeout,
+    }
+  })
+  return resp.data
+}
 
 export async function pricePerNFT() {
   const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/price")
