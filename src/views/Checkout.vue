@@ -169,9 +169,9 @@
               @submit.prevent="handleSubmit" 
               :class="{disabled: $store.state.app.status !== 'extension ready'}">
               <div class="inputNumbers m-b-space">
-                <div class="less" @click="setQuantity(-1)">-</div>
+                <div class="less" @click="setQuantity(-pricePerNftInUsd)">-</div>
                 <input type="number" v-model.number="quantity" value="quantity" required />
-                <div class="more" @click="setQuantity(+1)">+</div>
+                <div class="more" @click="setQuantity(pricePerNftInUsd)">+</div>
               </div>
 
               <h5>Total: {{ totalPaymentUSD }} USD</h5>
@@ -210,11 +210,13 @@ export default {
 
       // USD price per one STRGZN
       // changed here number of decimals from 2 to 0 @positivecrash
-      pricePerToken: (config.PRICE_PER_LESSON_CENTS / 100).toFixed(),
+      pricePerToken: (config.PRICE_PER_STRGZN_CENTS / 100).toFixed(),
 
       // How much STRGZN tokens user selected to purchase
-      // Better to set here minimum possible by default
-      quantity: parseInt(config.PRICE_PER_LESSON_CENTS / 100),
+      // Let's set a value for a couple of NFTs by default
+      quantity: config.PRICE_PER_NFT_STRGZNS * 2,
+
+      pricePerNftInUsd: config.PRICE_PER_NFT_STRGZNS * config.PRICE_PER_STRGZN_CENTS / 100,
 
       dayTimeClass: null,
 
