@@ -450,5 +450,7 @@ export default {
 
   .order-servicelinks .logo {
     max-height: 30px;
+    display: block;
+    width: 100%
   }
 </style>
