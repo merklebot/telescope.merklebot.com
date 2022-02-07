@@ -226,12 +226,10 @@ export default {
       }
 
       const response = await createNftOrder(this.$store.state.app.account, this.astronomicalObjSelected.catalog_name)
-      console.log(response)
+      console.log('Create NFT:', response)
       if(response.status == 200) {
-        setTimeout(() => {
           this.submitStatus = true
           this.nftStatus = 'done'
-        }, 5 * 60 * 1000) // probably an NFT is fine in 5 minutes
       }
       // const { open } = window.tf.createPopup(config.TYPEFORM_ID);
       // open();
