@@ -324,9 +324,6 @@ export default {
   },
 
   async mounted() {
-      // Get service status & message, astronomical objects with setinterval 10000 included. Vuex, main.js
-      this.$store.dispatch("watchApiData")
-
       /* Set class for top banner */
       this.dayTimeClass = this.dayTime()
 
@@ -340,11 +337,6 @@ export default {
           } 
         }, 10000);
       }
-  },
-
-  beforeDestroy () {
-    // Unsubscribe for "watchApiData". Vuex, main.js
-    this.$store.dispatch("stopApiData")
   },
 
   watch: {

@@ -6,11 +6,10 @@ import Fragment from "vue-fragment";
 import Vuex from 'vuex'; // for some global data
 // import { checkAddress } from "@polkadot/util-crypto";
 import VueHead from 'vue-head'; // for injecting to <head/>
-import axios from "axios";
 
 import { getProvider, getInstance, getAccounts } from "./services/substrate";
 import config from "./config";
-import { readServiceStatus } from "./services/api"
+import { readServiceStatus, readAstronomicalObjectsList, readIsTelescopeFree } from "./services/api"
 
 Vue.use(Fragment.Plugin);
 Vue.use(Vuex);
@@ -21,7 +20,6 @@ const store = new Vuex.Store({
     service: { message: null, status: null },
     telescope: [],
     astronomicalObjects: [],
-    watcherApiData: null,
     polkadot: {
       message: 'init',
       api: null,
@@ -36,16 +34,8 @@ const store = new Vuex.Store({
     },
   },
   mutations: {
-    getTelescope(state) {
-      axios.get("https://api.merklebot.com/beyond-the-sky/telescopes/{telescope_id}/is_free").then(response => {
-        state.telescope = response.data
-      })
-    },
-    getAstronomicalObjects(state) {
-      axios.get("https://api.merklebot.com/beyond-the-sky/astronomical-objects").then(response => {
-        state.astronomicalObjects = response.data
-        console.log("[Vuex getAstronomicalObjects]:", response.data)
-      })
+    setIsTelescopeFree(state, value) {
+      state.telescope = value
     },
     setEmail(state, value) {
       state.app.email = value
@@ -58,28 +48,19 @@ const store = new Vuex.Store({
       state.service = value
       console.log("[Vuex setServiceStatus]:", { "status": state.service.status, "message": state.service.message })
     },
+    setAstronomicalObjects(state, value) {
+      state.astronomicalObjects = value
+      console.log("[Vuex setAstronomicalObjects]:", value)
+    },
+    setPolkadotInfo(state, value) {
+      state.polkadot = value
+    },
+    setAppInfo(state, value) {
+      state.app = value
+    }
   },
   actions: {
-    async watchApiData({ state, commit, dispatch }) {
-      commit('getAstronomicalObjects')
-      commit('getTelescope')
-      dispatch("polkadotConnect")
-
-      state.watcherApiData = setInterval(() => {
-        commit('getAstronomicalObjects')
-        commit('getTelescope')
-      }, 10000)
-    },
-
-    stopApiData({ state }) {
-      clearInterval(state.watcherApiData)
-
-      if ( state.app.balanceUnsubscribe ) {
-        state.app.balanceUnsubscribe();
-      }
-    },
-
-    async setAccountActive({ state }, address) {
+    async setAccountActive({ state, commit }, address) {
 
       /* Check if address is in the extention list */
       let accountExists = false
@@ -94,6 +75,7 @@ const store = new Vuex.Store({
       if(accountExists){
 
         /* Set active account */
+        commit('setAppInfo', {...state.app, account: address})
         state.app.account = address
         localStorage.setItem('account', state.app.account)
 
@@ -106,53 +88,52 @@ const store = new Vuex.Store({
           config.ID_ASSET,
           state.app.account,
           ({ balance: currentFree }) => {
-            state.app.balance = currentFree.toNumber();
+            commit('setAppInfo', {...state.app, balance: currentFree.toNumber()})
           }
         )
       }
     },
 
-    async polkadotConnect({ state, dispatch }) {
+    async polkadotConnect({ state, dispatch, commit }) {
       try {
         /* Provider */
         const provider = getProvider()
         provider.on("error", () => {
-          state.polkadot.message = 'provider not connected'
-          state.app.status = 'extension error'
+          commit('setPolkadotInfo', {...state.polkadot, message: 'provider not connected'})
+          commit('setAppInfo', {...state.app, status: 'extension error'})
         });
         provider.on("connect", () => {
-          state.polkadot.message = 'provider connected'
+          commit('setPolkadotInfo', {...state.polkadot, message: 'provider connected'})
         });
 
         /* Api */
         state.polkadot.api = await getInstance()
         if ( state.polkadot.api ) {
-          state.polkadot.message = 'api connected'
+          commit('setPolkadotInfo', {...state.polkadot, message: 'api connected'})
         } else {
-          state.polkadot.message = 'api not connected'
-          state.app.status = 'extension error'
+          commit('setPolkadotInfo', {...state.polkadot, message: 'api not connected'})
+          commit('setAppInfo', {...state.app, status: 'extension error'})
         }
 
         /* Accounts */
-        state.polkadot.accounts = await getAccounts(state.polkadot.api)
+        commit('setPolkadotInfo', {...state.polkadot, accounts: await getAccounts(state.polkadot.api)})
         
         if ( state.polkadot.accounts.length > 0 ) {
-          state.polkadot.message = 'accounts found'
+          commit('setPolkadotInfo', {...state.polkadot, message: 'accounts found'})
         } else {
-          state.polkadot.message = 'accounts not found'
-          state.app.status = 'extension error'
+          commit('setPolkadotInfo', {...state.polkadot, message: 'accounts not found'})
+          commit('setAppInfo', {...state.app, status: 'extension error'})
         }
       } catch (error) {
 
         /* Catch other errors */
-        state.polkadot.message = error.message
-        state.app.status = 'extension error'
-
+        commit('setPolkadotInfo', {...state.polkadot, message: error.message})
+        commit('setAppInfo', {...state.app, status: 'extension error'})
       } finally {
 
         /* Ready if we have not any errors during trying */
         if(state.app.status !== 'extension error') {
-          state.app.status = 'extension ready'
+          commit('setAppInfo', {...state.app, status: 'extension ready'})
         }
 
         /* Set active account */
@@ -166,6 +147,12 @@ const store = new Vuex.Store({
     setServiceStatus({ commit }, new_status) {
       commit('setServiceStatus', new_status)
     },
+    setAstronomicalObjects({ commit }, newAstronomicalObjectsList) {
+      commit('setAstronomicalObjects', newAstronomicalObjectsList)
+    },
+    setIsTelescopeFree({ commit }, isFree) {
+      commit('setIsTelescopeFree', isFree)
+    },
   },
 });
 
@@ -177,6 +164,8 @@ new Vue({
   render: h => h(App),
   store,
   created: function () {
+    this.$store.dispatch("polkadotConnect")
+
     const subscribeServiceStatus = async () => {
       let status = await readServiceStatus(
         this.$store.state.service.status,
@@ -188,5 +177,26 @@ new Vue({
       await subscribeServiceStatus() // ToDo: are recursive promises ok?
     }
     subscribeServiceStatus()
+
+    readAstronomicalObjectsList().then(initAstronomicalObjectsList => {
+      this.$store.dispatch('setAstronomicalObjects', initAstronomicalObjectsList)
+    })
+    const subscribeAstronomicalObjectsListUpdates = async () => {
+      let astronomicalObjectsList = await readAstronomicalObjectsList(config.API_SERVER_LONG_POLLING_TIMEOUT)
+      this.$store.dispatch('setAstronomicalObjects', astronomicalObjectsList)
+      await new Promise(r => setTimeout(r, 5000))
+      await subscribeAstronomicalObjectsListUpdates()
+    }
+    subscribeAstronomicalObjectsListUpdates()
+
+    readIsTelescopeFree().then(isFree => {
+      this.$store.dispatch('setIsTelescopeFree', isFree)
+    })
+    const subscribeIsTelescopeFree = async () => {
+      await new Promise(r => setTimeout(r, 1000))
+      let isFree = await readIsTelescopeFree(config.API_SERVER_LONG_POLLING_TIMEOUT, this.$store.state.telescope)
+      this.$store.dispatch('setIsTelescopeFree', isFree)
+    }
+    subscribeIsTelescopeFree()
   }
 }).$mount("#app");

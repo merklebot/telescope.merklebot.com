@@ -50,6 +50,32 @@ export async function readServiceStatus(status_known = null, message_known = nul
   return resp.data
 }
 
+export async function readAstronomicalObjectsList(timeout = 0) {
+  timeout = timeout / 1000 // ms to seconds
+  const resp = await axios.get(`${config.API_SERVER}/catalogs/beyond-the-sky`, {
+    params: {
+      timeout,
+    },
+    headers: {
+      'Prefer': `wait=${timeout}`
+    }
+  })
+  return resp.data
+}
+
+export async function readIsTelescopeFree(timeout = 0, known_is_free) {
+  timeout = timeout / 1000 // ms to seconds
+  const resp = await axios.get(`${config.API_SERVER}/telescopes/1/is_free`, {
+    params: {
+      known_is_free,
+    },
+    headers: {
+      'Prefer': `wait=${timeout}`,
+    },
+  })
+  return resp.data
+}
+
 export async function pricePerNFT() {
   const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/price")
   return resp.data
