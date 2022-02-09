@@ -1,14 +1,21 @@
 import axios from "axios";
 import config from "../config";
 
+const client = axios.create({
+  baseURL: config.API_SERVER,
+  headers: {
+    'X-App-Info': `version=${config.APP_INFO.VERSION}; commit=${config.APP_INFO.COMMIT_HASH}`,
+  },
+})
+
 export async function checkout(data) {
-  const result = await axios.post(`${config.API_SERVER}/checkout`, data);
+  const result = await client.post('checkout', data);
   return result.data;
 }
 
 export async function setAccount(data) {
   try {
-    await axios.post(
+    await client.post(
       `https://api.merklebot.com/spot-sdk-edu/access-credentials`,
       data
     );
@@ -40,7 +47,7 @@ export async function setAccount(data) {
  */
 export async function readServiceStatus(status_known = null, message_known = null, timeout = 600 * 1000) {
   timeout = timeout / 1000 // ms to seconds
-  const resp = await axios.get(`${config.API_SERVER}/status/update`, {
+  const resp = await client.get('status/update', {
     params: {
       status_known,
       message_known,
@@ -52,7 +59,7 @@ export async function readServiceStatus(status_known = null, message_known = nul
 
 export async function readAstronomicalObjectsList(timeout = 0) {
   timeout = timeout / 1000 // ms to seconds
-  const resp = await axios.get(`${config.API_SERVER}/catalogs/beyond-the-sky`, {
+  const resp = await client.get('catalogs/beyond-the-sky', {
     params: {
       timeout,
     },
@@ -65,7 +72,7 @@ export async function readAstronomicalObjectsList(timeout = 0) {
 
 export async function readIsTelescopeFree(timeout = 0, known_is_free) {
   timeout = timeout / 1000 // ms to seconds
-  const resp = await axios.get(`${config.API_SERVER}/telescopes/1/is_free`, {
+  const resp = await client.get('telescopes/1/is_free', {
     params: {
       known_is_free,
     },
@@ -77,12 +84,12 @@ export async function readIsTelescopeFree(timeout = 0, known_is_free) {
 }
 
 export async function pricePerNFT() {
-  const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/price")
+  const resp = await client.get('price')
   return resp.data
 }
 
 export async function createNFT(name, owner) {
-  const resp = await axios.get("https://api.merklebot.com/beyond-the-sky/nft", {
+  const resp = await client.get('nft', {
     params: {
       "name": name,
       "sender": owner,
@@ -95,7 +102,7 @@ export async function createNFT(name, owner) {
 }
 
 export async function createNftOrder(customerAccountAddress, astronmicalObjectCatalogName) {
-  const resp = await axios.post(`${config.API_SERVER}/nft/orders`, {
+  const resp = await client.post('nft/orders', {
     customer: {
       account_address: customerAccountAddress,
     },
