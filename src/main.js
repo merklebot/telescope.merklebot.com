@@ -11,6 +11,8 @@ import { getProvider, getInstance, getAccounts } from "./services/substrate";
 import config from "./config";
 import { readServiceStatus, readAstronomicalObjectsList, readIsTelescopeFree } from "./services/api"
 
+console.log("App info:", JSON.stringify(config.APP_INFO))
+
 Vue.use(Fragment.Plugin);
 Vue.use(Vuex);
 Vue.use(VueHead);

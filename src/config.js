@@ -1,4 +1,10 @@
 export default {
+  APP_INFO: {
+    VERSION:
+      require("../package.json").version,
+    COMMIT_HASH:
+      process.env.VUE_APP_COMMIT_HASH,
+  },
   API_SERVER:
     process.env.VUE_APP_API_SERVER,
   API_SERVER_LONG_POLLING_TIMEOUT:
