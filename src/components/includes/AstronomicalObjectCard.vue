@@ -190,9 +190,9 @@ export default {
       
       /* First check - Update message */
 
-      if (!this.$store.state.telescope) {
-        this.submitMessage =  'Our telescope is busy. Please try again in 2-3 minutes.'
-      }
+      // if (!this.$store.state.telescope) {
+      //   this.submitMessage =  'Our telescope is busy. Please try again in 2-3 minutes.'
+      // }
 
       if (this.$store.state.service.status === 'off') {
         this.submitMessage =  'Please wait for the telescope to turn on'
@@ -209,7 +209,7 @@ export default {
       /* First check - Quit if this happens: */
       if (
         this.$store.state.service.status === 'off' ||
-        !this.$store.state.telescope ||
+        // !this.$store.state.telescope ||
         !this.$store.state.app.account || this.$store.state.app.status !== 'extension ready' || 
         this.$store.state.app.balance < 25) {
 
