@@ -148,8 +148,11 @@
             <h4>
               Your balance 
               <span :class="{'text-green': $store.state.app.balance > 0}">{{ $store.state.app.balance }} $STRGZN</span>
-              <div v-if="checkoutComplite==='success'" class="text-green">Payment successful</div>
-              <div v-if="checkoutComplite==='error'" class="text-red">Payment error, please <a :href="$discord" target="_blank" rel="noopener noreferrer">contact us</a></div>
+              <div v-if="$store.state.app.checkoutStatus === 'success'" class="text-green">
+                Payment successful!<br/>
+                Please wait for your $STRGZN tokens
+              </div>
+              <div v-if="$store.state.app.checkoutStatus === 'error'" class="text-red">Payment error, please <a :href="$discord" target="_blank" rel="noopener noreferrer">contact us</a></div>
             </h4>
             <p>1 $STRGZN = {{ pricePerToken }} USD</p>
             <p>1 space NFT = 25 $STRGZN</p>
@@ -220,9 +223,7 @@ export default {
 
       dayTimeClass: null,
 
-      checkoutStatus: true,
-
-      checkoutComplite: false
+      checkoutStatus: true
 
     };
   },
@@ -323,20 +324,25 @@ export default {
     
   },
 
-  async mounted() {
+  mounted() {
       /* Set class for top banner */
       this.dayTimeClass = this.dayTime()
 
+      this.$store.dispatch("onMount", this.$route)
+
+      /* Set checkout status */
+      // this.$store.commit("setCheckoutStatus", this.$route.query.checkout)
+
       /* Settimeout for payment messages */
-      if(this.$route.query.checkout) {
-        this.checkoutComplite = this.$route.query.checkout
+      // if(this.$route.query.checkout) {
+      //   this.checkoutComplite = this.$route.query.checkout
         
-        setTimeout(() => {
-          if( this.checkoutComplite === 'success') {
-            this.checkoutComplite = false
-          } 
-        }, 10000);
-      }
+      //   setTimeout(() => {
+      //     if( this.checkoutComplite === 'success') {
+      //       this.checkoutComplite = false
+      //     } 
+      //   }, 100000);
+      // }
   },
 
   watch: {
