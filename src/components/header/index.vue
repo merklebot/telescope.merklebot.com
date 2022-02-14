@@ -3,7 +3,7 @@
 
     <div class="header-top msg-green" v-if="$store.state.app.checkoutStatus === 'success'">
       <div class="layout-narrow">
-        Payment successful! Please wait for your <a href="#step-2" @click.prevent="jump('#step-2')">$STRGZN</a> tokens
+        Payment successful! Please wait for your <a href="#step-2" @click.prevent="jump('#step-2')">$STRGZN</a> tokens ~ 1 minute
       </div>
     </div>
 

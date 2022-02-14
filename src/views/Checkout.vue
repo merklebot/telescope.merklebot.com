@@ -150,7 +150,8 @@
               <span :class="{'text-green': $store.state.app.balance > 0}">{{ $store.state.app.balance }} $STRGZN</span>
               <div v-if="$store.state.app.checkoutStatus === 'success'" class="text-green">
                 Payment successful!<br/>
-                Please wait for your $STRGZN tokens
+                Please wait for your $STRGZN tokens<br/>
+                ~ 1 minute
               </div>
               <div v-if="$store.state.app.checkoutStatus === 'error'" class="text-red">Payment error, please <a :href="$discord" target="_blank" rel="noopener noreferrer">contact us</a></div>
             </h4>
