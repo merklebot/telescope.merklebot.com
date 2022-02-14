@@ -95,12 +95,16 @@ const store = new Vuex.Store({
         if ( state.app.balanceUnsubscribe ) {
           state.app.balanceUnsubscribe();
         }
-       
+
         state.app.balanceUnsubscribe = await state.polkadot.api.query.assets.account(
           config.ID_ASSET,
           state.app.account,
-          ({ balance: currentFree }) => {
-            commit('setAppInfo', {...state.app, balance: currentFree.toNumber()})
+          (result) => {
+            let currentBalance = 0
+            if (!result.isNone) {
+              currentBalance = result.value.balance.toNumber()
+            }
+            commit('setAppInfo', {...state.app, balance: currentBalance})
           }
         )
       }
@@ -129,7 +133,7 @@ const store = new Vuex.Store({
 
         /* Accounts */
         commit('setPolkadotInfo', {...state.polkadot, accounts: await getAccounts(state.polkadot.api)})
-        
+
         if ( state.polkadot.accounts.length > 0 ) {
           commit('setPolkadotInfo', {...state.polkadot, message: 'accounts found'})
         } else {
@@ -174,7 +178,7 @@ const store = new Vuex.Store({
         setTimeout(() => {
           if( state.app.checkoutStatus === 'success') {
             commit("setCheckoutStatus", false)
-          } 
+          }
         }, 50000);
       }
     }
