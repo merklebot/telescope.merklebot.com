@@ -51,7 +51,12 @@
         <div class="banner-bottom">
           <div class="layout-narrow">
             <div class="service-status">Telescope {{service.status}}</div>
-            <div class="service-message">{{service.message}}</div>
+            <!-- <div class="service-message">{{service.message}}</div> -->
+            <p class="service-message">
+              <span v-if="dayTimeClass === 'night'">{{service.message}}</span>
+              <span v-if="dayTimeClass === 'day'">Telescope is waiting for night…</span><br/>
+              <span v-if="dayTimeClass === 'day' && time">{{ time }} left</span>
+            </p>
           </div>
         </div>
       </div>
@@ -199,7 +204,9 @@
 import { checkout } from "../services/api";
 import stripe from "../services/stripe";
 import config from "../config";
-// import { loadScript } from "../utils/tools";
+
+// Timer
+import moment from 'moment-timezone';
 
 export default {
   components: {
@@ -210,7 +217,6 @@ export default {
   data() {
     return {
       error: null,
-      // status: false,
 
       // USD price per one STRGZN
       // changed here number of decimals from 2 to 0 @positivecrash
@@ -224,8 +230,14 @@ export default {
 
       dayTimeClass: null,
 
-      checkoutStatus: true
+      checkoutStatus: true,
 
+      // For timer
+      time: "00:00:00",
+      hourStartNight: "18",
+      hourEndNight: "05",
+      currentHour: "00",
+      timeId: null
     };
   },
 
@@ -321,43 +333,59 @@ export default {
           return 'cloudy'
         }
       }
-    }
+    },
+
+    /* Timer - Gets telescope time in Atacama(Chile) */
+    getCurrentHour(){
+      return new Date().toLocaleString("en-US", { timeZone: "America/Santiago", hour: 'numeric', hour12: false })
+    },
+    currentTime(){
+      return new Date().toLocaleString("en-US", { timeZone: "America/Santiago", hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false })
+    },
+    /* Timer - Gets how long left tonight */
+    countdown(currentTime) {
+      var 
+          startNight = moment.duration(this.hourStartNight + ':00:00'),
+          timer = startNight.subtract(currentTime),
+          timeString = '';
+          if(timer.hours() > 0) {
+            timeString += timer.hours() + ' hours '
+          }
+          if(timer.minutes() >= 0) {
+            timeString += timer.minutes() + ' minute(s) '
+          }
+
+      return timeString
+    },
     
   },
 
   mounted() {
+      /* Set some global options for app */
+      this.$store.dispatch("onMount", this.$route)
+      
       /* Set class for top banner */
       this.dayTimeClass = this.dayTime()
 
-      this.$store.dispatch("onMount", this.$route)
-
-      /* Set checkout status */
-      // this.$store.commit("setCheckoutStatus", this.$route.query.checkout)
-
-      /* Settimeout for payment messages */
-      // if(this.$route.query.checkout) {
-      //   this.checkoutComplite = this.$route.query.checkout
-        
-      //   setTimeout(() => {
-      //     if( this.checkoutComplite === 'success') {
-      //       this.checkoutComplite = false
-      //     } 
-      //   }, 100000);
-      // }
+      /* Set timer */
+      var self = this
+      this.time = this.countdown(this.currentTime())
+      this.currentHour = this.getCurrentHour()
+      this.timeId = setInterval(() => {
+        self.time = self.countdown(self.currentTime())
+        self.currentHour = self.getCurrentHour()
+      }, 10000)
   },
 
   watch: {
-    // status: async function(newValue, oldValue) {
-    //   if (oldValue === false && newValue === true) {
-    //     await loadScript(
-    //       "https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js"
-    //     );
-    //   }
-    // },
     service: function() {
       this.dayTimeClass = this.dayTime()
     }
   },
+
+  beforeDestroy() {
+    clearInterval(this.timeId)
+  }
 };
 </script>
 
