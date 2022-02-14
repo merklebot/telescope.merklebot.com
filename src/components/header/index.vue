@@ -1,31 +1,46 @@
 <template>
   <header class="header" role="banner">
 
-    <router-link :to="{ name: 'checkout' }" class="toplink">Online telescope</router-link>
+    <div class="header-top msg-green" v-if="$store.state.app.checkoutStatus === 'success'">
+      <div class="layout-narrow">
+        Payment successful! Please wait for your <a href="#step-2" @click.prevent="jump('#step-2')">$STRGZN</a> tokens
+      </div>
+    </div>
 
-    <nav class="nav-g">
-      <details class="nav-expand" tabindex="0">
-        <summary class="icon">?</summary>
+    <div class="header-top msg-red" v-if="$store.state.app.checkoutStatus === 'error'">
+      <div class="layout-narrow">
+        Payment error, please <a :href="$discord" target="_blank" rel="noopener noreferrer">contact us</a>
+      </div>
+    </div>
 
-        <div class="nav-expand-content">
-          <h4>Have a question?</h4>
-          <p>Please contact us by <a :href="$discord" target="_blank" rel="noopener noreferrer">Discord</a>.</p>
-        </div>
-      </details>
+    <div class="header-content">
+      <router-link :to="{ name: 'checkout' }" class="toplink">Online telescope</router-link>
 
-      <details class="nav-expand" tabindex="0">
-        <summary class="icon">i</summary>
+      <nav class="nav-g">
+        <details class="nav-expand" tabindex="0">
+          <summary class="icon">?</summary>
 
-        <div class="nav-expand-content">
-          <h4>First Beyond the Sky</h4>
-          <p>This digital experience explores the interconnection of realverse and metaverse. </p>
-          <p><a href="https://medium.com/merklebot/mint-nfts-with-telescope-in-chile-371eb773189" target="_blank" rel="noopener noreferrer">Learn more</a></p>
-          <h4>Technologies used</h4>
-          <p>Blockchain, <a href="https://robonomics.network/" target="_blank" rel="noopener noreferrer">Robonomics</a>, <a href="https://kusama.network/" target="_blank" rel="noopener noreferrer">Kusama</a>, <a href="https://ipfs.io/" target="_blank" rel="noopener noreferrer">IPFS</a>, <a href="https://www.rmrk.app/" target="_blank" rel="noopener noreferrer">RMRK</a></p>
-        </div>
-      </details>
-    </nav>
+          <div class="nav-expand-content">
+            <h4>Have a question?</h4>
+            <p>Please contact us by <a :href="$discord" target="_blank" rel="noopener noreferrer">Discord</a>.</p>
+          </div>
+        </details>
 
+        <details class="nav-expand" tabindex="0">
+          <summary class="icon">i</summary>
+
+          <div class="nav-expand-content">
+            <h4>First Beyond the Sky</h4>
+            <p>This digital experience explores the interconnection of realverse and metaverse. </p>
+            <p><a href="https://medium.com/merklebot/mint-nfts-with-telescope-in-chile-371eb773189" target="_blank" rel="noopener noreferrer">Learn more</a></p>
+            <h4>Technologies used</h4>
+            <p>Blockchain, <a href="https://robonomics.network/" target="_blank" rel="noopener noreferrer">Robonomics</a>, <a href="https://kusama.network/" target="_blank" rel="noopener noreferrer">Kusama</a>, <a href="https://ipfs.io/" target="_blank" rel="noopener noreferrer">IPFS</a>, <a href="https://www.rmrk.app/" target="_blank" rel="noopener noreferrer">RMRK</a></p>
+          </div>
+        </details>
+      </nav>
+    </div>
+
+  
   </header>
 </template>
 
@@ -33,6 +48,16 @@
 <script>
 
 export default {
+
+  methods: {
+    jump(anchor) {
+      /* Jump to anchor */
+      window.scrollTo({
+          top: document.querySelector(anchor).offsetTop,
+          behavior: "smooth"
+      })
+    },
+  },
 
   mounted() {
     // get the sticky element
@@ -73,8 +98,6 @@ export default {
     font-weight: 900;
     color: var(--header-textcolor);
  
-    padding: var(--space);
-
     /* position: -webkit-sticky;
     position: sticky;
     top: -1px; */
@@ -83,17 +106,38 @@ export default {
     left: 0;
     right: 0;
     z-index: 999;
-
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
   }
 
-  header > *:nth-child(2) {
+  .header-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    padding: var(--space);
+  }
+
+  .header-content > *:nth-child(2) {
     justify-self: end;
   }
 
   header a.toplink {
     color: var(--header-textcolor);
+  }
+
+  .msg-green, .msg-red {
+    background-color: var(--color-green);
+    color: var(--color-white);
+    padding: 5px 0;
+  }
+
+  .msg-green a {
+    color: var(--color-blue)
+  }
+
+  .msg-red a {
+    color: var(--color-orange)
+  }
+
+  .msg-red {
+    background-color: var(--color-red);
   }
 
   /* Nav details expand */

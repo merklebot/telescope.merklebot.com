@@ -32,7 +32,14 @@ const store = new Vuex.Store({
       account: localStorage.account ? localStorage.account : null,
       balance: 0,
       balanceUnsubscribe: null,
-      email: localStorage.email ? localStorage.email : null
+      email: localStorage.email ? localStorage.email : null,
+
+      /*
+      For messages about payment from Stripe;
+      Payment ok: app.url/#/?checkout=success
+      Payment not ok: app.url/#/?checkout=error
+      */
+      checkoutStatus: false
     },
   },
   mutations: {
@@ -59,6 +66,9 @@ const store = new Vuex.Store({
     },
     setAppInfo(state, value) {
       state.app = value
+    },
+    setCheckoutStatus(state, value) {
+      state.app.checkoutStatus = value
     }
   },
   actions: {
@@ -155,6 +165,19 @@ const store = new Vuex.Store({
     setIsTelescopeFree({ commit }, isFree) {
       commit('setIsTelescopeFree', isFree)
     },
+
+    onMount({ commit, state }, route) {
+      if(route.query.checkout) {
+        commit("setCheckoutStatus", route.query.checkout)
+
+        // if status success, we do not need to store it forever
+        setTimeout(() => {
+          if( state.app.checkoutStatus === 'success') {
+            commit("setCheckoutStatus", false)
+          } 
+        }, 50000);
+      }
+    }
   },
 });
 
