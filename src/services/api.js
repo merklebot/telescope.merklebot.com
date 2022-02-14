@@ -79,3 +79,8 @@ export async function getCustomerEmailByAccountAddress(accountAddress) {
   console.log(accountAddress) // delete this when function will be ready
   return "customer@example.com"
 }
+
+export async function getTimeNight() {
+  const resp = await client.get('tonight')
+  return resp.data
+}

@@ -201,7 +201,7 @@
 </template>
 
 <script>
-import { checkout } from "../services/api";
+import { checkout, getTimeNight } from "../services/api";
 import stripe from "../services/stripe";
 import config from "../config";
 
@@ -360,7 +360,7 @@ export default {
     
   },
 
-  mounted() {
+  async mounted() {
       /* Set some global options for app */
       this.$store.dispatch("onMount", this.$route)
       
@@ -368,6 +368,10 @@ export default {
       this.dayTimeClass = this.dayTime()
 
       /* Set timer */
+      const timeNight = await getTimeNight();
+      this.hourStartNight = moment(timeNight.start).hour();
+      this.hourEndNight = moment(timeNight.end).hour();
+
       var self = this
       this.time = this.countdown(this.currentTime())
       this.currentHour = this.getCurrentHour()
