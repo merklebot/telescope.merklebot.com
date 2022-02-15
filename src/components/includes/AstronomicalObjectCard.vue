@@ -47,7 +47,7 @@
         <li>
           <span>Status:</span>
 
-          <div v-if="nftStatus === 'waiting'">
+          <div v-if="nftStatus !== 'done' && nftStatus !== null">
             <p>
               <span class="loader"></span>
               <span>{{nftStatus}}</span>
@@ -227,6 +227,21 @@ export default {
 
       const response = await createNftOrder(this.$store.state.app.account, this.astronomicalObjSelected.catalog_name)
       console.log('Create NFT:', response)
+      const timer = (status, sec) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            this.nftStatus = status;
+            resolve()
+          }, sec * 1000);
+        });
+      }
+      await timer('Order created', 1);
+      await timer('Telescope is positioning', 5);
+      await timer('Telescope stabilizing', 15);
+      await timer('Recording your photo', 10);
+      await timer('Uploading to IPFS', 20);
+      await timer('Minting NFT', 10);
+      await timer('Sending NFT to your wallet', 60);
       if(response.status == 200) {
           this.submitStatus = true
           this.nftStatus = 'done'
