@@ -320,7 +320,7 @@ export default {
 
       /* This is for banner gradient visualization, just relay on message */
 
-      let status = null
+      let status = ''
 
       if( this.service.message ) {
         if ( this.service.message.includes('Daytime') ) {
