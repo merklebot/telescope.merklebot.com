@@ -1,7 +1,7 @@
 <template>
   <div>
       <div class="banner" :class="service.status">
-        <div class="banner-top" :class="dayTimeClass">
+        <div class="banner-top" :class="conditionsStatus">
           <div class="banner-top-content">
             <h1>Connecting Universe to Metaverse!</h1>
             <div class="layout-narrow">
@@ -53,9 +53,9 @@
             <div class="service-status">Telescope {{service.status}}</div>
             <!-- <div class="service-message">{{service.message}}</div> -->
             <p class="service-message">
-              <span v-if="dayTimeClass === 'night'">{{service.message}}</span>
-              <span v-if="dayTimeClass === 'day'">Telescope is waiting for night…</span><br/>
-              <span v-if="dayTimeClass === 'day' && time">{{ time }} left</span>
+              <span v-if="conditionsStatus.includes('night')">{{service.message}}</span>
+              <span v-if="conditionsStatus.includes('day')">Telescope is waiting for night…</span><br/>
+              <span v-if="conditionsStatus.includes('day') && time">{{ time }} left</span>
             </p>
           </div>
         </div>
@@ -228,7 +228,7 @@ export default {
 
       pricePerNftInUsd: config.PRICE_PER_NFT_STRGZNS * config.PRICE_PER_STRGZN_CENTS / 100,
 
-      dayTimeClass: null,
+      conditionsStatus: null,
 
       checkoutStatus: true,
 
@@ -320,19 +320,23 @@ export default {
 
       /* This is for banner gradient visualization, just relay on message */
 
+      let status = null
+
       if( this.service.message ) {
         if ( this.service.message.includes('Daytime') ) {
-          return 'day'
+          status = 'day '
         }
 
         if ( this.service.message.includes('Night') ) {
-          return 'night'
+          status = 'night '
         }
 
         if ( this.service.message.includes('cloudy') ) {
-          return 'cloudy'
+          status += 'cloudy '
         }
       }
+
+      return status
     },
 
     /* Timer - Gets telescope time in Atacama(Chile) */
@@ -365,7 +369,7 @@ export default {
       this.$store.dispatch("onMount", this.$route)
       
       /* Set class for top banner */
-      this.dayTimeClass = this.dayTime()
+      this.conditionsStatus = this.dayTime()
 
       /* Set timer */
       const timeNight = await getTimeNight();
@@ -383,7 +387,7 @@ export default {
 
   watch: {
     service: function() {
-      this.dayTimeClass = this.dayTime()
+      this.conditionsStatus = this.dayTime()
     }
   },
 
