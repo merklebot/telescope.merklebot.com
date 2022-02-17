@@ -331,7 +331,7 @@ export default {
           status = 'night '
         }
 
-        if ( this.service.message.includes('cloudy') ) {
+        if ( this.service.message.includes('cloud') ) {
           status += 'cloudy '
         }
       }
