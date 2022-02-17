@@ -9,7 +9,12 @@ import VueHead from 'vue-head'; // for injecting to <head/>
 
 import { getProvider, getInstance, getAccounts } from "./services/substrate";
 import config from "./config";
-import { readServiceStatus, readAstronomicalObjectsList, readIsTelescopeFree } from "./services/api"
+import {
+  readServiceStatus,
+  readAstronomicalObjectsList,
+  readIsTelescopeFree,
+  readOrderById,
+} from "./services/api"
 
 console.log("App info:", JSON.stringify(config.APP_INFO))
 
@@ -41,6 +46,7 @@ const store = new Vuex.Store({
       */
       checkoutStatus: false
     },
+    order: null, // active order tracked
   },
   mutations: {
     setIsTelescopeFree(state, value) {
@@ -69,7 +75,10 @@ const store = new Vuex.Store({
     },
     setCheckoutStatus(state, value) {
       state.app.checkoutStatus = value
-    }
+    },
+    setActiveOrder(state, value) {
+      state.order = value
+    },
   },
   actions: {
     async setAccountActive({ state, commit }, address) {
@@ -181,7 +190,12 @@ const store = new Vuex.Store({
           }
         }, 50000);
       }
-    }
+    },
+    async updateActiveOrder({ commit, state }) {
+      if (!state.order) return
+      const order = await readOrderById(state.order.id)
+      commit('setActiveOrder', order)
+    },
   },
 });
 
