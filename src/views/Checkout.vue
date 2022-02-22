@@ -228,7 +228,7 @@ export default {
 
       pricePerNftInUsd: config.PRICE_PER_NFT_STRGZNS * config.PRICE_PER_STRGZN_CENTS / 100,
 
-      conditionsStatus: null,
+      conditionsStatus: "",
 
       checkoutStatus: true,
 
@@ -320,7 +320,7 @@ export default {
 
       /* This is for banner gradient visualization, just relay on message */
 
-      let status = ''
+      let status = ""
 
       if( this.service.message ) {
         if ( this.service.message.includes('Daytime') ) {
@@ -331,7 +331,7 @@ export default {
           status = 'night '
         }
 
-        if ( this.service.message.includes('cloudy') ) {
+        if ( this.service.message.includes('cloud') ) {
           status += 'cloudy '
         }
       }

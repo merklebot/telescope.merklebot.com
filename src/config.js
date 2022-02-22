@@ -15,7 +15,7 @@ export default {
   PRICE_PER_NFT_STRGZNS: parseInt(process.env.VUE_APP_PRICE_PER_NFT_STRGZNS),
   ID_ASSET: process.env.VUE_APP_ACCESS_TOKEN_ASSET_ID,
   SUBSTRATE: {
-    url: "wss://statemine-rpc.polkadot.io",
+    url: process.env.VUE_APP_STATEMINE_PROVIDER,
     types: {},
     keyring: {
       isDevelopment: false,

@@ -135,7 +135,8 @@ export default {
       astronomicalObjSelected: [],
       submitStatus: true,
       submitMessage: null,
-      nftStatus: null
+      nftStatus: null,
+      orderStatusPollingTimeoutId: null,
     };
   },
 
@@ -155,6 +156,10 @@ export default {
 
   async created(){
     this.nftPrice = await pricePerNFT();
+  },
+
+  beforeDestroy() {
+    clearTimeout(this.orderStatusPollingTimeoutId)
   },
 
   watch: {
@@ -216,7 +221,7 @@ export default {
         return
       }
 
-      this.nftStatus = 'waiting'
+      this.nftStatus = 'Waiting for STRGZN spending transaction...'
 
       /* Send tokens */
       const success = await sendAsset(this.$store.state.app.account, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 25);
@@ -225,27 +230,57 @@ export default {
         return
       }
 
+      this.nftStatus = 'STRGZN sent. Waiting for the telescope response...'
       const response = await createNftOrder(this.$store.state.app.account, this.astronomicalObjSelected.catalog_name)
       console.log('Create NFT:', response)
-      const timer = (status, sec) => {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            this.nftStatus = status;
-            resolve()
-          }, sec * 1000);
-        });
+
+      const order = response.data
+      this.$store.commit('setActiveOrder', order)
+
+      const updateOrder = () => {
+        this.$store.dispatch('updateActiveOrder')
+        switch (this.$store.state.order?.status) {
+          case 'created':
+            this.nftStatus = `Aiming the telescope on ${this.$store.state.order.astronomical_object_catalog_name}...`
+            break
+          case 'observed':
+            this.nftStatus = 'Image captured, uploading...'
+            break
+          case 'uploaded':
+            // this.nftStatus = `Image and NFT metadata uploaded. IPFS content id is ${this.$store.state.order.nft_metadata_cid}. Minting NFT at RMRK...`
+            this.nftStatus = `Image and NFT metadata uploaded. Minting NFT at RMRK...`
+            break
+          case 'minted':
+            // this.nftStatus = `New NFT created on RMRK platform, extrinsic hash ${this.$store.state.order.nft_mint_extrinsic_hash} (Kusama). Sending to ${this.$store.customer_account_address}...`
+            this.nftStatus = `New NFT created on RMRK platform. Sending...`
+            break
+          case 'delivered':
+            this.nftStatus = 'done'
+            this.submitStatus = true
+            clearTimeout(this.orderStatusPollingTimeoutId)
+            this.$store.commit('setActiveOrder', null)
+            return
+          case 'delayed':
+            this.nftStatus = 'Your order is delayed because the object ordered went out of the field of view. We are sorry about that. We will mint this NFT in the next night.'
+            clearTimeout(this.orderStatusPollingTimeoutId)
+            this.$store.commit('setActiveOrder', null)
+            this.submitStatus = true
+            return
+          case null:
+          case undefined:
+          default:
+            console.error('Bad active order:', this.$store.order)
+            this.nftStatus = 'Unexpected error. Please contact us by Discord or by email.'
+            clearTimeout(this.orderStatusPollingTimeoutId)
+            this.$store.commit('setActiveOrder', null)
+            this.submitStatus = true
+            return
+        }
+
+        this.orderStatusPollingTimeoutId = setTimeout(updateOrder, 3000)
       }
-      await timer('Order created', 1);
-      await timer('Telescope is positioning', 5);
-      await timer('Telescope stabilizing', 15);
-      await timer('Recording your photo', 10);
-      await timer('Uploading to IPFS', 20);
-      await timer('Minting NFT', 10);
-      await timer('Sending NFT to your wallet', 60);
-      if(response.status == 200) {
-          this.submitStatus = true
-          this.nftStatus = 'done'
-      }
+      setTimeout(updateOrder, 1000) // wait for active order set
+
       // const { open } = window.tf.createPopup(config.TYPEFORM_ID);
       // open();
     },

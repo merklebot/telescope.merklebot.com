@@ -84,3 +84,8 @@ export async function getTimeNight() {
   const resp = await client.get('tonight')
   return resp.data
 }
+
+export async function readOrderById(order_id) {
+  const resp = await client.get(`nft/orders/${order_id}`)
+  return resp.data
+}
