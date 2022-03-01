@@ -14,6 +14,7 @@ import {
   readAstronomicalObjectsList,
   readIsTelescopeFree,
   readOrderById,
+  readPriceStrgznKsm,
 } from "./services/api"
 
 console.log("App info:", JSON.stringify(config.APP_INFO))
@@ -47,6 +48,7 @@ const store = new Vuex.Store({
       checkoutStatus: false
     },
     order: null, // active order tracked
+    priceStrgznKsm: null,
   },
   mutations: {
     setIsTelescopeFree(state, value) {
@@ -78,6 +80,9 @@ const store = new Vuex.Store({
     },
     setActiveOrder(state, value) {
       state.order = value
+    },
+    setPriceStrgznKsm(state, value) {
+      state.priceStrgznKsm = value
     },
   },
   actions: {
@@ -196,6 +201,15 @@ const store = new Vuex.Store({
       const order = await readOrderById(state.order.id)
       commit('setActiveOrder', order)
     },
+    async updatePriceStrgznKsm({ commit, state }) {
+      console.log('updatePriceStrgznKsm:', state.priceStrgznKsm)
+      console.log(state.priceStrgznKsm, config.API_SERVER_LONG_POLLING_TIMEOUT)
+      const priceStrgnKsm = await readPriceStrgznKsm(
+        state.priceStrgznKsm ?? 0,
+        config.API_SERVER_LONG_POLLING_TIMEOUT,
+      )
+      commit('setPriceStrgznKsm', priceStrgnKsm)
+    },
   },
 });
 
@@ -241,5 +255,11 @@ new Vue({
       this.$store.dispatch('setIsTelescopeFree', isFree)
     }
     subscribeIsTelescopeFree()
+
+    const subscribePriceStrgznKsm = async () => {
+      await this.$store.dispatch('updatePriceStrgznKsm')
+      setTimeout(subscribePriceStrgznKsm, 1000)
+    }
+    subscribePriceStrgznKsm()
   }
 }).$mount("#app");
