@@ -160,36 +160,22 @@
               </div>
               <div v-if="$store.state.app.checkoutStatus === 'error'" class="text-red">Payment error, please <a :href="$discord" target="_blank" rel="noopener noreferrer">contact us</a></div>
             </h4>
-            <p>1 $STRGZN = {{ pricePerToken }} USD</p>
+            <p>1 $STRGZN = {{ pricePerTokenCents / 100 }} USD</p>
             <p>1 space NFT = 25 $STRGZN</p>
           </div>
 
           <div class="tokenSection-form">
-            <h4>Purchase tokens</h4>
-
-            <p 
-              v-if="$store.state.app.status !== 'extension ready'" 
-              class="error-title text-small">
-              
-              Please <a href="#step-1" @click.prevent="jump('#step-1')">connect your Polkadot account</a>
-            </p>
-
-            <form  
-              @submit.prevent="handleSubmit" 
-              :class="{disabled: $store.state.app.status !== 'extension ready'}">
-              <div class="inputNumbers m-b-space">
-                <div class="less" @click="setQuantity(-pricePerNftInUsd)">-</div>
-                <input type="number" v-model.number="quantity" value="quantity" required />
-                <div class="more" @click="setQuantity(pricePerNftInUsd)">+</div>
-              </div>
-
-              <h5>Total: {{ totalPaymentUSD }} USD</h5>
-
-              <Button class="container-full" size="medium" :disabled="!checkoutStatus">
-                <span class="text">Pay with</span>
-                <img class="label" alt="Stripe" src="i/stripe.svg" />
-              </Button>
-            </form>
+            <PurchaseTokens
+              :extensionStatus="$store.state.app.status"
+              :jumpToExtensionSetupFunction="jump"
+              :submitHandler="handleSubmit"
+              :checkoutStatus="checkoutStatus"
+              :pricePerNftInStrgzn="pricePerNftInStrgzn"
+              :pricePerStrgznInCents="pricePerTokenCents"
+              :pricePerStrgznInPicoKsm="pricePerTokenPicoKsm"
+              :tokensPurchaseMinMax="tokensPurchaseMinMax"
+              :defaultQuantity="defaultQuantity"
+            />
           </div>
         </section>
       </section>
@@ -212,19 +198,27 @@ export default {
   components: {
     astronomicalObjectCard: () => import('../components/includes/AstronomicalObjectCard.vue'),
     Button: () => import('../components/includes/Button.vue'),
-    Stars: () => import('../components/includes/Stars.vue')
+    Stars: () => import('../components/includes/Stars.vue'),
+    PurchaseTokens: () => import ('../components/forms/PurchaseTokens.vue'),
   },
   data() {
     return {
       error: null,
 
+      pricePerNftInStrgzn: config.PRICE_PER_NFT_STRGZNS,
+      tokensPurchaseMinMax: {
+        max: config.MAX_TOKENS_BUY,
+        min: config.MIN_TOKENS_BUY,
+      },
+
       // USD price per one STRGZN
-      // changed here number of decimals from 2 to 0 @positivecrash
-      pricePerToken: (config.PRICE_PER_STRGZN_CENTS / 100).toFixed(),
+      pricePerTokenCents: config.PRICE_PER_STRGZN_CENTS,
+      pricePerTokenPicoKsm: 500000000,
+
 
       // How much STRGZN tokens user selected to purchase
       // Let's set a value for a couple of NFTs by default
-      quantity: config.PRICE_PER_NFT_STRGZNS * 2,
+      defaultQuantity: config.PRICE_PER_NFT_STRGZNS * 2,
 
       pricePerNftInUsd: config.PRICE_PER_NFT_STRGZNS * config.PRICE_PER_STRGZN_CENTS / 100,
 
@@ -248,7 +242,7 @@ export default {
     },
     
     totalPaymentUSD() {
-      return (this.quantity * this.pricePerToken).toFixed(2)
+      return (this.quantity * this.pricePerTokenCents / 100).toFixed(2)
     },
 
     account: {
@@ -271,24 +265,30 @@ export default {
   },
 
   methods: {
-    setQuantity(change) {
-      // This is for input[number] controls - +
-      if ( (this.quantity + change) >=  config.MIN_TOKENS_BUY &&  (this.quantity + change) <=  config.MAX_TOKENS_BUY ){
-        return this.quantity += change
-      }
-    },
-
     addressShort(address) {
       return address.slice(0, 6) + "..." + address.slice(-4);
     },
 
-    handleSubmit() {
-      // disabling button on click
+    async handleSubmit(paymentMethod, baseAmount, quoteAmount) {
+      console.log('Proceeding payment:', paymentMethod, baseAmount, quoteAmount)
       this.checkoutStatus = false
-
-      if (this.account) {
-        this.checkout(this.account, this.quantity);
+      if (!this.account) {
+        console.warn("Token purchase skipped becase customer account is not set")
+        return
       }
+      switch (paymentMethod) {
+        case "Card":
+          await this.checkout(this.account, quoteAmount)
+          break
+        case "KSM":
+          // create purchase, sign tx and update purchase
+          console.log("handleSubmit:", this.account, paymentMethod, baseAmount, quoteAmount)
+          break
+        default:
+          console.warn("Token purchase skipped becase an unexpected payment method provided:", paymentMethod)
+          break
+      }
+      this.checkoutStatus = true
     },
     async checkout(account, quantity) {
       this.proccess = true;
