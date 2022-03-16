@@ -16,6 +16,7 @@
     "core-js": "^3.20.1",
     "moment-timezone": "^0.5.34",
     "stripe": "^8.195.0",
+    "uuid": "^8.3.2",
     "vue": "^2.6.11",
     "vue-fragment": "^1.5.2",
     "vue-head": "^2.2.0",

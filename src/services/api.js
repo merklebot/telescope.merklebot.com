@@ -101,3 +101,46 @@ export async function readPriceStrgznKsm(knownPrice = 0, timeout = 0) {
   })
   return resp.data
 }
+
+export async function createCryptoPurchase(
+  idempotencyKey,
+  customerAccountAddress,
+  picoksmAmount,
+  strgznAmount,
+  strgznPicoksmRate,
+) {
+  console.log('createCryptoPurchase start', arguments)
+  const resp = await client.post("purchases", {
+    "customer": {
+      "account_address": customerAccountAddress
+    },
+    "picoksm_amount": picoksmAmount,
+    "strgzn_amount": strgznAmount,
+    "strgzn_picoksm_rate": strgznPicoksmRate,
+    "idempotency_key": idempotencyKey
+  })
+  console.log('createCryptoPurchase end')
+  return resp.data
+}
+
+export async function submitCryptoPurchaseKusamaPaymentInfo(
+  purchaseId,
+  customerAccountAddress,
+  txBlockNumber,
+  txBlockHash,
+  txExtrinsicHash,
+) {
+  console.log('submitCryptoPurchaseKusamaPaymentInfo:', arguments)
+
+  const resp = await client.patch(`${purchaseId}/kusama-payment-info`, null, {
+    params: {
+      id: purchaseId,
+      customer_account_address: customerAccountAddress,
+      ksm_transfer_block_number: txBlockNumber,
+      ksm_transfer_block_hash: txBlockHash,
+      ksm_transfer_extrinsic_hash: txExtrinsicHash,
+    },
+  })
+  return resp.data
+
+}

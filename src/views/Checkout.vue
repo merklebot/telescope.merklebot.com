@@ -187,12 +187,22 @@
 </template>
 
 <script>
-import { checkout, getTimeNight } from "../services/api";
+import { v4 as uuidv4 } from 'uuid';
+import {
+  checkout,
+  getTimeNight,
+  createCryptoPurchase,
+  submitCryptoPurchaseKusamaPaymentInfo,
+} from "../services/api";
 import stripe from "../services/stripe";
 import config from "../config";
 
 // Timer
 import moment from 'moment-timezone';
+import {
+  signAndSend2,
+  createTransfer,
+} from '../services/substrate';
 
 export default {
   components: {
@@ -213,7 +223,7 @@ export default {
 
       // USD price per one STRGZN
       pricePerTokenCents: config.PRICE_PER_STRGZN_CENTS,
-      pricePerTokenPicoKsm: 500000000,
+      pricePerTokenPicoKsm: 1000000,
 
 
       // How much STRGZN tokens user selected to purchase
@@ -225,6 +235,7 @@ export default {
       conditionsStatus: "",
 
       checkoutStatus: true,
+      checkoutCryptoTxInfo: null,
 
       // For timer
       time: "00:00:00",
@@ -278,11 +289,12 @@ export default {
       }
       switch (paymentMethod) {
         case "Card":
-          await this.checkout(this.account, quoteAmount)
+          await this.checkout(this.account, Math.trunc(quoteAmount)) // ToDo: fix payee service to support cents
           break
         case "KSM":
           // create purchase, sign tx and update purchase
           console.log("handleSubmit:", this.account, paymentMethod, baseAmount, quoteAmount)
+          await this.checkoutCrypto(baseAmount, quoteAmount)
           break
         default:
           console.warn("Token purchase skipped becase an unexpected payment method provided:", paymentMethod)
@@ -307,7 +319,49 @@ export default {
       this.proccess = false;
       this.checkoutStatus = true
     },
-
+    async checkoutCrypto(strgznAmount, ksmAmount) {
+      this.process = true;
+      const uuid = uuidv4()
+      const createdCryptoPurchase = await createCryptoPurchase(
+        uuid,
+        this.account,
+        ksmAmount * Math.pow(10, 12),
+        strgznAmount,
+        this.pricePerTokenPicoKsm,
+      )
+      try {
+        const tx = await createTransfer(
+          config.CRYPTO_PAYMENT_RECV_ACCOUNT,
+          ksmAmount,
+        )
+        await signAndSend2(this.$store.state.app.account, tx,
+        async (blockHash, extrinsicHash) => {
+          console.log(`Tx included, block hash: ${blockHash}, extrinsic hash: ${extrinsicHash}`)
+          this.checkoutCryptoTxInfo = {
+            blockHash,
+            extrinsicHash,
+          }
+        },
+        async (blockHash, extrinsicHash) => {
+          console.log(`Tx finalized, block hash: ${blockHash}, extrinsic hash: ${extrinsicHash}`)
+          this.checkoutCryptoTxInfo = {
+            blockHash,
+            extrinsicHash,
+          }
+          await submitCryptoPurchaseKusamaPaymentInfo(
+            createdCryptoPurchase.id,
+            this.account,
+            "0",
+            this.checkoutCryptoTxInfo.blockHash,
+            this.checkoutCryptoTxInfo.extrinsicHash,
+          )
+          this.process = false
+          this.checkoutStatus = true
+        })
+      } catch(error) {
+        console.error("Crypto checkout error:", error)
+      }
+    },
     jump(anchor) {
       /* Jump to anchor */
       window.scrollTo({

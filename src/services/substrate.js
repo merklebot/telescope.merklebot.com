@@ -142,6 +142,30 @@ export async function signAndSend(account, tx, options = {}) {
   });
 }
 
+export async function createTransfer(recipientAddress, amount) {
+  const tx = api.tx.balances.transfer(recipientAddress, amount)
+  return tx
+}
+
+export async function signAndSend2(senderAccount, tx, txIncludedCallback, txFinalizedCallback) {
+  const injector = await web3FromAddress(senderAccount)
+  try {
+    const unsubscribe = await tx.signAndSend(senderAccount, {signer: injector.signer}, (result) => {
+      if (result.status.isInBlock) {
+        console.log(`Transaction ${tx.hash.toString()} included at blockHash ${result.status.asInBlock}`)
+        txIncludedCallback(result.status.asInBlock.toString(), tx.hash.toString())
+      } else if (result.status.isFinalized) {
+        console.log('result:', result)
+        console.log(`Transaction ${tx.hash.toString()} finalized at blockHash ${result.status.asFinalized}`)
+        txFinalizedCallback(result.status.asFinalized.toString(), tx.hash.toString())
+        unsubscribe()
+      }
+    })
+  } catch (error) {
+    console.error("Transaction failed:", error)
+  }
+}
+
 export async function sendAsset(from, to, asset_id, amount) {
   const injector = await web3FromAddress(from);
   const tx = api.tx.utility.batch([
