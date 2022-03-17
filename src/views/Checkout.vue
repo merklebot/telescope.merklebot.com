@@ -274,7 +274,6 @@ export default {
 
     pricePerTokenPicoKsm: {
       get() {
-        console.log("pricePerTokenPicoKsm get():", this.$store.state.priceStrgznPicoKsm)
         return this.$store.state.priceStrgznPicoKsm
       }
     },
@@ -286,7 +285,6 @@ export default {
     },
 
     async handleSubmit(paymentMethod, baseAmount, quoteAmount) {
-      console.log('Proceeding payment:', paymentMethod, baseAmount, quoteAmount)
       this.checkoutStatus = false
       if (!this.account) {
         console.warn("Token purchase skipped becase customer account is not set")
@@ -297,8 +295,6 @@ export default {
           await this.checkout(this.account, Math.trunc(quoteAmount)) // ToDo: fix payee service to support cents
           break
         case "KSM":
-          // create purchase, sign tx and update purchase
-          console.log("handleSubmit:", this.account, paymentMethod, baseAmount, quoteAmount)
           await this.checkoutCrypto(baseAmount, quoteAmount)
           break
         default:

@@ -108,7 +108,6 @@ export async function createCryptoPurchase(
   strgznAmount,
   strgznPicoksmRate,
 ) {
-  console.log('createCryptoPurchase start', arguments)
   const resp = await client.post("purchases", {
     "customer": {
       "account_address": customerAccountAddress
@@ -118,7 +117,6 @@ export async function createCryptoPurchase(
     "strgzn_picoksm_rate": strgznPicoksmRate,
     "idempotency_key": idempotencyKey
   })
-  console.log('createCryptoPurchase end')
   return resp.data
 }
 
@@ -129,8 +127,6 @@ export async function submitCryptoPurchaseKusamaPaymentInfo(
   txBlockHash,
   txExtrinsicHash,
 ) {
-  console.log('submitCryptoPurchaseKusamaPaymentInfo:', arguments)
-
   const resp = await client.patch(`${purchaseId}/kusama-payment-info`, null, {
     params: {
       id: purchaseId,

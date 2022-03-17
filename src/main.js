@@ -204,8 +204,6 @@ const store = new Vuex.Store({
       commit('setActiveOrder', order)
     },
     async updatePriceStrgznPicoKsm({ commit, state }) {
-      console.log('updatePriceStrgznPicoKsm:', state.priceStrgznPicoKsm)
-      console.log(state.priceStrgznPicoKsm, config.API_SERVER_LONG_POLLING_TIMEOUT)
       const priceStrgnKsm = await readPriceStrgznPicoKsm(
         state.priceStrgznPicoKsm ?? 0,
         config.API_SERVER_LONG_POLLING_TIMEOUT,

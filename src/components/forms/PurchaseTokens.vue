@@ -127,11 +127,9 @@ export default {
   },
   methods: {
     updatePaymentMethod(value) {
-      console.log("updatePaymentMethod:", value);
       this.paymentMethod = value;
     },
     async handleSubmit() {
-      // console.log('handleSubmit', this.paymentMethod, this.quantity)
       this.submitHandler(this.paymentMethod, this.quantity, this.total);
     },
     setQuantity(change) {
