@@ -15,7 +15,7 @@ import {
   readAstronomicalObjectsList,
   readIsTelescopeFree,
   readOrderById,
-  readPriceStrgznKsm,
+  readPriceStrgznPicoKsm,
 } from "./services/api"
 
 console.log("App info:", JSON.stringify(config.APP_INFO))
@@ -50,7 +50,7 @@ const store = new Vuex.Store({
       checkoutStatus: false
     },
     order: null, // active order tracked
-    priceStrgznKsm: null,
+    priceStrgznPicoKsm: null,
   },
   mutations: {
     setIsTelescopeFree(state, value) {
@@ -83,8 +83,8 @@ const store = new Vuex.Store({
     setActiveOrder(state, value) {
       state.order = value
     },
-    setPriceStrgznKsm(state, value) {
-      state.priceStrgznKsm = value
+    setPriceStrgznPicoKsm(state, value) {
+      state.priceStrgznPicoKsm = value
     },
   },
   actions: {
@@ -203,14 +203,14 @@ const store = new Vuex.Store({
       const order = await readOrderById(state.order.id)
       commit('setActiveOrder', order)
     },
-    async updatePriceStrgznKsm({ commit, state }) {
-      console.log('updatePriceStrgznKsm:', state.priceStrgznKsm)
-      console.log(state.priceStrgznKsm, config.API_SERVER_LONG_POLLING_TIMEOUT)
-      const priceStrgnKsm = await readPriceStrgznKsm(
-        state.priceStrgznKsm ?? 0,
+    async updatePriceStrgznPicoKsm({ commit, state }) {
+      console.log('updatePriceStrgznPicoKsm:', state.priceStrgznPicoKsm)
+      console.log(state.priceStrgznPicoKsm, config.API_SERVER_LONG_POLLING_TIMEOUT)
+      const priceStrgnKsm = await readPriceStrgznPicoKsm(
+        state.priceStrgznPicoKsm ?? 0,
         config.API_SERVER_LONG_POLLING_TIMEOUT,
       )
-      commit('setPriceStrgznKsm', priceStrgnKsm)
+      commit('setPriceStrgznPicoKsm', priceStrgnKsm)
     },
   },
 });
@@ -259,7 +259,7 @@ new Vue({
     subscribeIsTelescopeFree()
 
     const subscribePriceStrgznKsm = async () => {
-      await this.$store.dispatch('updatePriceStrgznKsm')
+      await this.$store.dispatch('updatePriceStrgznPicoKsm')
       setTimeout(subscribePriceStrgznKsm, 1000)
     }
     subscribePriceStrgznKsm()

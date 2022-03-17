@@ -59,9 +59,10 @@
         <div class="more" @click="setQuantity(pricePerNftInStrgzn)">+</div>
       </div>
 
-      <h5>Total: {{ total }} KSM</h5>
+      <h5 v-if="pricePerStrgznInPicoKsm">Total: {{ total }} KSM</h5>
+      <h5 v-else>Total: loading price...</h5>
 
-      <Button class="container-full" size="medium" :disabled="!checkoutStatus">
+      <Button class="container-full" size="medium" :disabled="!checkoutStatus || !pricePerStrgznInPicoKsm">
         <span class="text">Sign</span>
       </Button>
     </form>

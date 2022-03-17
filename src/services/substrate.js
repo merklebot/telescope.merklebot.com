@@ -155,7 +155,6 @@ export async function signAndSend2(senderAccount, tx, txIncludedCallback, txFina
         console.log(`Transaction ${tx.hash.toString()} included at blockHash ${result.status.asInBlock}`)
         txIncludedCallback(result.status.asInBlock.toString(), tx.hash.toString())
       } else if (result.status.isFinalized) {
-        console.log('result:', result)
         console.log(`Transaction ${tx.hash.toString()} finalized at blockHash ${result.status.asFinalized}`)
         txFinalizedCallback(result.status.asFinalized.toString(), tx.hash.toString())
         unsubscribe()

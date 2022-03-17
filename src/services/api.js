@@ -90,10 +90,9 @@ export async function readOrderById(order_id) {
   return resp.data
 }
 
-export async function readPriceStrgznKsm(knownPrice = 0, timeout = 0) {
+export async function readPriceStrgznPicoKsm(knownPrice = 0, timeout = 0) {
   timeout = timeout / 1000
-  console.log(knownPrice, timeout)
-  const resp = await client.get('price-strgzn-ksm', {
+  const resp = await client.get('price-strgzn-picoksm', {
     headers: {
       'Prefer': `wait=${timeout}`,
       'If-None-Match': knownPrice,

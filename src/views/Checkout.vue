@@ -223,8 +223,6 @@ export default {
 
       // USD price per one STRGZN
       pricePerTokenCents: config.PRICE_PER_STRGZN_CENTS,
-      pricePerTokenPicoKsm: 1000000,
-
 
       // How much STRGZN tokens user selected to purchase
       // Let's set a value for a couple of NFTs by default
@@ -273,6 +271,13 @@ export default {
     //     this.$store.commit("setEmail", value);
     //   },
     // },
+
+    pricePerTokenPicoKsm: {
+      get() {
+        console.log("pricePerTokenPicoKsm get():", this.$store.state.priceStrgznPicoKsm)
+        return this.$store.state.priceStrgznPicoKsm
+      }
+    },
   },
 
   methods: {
