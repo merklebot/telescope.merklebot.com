@@ -59,9 +59,10 @@
         <div class="more" @click="setQuantity(pricePerNftInStrgzn)">+</div>
       </div>
 
+      <h5>Your Statemine KSM balance: {{ this.picoKsmBalance * Math.pow(10, -12) }} </h5>
       <h5 v-if="pricePerStrgznInPicoKsm">Total: {{ total }} Statemine KSM</h5>
       <h5 v-else>Total: loading price...</h5>
-      <Button class="container-full" size="medium" :disabled="!checkoutStatus || !pricePerStrgznInPicoKsm">
+      <Button class="container-full" size="medium" :disabled="!checkoutStatus || !pricePerStrgznInPicoKsm || !isEnoughBalance">
         <span class="text">Sign</span>
       </Button>
     </form>
@@ -100,6 +101,7 @@ export default {
     pricePerStrgznInCents: Number,
     pricePerStrgznInPicoKsm: Number,
     defaultQuantity: Number,
+    picoKsmBalance: Number,
   },
   data() {
     return {
@@ -171,6 +173,10 @@ export default {
         throw new Error("Unexpected payment method", this.paymentMethod)
       }
     },
+    isEnoughBalance() {
+      // #ToDo: replace 0.001 with tx fee
+      return this.picoKsmBalance - 0.001 * Math.pow(10, 12) > this.pricePerStrgznInPicoKsm * this.quantity
+    }
   },
 };
 </script>

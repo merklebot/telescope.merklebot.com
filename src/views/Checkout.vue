@@ -177,6 +177,7 @@
               :pricePerStrgznInPicoKsm="pricePerTokenPicoKsm"
               :tokensPurchaseMinMax="tokensPurchaseMinMax"
               :defaultQuantity="defaultQuantity"
+              :picoKsmBalance="$store.state.app.picoKsmBalance"
               @resetCheckoutCryptoTxInfo="resetCheckoutCryptoTxInfo"
             />
           </div>

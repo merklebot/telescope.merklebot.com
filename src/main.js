@@ -41,6 +41,8 @@ const store = new Vuex.Store({
       balance: 0,
       balanceUnsubscribe: null,
       email: localStorage.email ? localStorage.email : null,
+      picoKsmBalance: null,
+      picoKsmBalanceUnsubscribe: null,
 
       /*
       For messages about payment from Stripe;
@@ -121,6 +123,17 @@ const store = new Vuex.Store({
               currentBalance = result.value.balance.toNumber()
             }
             commit('setAppInfo', {...state.app, balance: currentBalance})
+          }
+        )
+
+        if (state.app.picoKsmBalanceUnsubscribe) {
+          state.spp.picoKsmBalanceUnsubscribe()
+        }
+        state.app.picoKsmBalanceUnsubscribe = await state.polkadot.api.query.system.account(
+          state.app.account,
+          ({ data: { free: currentFree }}) => {
+            currentFree = parseInt(currentFree)
+            commit('setAppInfo', {...state.app, picoKsmBalance: currentFree})
           }
         )
       }
