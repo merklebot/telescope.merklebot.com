@@ -160,8 +160,9 @@ export async function signAndSend2(senderAccount, tx, txIncludedCallback, txFina
         unsubscribe()
       }
     })
+    return true
   } catch (error) {
-    console.error("Transaction failed:", error)
+    return false
   }
 }
 

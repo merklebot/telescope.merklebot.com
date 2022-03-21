@@ -59,13 +59,23 @@
         <div class="more" @click="setQuantity(pricePerNftInStrgzn)">+</div>
       </div>
 
-      <h5 v-if="pricePerStrgznInPicoKsm">Total: {{ total }} KSM</h5>
+      <h5 v-if="pricePerStrgznInPicoKsm">Total: {{ total }} Statemine KSM</h5>
       <h5 v-else>Total: loading price...</h5>
-
       <Button class="container-full" size="medium" :disabled="!checkoutStatus || !pricePerStrgznInPicoKsm">
         <span class="text">Sign</span>
       </Button>
     </form>
+
+    <TransactionInfoModal
+      v-if="showTransactionInfo"
+      :isCreated="!!checkoutCryptoTxInfo && !!checkoutCryptoTxInfo.created"
+      :isIncluded="!!checkoutCryptoTxInfo && !!checkoutCryptoTxInfo.included"
+      :isFinalized="!!checkoutCryptoTxInfo && !!checkoutCryptoTxInfo.finalized"
+      :asCreated="checkoutCryptoTxInfo ? checkoutCryptoTxInfo.created : null"
+      :asIncluded="checkoutCryptoTxInfo ? checkoutCryptoTxInfo.included : null"
+      :asFinalized="checkoutCryptoTxInfo ? checkoutCryptoTxInfo.finalized : null"
+      @closed="onTransactionInfoClosed()"
+    />
   </div>
 </template>
 
@@ -74,6 +84,7 @@ export default {
   name: "PurchaseToken",
   components: {
     Button: () => import("../includes/Button.vue"),
+    TransactionInfoModal: () => import ("../includes/TransactionInfoModal.vue")
   },
   props: {
     extensionStatus: {
@@ -81,6 +92,7 @@ export default {
       default: "loading",
     },
     checkoutStatus: Boolean,
+    checkoutCryptoTxInfo: Object,
     jumpToExtensionSetupFunction: Function,
     submitHandler: Function,
     pricePerNftInStrgzn: Number,
@@ -93,6 +105,7 @@ export default {
     return {
       quantity: this.defaultQuantity,
       paymentMethod: "Card",
+      showTransactionInfo: false,
       options: {
         layout: {
           color: "black",
@@ -140,6 +153,13 @@ export default {
         return;
       this.quantity += change;
     },
+    onTransactionSigned() {
+      this.showTransactionInfo = true
+    },
+    onTransactionInfoClosed() {
+      this.showTransactionInfo = false
+      this.$emit('resetCheckoutCryptoTxInfo')
+    },
   },
   computed: {
     total() {
@@ -155,4 +175,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>

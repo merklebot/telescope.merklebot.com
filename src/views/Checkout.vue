@@ -166,15 +166,18 @@
 
           <div class="tokenSection-form">
             <PurchaseTokens
+              ref="purchaseTokens"
               :extensionStatus="$store.state.app.status"
               :jumpToExtensionSetupFunction="jump"
               :submitHandler="handleSubmit"
               :checkoutStatus="checkoutStatus"
+              :checkoutCryptoTxInfo="checkoutCryptoTxInfo"
               :pricePerNftInStrgzn="pricePerNftInStrgzn"
               :pricePerStrgznInCents="pricePerTokenCents"
               :pricePerStrgznInPicoKsm="pricePerTokenPicoKsm"
               :tokensPurchaseMinMax="tokensPurchaseMinMax"
               :defaultQuantity="defaultQuantity"
+              @resetCheckoutCryptoTxInfo="resetCheckoutCryptoTxInfo"
             />
           </div>
         </section>
@@ -290,6 +293,7 @@ export default {
         console.warn("Token purchase skipped becase customer account is not set")
         return
       }
+      console.log(`New purchase, payment method: ${paymentMethod}, base amount: ${baseAmount}, quote amount: ${quoteAmount}`)
       switch (paymentMethod) {
         case "Card":
           await this.checkout(this.account, Math.trunc(quoteAmount)) // ToDo: fix payee service to support cents
@@ -330,38 +334,55 @@ export default {
         strgznAmount,
         this.pricePerTokenPicoKsm,
       )
-      try {
-        const tx = await createTransfer(
-          config.CRYPTO_PAYMENT_RECV_ACCOUNT,
-          ksmAmount,
-        )
-        await signAndSend2(this.$store.state.app.account, tx,
+      const tx = await createTransfer(
+        config.CRYPTO_PAYMENT_RECV_ACCOUNT,
+        ksmAmount * Math.pow(10, 12),
+      )
+      console.log(`Transfer transaction for ${ksmAmount} created: ${JSON.stringify(tx)}`)
+      const isSignedAndSent = await signAndSend2(this.$store.state.app.account, tx,
         async (blockHash, extrinsicHash) => {
           console.log(`Tx included, block hash: ${blockHash}, extrinsic hash: ${extrinsicHash}`)
           this.checkoutCryptoTxInfo = {
-            blockHash,
-            extrinsicHash,
+            included: {
+              blockHash,
+              extrinsicHash,
+            }
           }
         },
         async (blockHash, extrinsicHash) => {
           console.log(`Tx finalized, block hash: ${blockHash}, extrinsic hash: ${extrinsicHash}`)
           this.checkoutCryptoTxInfo = {
-            blockHash,
-            extrinsicHash,
+            finalized: {
+              blockHash,
+              extrinsicHash,
+            }
           }
           await submitCryptoPurchaseKusamaPaymentInfo(
             createdCryptoPurchase.id,
             this.account,
             "0",
-            this.checkoutCryptoTxInfo.blockHash,
-            this.checkoutCryptoTxInfo.extrinsicHash,
+            this.checkoutCryptoTxInfo.finalized.blockHash,
+            this.checkoutCryptoTxInfo.finalized.extrinsicHash,
           )
           this.process = false
           this.checkoutStatus = true
-        })
-      } catch(error) {
-        console.error("Crypto checkout error:", error)
+        }
+      )
+      if (!isSignedAndSent) {
+        console.log("Transfer is cancelled or not successful")
+        this.process = false
+        this.checkoutStatus = true
+        return
       }
+      this.checkoutCryptoTxInfo = {
+        created: {
+          extrinsicHash: tx.hash.toString(),
+        },
+      }
+      this.$refs.purchaseTokens.onTransactionSigned()
+    },
+    resetCheckoutCryptoTxInfo() {
+      this.checkoutCryptoTxInfo = null
     },
     jump(anchor) {
       /* Jump to anchor */
