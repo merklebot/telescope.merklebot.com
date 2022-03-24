@@ -107,6 +107,7 @@ export async function createCryptoPurchase(
   picoksmAmount,
   strgznAmount,
   strgznPicoksmRate,
+  referrer,
 ) {
   const resp = await client.post("purchases", {
     "customer": {
@@ -115,7 +116,8 @@ export async function createCryptoPurchase(
     "picoksm_amount": picoksmAmount,
     "strgzn_amount": strgznAmount,
     "strgzn_picoksm_rate": strgznPicoksmRate,
-    "idempotency_key": idempotencyKey
+    "idempotency_key": idempotencyKey,
+    referrer,
   })
   return resp.data
 }

@@ -315,7 +315,8 @@ export default {
       try {
         const session = await checkout({
           account,
-          quantity
+          quantity,
+          referrer: this.$store.state.referrer,
         });
         const r = await stripe.redirectToCheckout({ sessionId: session.id });
         if (r.error) {
@@ -336,6 +337,7 @@ export default {
         ksmAmount * Math.pow(10, 12),
         strgznAmount,
         this.pricePerTokenPicoKsm,
+        this.$store.state.referrer,
       )
       const tx = await createTransfer(
         config.CRYPTO_PAYMENT_RECV_ACCOUNT,
