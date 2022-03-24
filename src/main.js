@@ -127,7 +127,7 @@ const store = new Vuex.Store({
         )
 
         if (state.app.picoKsmBalanceUnsubscribe) {
-          state.spp.picoKsmBalanceUnsubscribe()
+          state.app.picoKsmBalanceUnsubscribe()
         }
         state.app.picoKsmBalanceUnsubscribe = await state.polkadot.api.query.system.account(
           state.app.account,
