@@ -184,7 +184,9 @@
         </section>
       </section>
 
-      <astronomicalObjectCard />
+      <astronomicalObjectCard
+        v-bind:address="account"
+      />
   
   </div>  
 
