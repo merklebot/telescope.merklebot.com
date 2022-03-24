@@ -53,6 +53,7 @@ const store = new Vuex.Store({
     },
     order: null, // active order tracked
     priceStrgznPicoKsm: null,
+    referrer: null,
   },
   mutations: {
     setIsTelescopeFree(state, value) {
@@ -88,6 +89,9 @@ const store = new Vuex.Store({
     setPriceStrgznPicoKsm(state, value) {
       state.priceStrgznPicoKsm = value
     },
+    setReferrer(state, value) {
+      state.referrer = value
+    }
   },
   actions: {
     async setAccountActive({ state, commit }, address) {
@@ -209,6 +213,13 @@ const store = new Vuex.Store({
             commit("setCheckoutStatus", false)
           }
         }, 50000);
+      }
+
+      if(route.query.referrer) {
+        console.log(`Referrer found: ${route.query.referrer}`)
+        commit("setReferrer", route.query.referrer)
+      } else {
+        console.log("Referrer not found")
       }
     },
     async updateActiveOrder({ commit, state }) {
