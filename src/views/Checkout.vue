@@ -312,11 +312,14 @@ export default {
     },
     async checkout(account, quantity) {
       this.proccess = true;
+      const isReferrerOwnedByCustomer = this.$store.state.polkadot.accounts
+        .map((account) => { return account.address })
+        .some((address) => { return address == this.$store.state.referrer })
       try {
         const session = await checkout({
           account,
           quantity,
-          referrer: this.$store.state.referrer,
+          ...(!isReferrerOwnedByCustomer && { referrer: this.$store.state.referrer }), // prevent using owned accounts as referral
         });
         const r = await stripe.redirectToCheckout({ sessionId: session.id });
         if (r.error) {
@@ -331,13 +334,16 @@ export default {
     async checkoutCrypto(strgznAmount, ksmAmount) {
       this.process = true;
       const uuid = uuidv4()
+      const isReferrerOwnedByCustomer = this.$store.state.polkadot.accounts
+        .map((account) => { return account.address })
+        .some((address) => { return address == this.$store.state.referrer })
       const createdCryptoPurchase = await createCryptoPurchase(
         uuid,
         this.account,
         ksmAmount * Math.pow(10, 12),
         strgznAmount,
         this.pricePerTokenPicoKsm,
-        this.$store.state.referrer,
+        isReferrerOwnedByCustomer ? undefined : this.$store.state.referrer, // prevent using owned accounts as referral
       )
       const tx = await createTransfer(
         config.CRYPTO_PAYMENT_RECV_ACCOUNT,
