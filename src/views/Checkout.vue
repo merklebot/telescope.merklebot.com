@@ -55,7 +55,7 @@
             <p class="service-message">
               <span v-if="conditionsStatus.includes('night')">{{service.message}}</span>
               <span v-if="conditionsStatus.includes('day')">Telescope is waiting for night…</span><br/>
-              <span v-if="conditionsStatus.includes('day') && time">{{ time }} left</span>
+              <span v-if="conditionsStatus.includes('day') && countdownToNight">{{ countdownToNight }}</span>
             </p>
           </div>
         </div>
@@ -242,6 +242,8 @@ export default {
       checkoutCryptoTxInfo: null,
 
       // For timer
+      countdownToNight: null,
+      countdownToNightUpdateTimeoutId: null,
       time: "00:00:00",
       hourStartNight: "18",
       hourEndNight: "05",
@@ -470,6 +472,23 @@ export default {
         self.time = self.countdown(self.currentTime())
         self.currentHour = self.getCurrentHour()
       }, 10000)
+
+      // Update countdown message
+      setImmediate(async () => {
+        const tonight = await getTimeNight()
+        const tonightFetchedAt = Date.now()
+        const updateCountdownToNight = async () => {
+          const dt = Date.now() - tonightFetchedAt
+          if (dt <= 0) {
+            this.countdownToNight = null
+          } else {
+            const message = moment.duration(tonight.left * 1_000 - dt).humanize() + ' left'
+            this.countdownToNight = message.charAt(0).toUpperCase() + message.slice(1)
+          }
+          this.countdownToNightUpdateTimeoutId = setTimeout(updateCountdownToNight, 10_000)
+        }
+        updateCountdownToNight()
+      })
   },
 
   watch: {
@@ -480,6 +499,7 @@ export default {
 
   beforeDestroy() {
     clearInterval(this.timeId)
+    clearInterval(this.countdownToNightUpdateTimeoutId)
   }
 };
 </script>
