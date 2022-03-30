@@ -412,15 +412,15 @@ export default {
       let status = ""
 
       if( this.service.message ) {
-        if ( this.service.message.includes('Daytime') ) {
+        if ( this.service.message.toLowerCase().includes('daytime') ) {
           status = 'day '
         }
 
-        if ( this.service.message.includes('Night') ) {
+        if ( this.service.message.toLowerCase().includes('night') ) {
           status = 'night '
         }
 
-        if ( this.service.message.includes('cloud') ) {
+        if ( this.service.message.toLowerCase().includes('cloud') ) {
           status += 'cloudy '
         }
       }
