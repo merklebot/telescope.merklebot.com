@@ -160,8 +160,9 @@
               </div>
               <div v-if="$store.state.app.checkoutStatus === 'error'" class="text-red">Payment error, please <a :href="$discord" target="_blank" rel="noopener noreferrer">contact us</a></div>
             </h4>
-            <p>1 $STRGZN = {{ pricePerTokenCents / 100 }} USD</p>
+            <p>1 $STRGZN = {{ pricePerTokenCents / 100 }} USD*</p>
             <p>1 space NFT = 25 $STRGZN</p>
+            <p style="color:#00819d;text-align:justify;">*STRGZN is not a cryptocurrency token, and STRGZN has no resale value. The $1 value is only associated with purchase of STRGZN.</p>
           </div>
 
           <div class="tokenSection-form">
