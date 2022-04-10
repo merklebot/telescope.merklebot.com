@@ -17,6 +17,7 @@
             </template>
 
             <template v-else-if="$store.state.app.account">
+
                 <div><Button @click.native="jump('#step-2')" size="medium" color="orange">Get access</Button></div>
 
                 <div>or</div>

@@ -66,6 +66,11 @@ sub { vertical-align: sub; }
 
 /* end - G - variables */
 
+html { font-size: 100%; }
+@media screen and (max-width: 600px) {
+  html { font-size: 80%; }
+}
+
 
 body {
   font-family: var(--font-text);
