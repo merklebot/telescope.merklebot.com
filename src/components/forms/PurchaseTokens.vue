@@ -77,18 +77,8 @@
         </Button>
       </form>
 
-    <!-- <TransactionInfoModal
-      v-if="showTransactionInfo"
-      :isCreated="!!checkoutCryptoTxInfo && !!checkoutCryptoTxInfo.created"
-      :isIncluded="!!checkoutCryptoTxInfo && !!checkoutCryptoTxInfo.included"
-      :isFinalized="!!checkoutCryptoTxInfo && !!checkoutCryptoTxInfo.finalized"
-      :asCreated="checkoutCryptoTxInfo ? checkoutCryptoTxInfo.created : null"
-      :asIncluded="checkoutCryptoTxInfo ? checkoutCryptoTxInfo.included : null"
-      :asFinalized="checkoutCryptoTxInfo ? checkoutCryptoTxInfo.finalized : null"
-      @closed="onTransactionInfoClosed()"
-    /> -->
-
     <TransactionInfoModal
+      v-if="showTransactionInfo"
       :isCreated="!!checkoutCryptoTxInfo && !!checkoutCryptoTxInfo.created"
       :isIncluded="!!checkoutCryptoTxInfo && !!checkoutCryptoTxInfo.included"
       :isFinalized="!!checkoutCryptoTxInfo && !!checkoutCryptoTxInfo.finalized"
