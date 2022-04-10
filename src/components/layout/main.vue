@@ -1,6 +1,6 @@
 <template>
   <fragment>
-    <Header />
+    <Header :class="scrollClass" />
 
     <main role="main">
       <slot />
@@ -8,7 +8,8 @@
 
     <a 
     title="Get support in our Discord community" 
-    class="support-discord" 
+    class="support-discord"
+    :class="scrollClass"
     :href="$discord" 
     target="_blank">
     <img alt="" src="i/discord.png" aria-hidden="true"/>
@@ -28,6 +29,41 @@ export default {
   name: "Layout",
   components: {
     Header
+  },
+
+  data(){
+    return {
+      scrolled: false
+    }
+  },
+
+  computed: {
+    scrollClass() {
+      return {
+        [`scrolled`]: this.scrolled
+      };
+    },
+  },
+
+  methods: {
+    windowScrolled() {
+      if(window.pageYOffset > 200) {
+        console.log('window.pageYOffset > 200')
+        this.scrolled = true
+      } else {
+        this.scrolled = false
+        console.log('window.pageYOffset < 200')
+      }
+    }
+  },
+
+  mounted(){
+    
+    var o = this;
+    o.windowScrolled();
+    window.addEventListener('scroll', function(){
+      o.windowScrolled();
+    });
   }
 };
 </script>
@@ -61,5 +97,19 @@ export default {
 .support-discord-title {
   font-weight: bold;
   font-size: var(--font-size);
+}
+
+.scrolled.support-discord {
+  --space: 0.8rem;
+  font-weight: bold;
+  grid-template-columns: 30px 1fr;
+}
+
+.scrolled .support-discord-title {
+  display: none;
+}
+
+.scrolled.support-discord img {
+  max-width: 30px;
 }
 </style>

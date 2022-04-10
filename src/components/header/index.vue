@@ -97,15 +97,19 @@ export default {
     font-family: var(--font-highlight);
     font-weight: 900;
     color: var(--header-textcolor);
+    transition: all 0.2s linear;
  
-    /* position: -webkit-sticky;
-    position: sticky;
-    top: -1px; */
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 999;
+  }
+
+  header.scrolled {
+    --space: 0.8rem;
+    background-color: var(--color-blue);
+    border-bottom: 4px solid var(--color-lilac);
   }
 
   .header-content {
