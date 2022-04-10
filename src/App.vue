@@ -87,8 +87,11 @@ h1, h2, h3, h4, h5 {
   font-family: var(--font-highlight);
   font-weight: 900 !important;
   line-height: 1.2;
-  margin-bottom: calc(var(--space) * 2);
   text-align: center;
+}
+
+h1:not(:last-child), h2:not(:last-child), h3:not(:last-child), h4:not(:last-child), h5:not(:last-child) {
+  margin-bottom: calc(var(--space) * 2);
 }
 
 h1:not(:first-child), h2:not(:first-child), h3:not(:first-child), h4:not(:first-child), h5:not(:first-child) {
@@ -120,6 +123,10 @@ p {
 }
 
 .text-small { font-size: 80%; } 
+
+.nowrap { white-space: nowrap }
+
+.text-left { text-align: left; }
 
 /* form elements */
 
@@ -335,6 +342,19 @@ section section {
 .section-blue-dark {
   background-color: var(--color-blue-dark);
 }
+
+.section-blue-darkest {
+  background-color: var(--color-blue-darkest);
+}
+
+.section-colored {
+  padding: var(--space);
+  border-radius: 20px;
+}
+
+.section-colored:not(:last-child) {
+  margin-bottom: var(--space);
+}
 /* end of Colored sections */
 
 .loader {
@@ -403,5 +423,61 @@ section section {
 .line > *:not(:last-child) {
   margin-right: var(--space)
 } */
+
+
+.tip {
+  font-size: 85%;
+  color: var(--color-lilac);
+  text-align: justify !important;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  max-width: 500px;
+  display: inline-block;
+}
+
+
+
+.switch {
+  display: inline-flex;
+  list-style: none;
+  width: 100%;
+}
+
+.switch input {
+  display: none;
+}
+
+.switch input:checked ~ label {
+  color: #fff
+}
+
+.switch label {
+  cursor: pointer;
+}
+
+.switch-section {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: var(--space);
+  border: 2px solid var(--color-lilac)
+}
+
+.switch-section li {
+  flex-grow: 1;
+}
+
+.switch-section label {
+  display: inline-block;
+  width: 100%;
+  padding: var(--space);
+  background-color: var(--color-blue-darkest);
+  font-weight: bold;
+}
+
+.switch-section input:checked ~ label {
+  background-color: var(--color-blue);
+}
 </style>
 

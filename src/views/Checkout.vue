@@ -149,8 +149,20 @@
         </div>
 
         <section class="tokenSection layout-sm">
+
           <div class="tokenSection-info">
-            <h4>
+
+            <p
+              v-if="$store.state.app.status !== 'extension ready'"
+              class="error-title text-small"
+            >
+              Please
+              <a href="#step-1" @click.prevent="jump('#step-1')"
+                >connect your Polkadot account</a
+              >
+            </p>
+
+            <h4 v-if="$store.state.app.status == 'extension ready'" class="purchase-balance">
               Your balance 
               <span :class="{'text-green': $store.state.app.balance > 0}">{{ $store.state.app.balance }} $STRGZN</span>
               <div v-if="$store.state.app.checkoutStatus === 'success'" class="text-green">
@@ -160,12 +172,14 @@
               </div>
               <div v-if="$store.state.app.checkoutStatus === 'error'" class="text-red">Payment error, please <a :href="$discord" target="_blank" rel="noopener noreferrer">contact us</a></div>
             </h4>
-            <p>1 $STRGZN = {{ pricePerTokenCents / 100 }} USD*</p>
-            <p>1 space NFT = 25 $STRGZN</p>
-            <p style="color:#00819d;text-align:justify;">*STRGZN is not a cryptocurrency token, and STRGZN has no resale value. The $1 value is only associated with purchase of STRGZN.</p>
+            
+            <p><span class="nowrap">1 $STRGZN</span> = <span class="nowrap">{{ pricePerTokenCents / 100 }} USD*</span><br/>
+            <span class="nowrap">1 Space NFT</span> = <span class="nowrap">25 $STRGZN</span></p>
+            <div class="tip">* STRGZN is not a cryptocurrency token, and STRGZN has no resale value. The $1 value is only associated with purchase of STRGZN.</div>
           </div>
 
           <div class="tokenSection-form">
+        
             <PurchaseTokens
               ref="purchaseTokens"
               :extensionStatus="$store.state.app.status"
@@ -181,6 +195,7 @@
               :picoKsmBalance="$store.state.app.picoKsmBalance"
               @resetCheckoutCryptoTxInfo="resetCheckoutCryptoTxInfo"
             />
+            
           </div>
         </section>
       </section>
@@ -815,13 +830,30 @@ export default {
   /* end of Day time change */
 
     /* Token purchase section */
+    #step-2 {
+      overflow: hidden
+    }
+
   .tokenSection {
     display: grid;
-    grid-template-columns: 1.5fr 2fr;
+    grid-template-columns: auto 350px;
     gap: calc(var(--space) * 3);
-    background: url("/i/telescope-shadow.png") no-repeat 100% 100%;
-    background-size: 260px;
     min-height: 480px;
+    max-width: 45rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .tokenSection:before {
+    content: "";
+    background: url("/i/telescope-shadow.png") no-repeat 0 0;
+    background-size: contain;
+  
+    width: 300px;
+    height: 400px;
+    position: absolute;
+    bottom: calc(var(--padding) * (-1));
+    right: -300px;
   }
 
   .tokenSection h4 span {
@@ -836,16 +868,8 @@ export default {
     font-size: 80%;
   }
 
-  .tokenSection-form {
-    text-align: center;
-    background-color: var(--color-blue-darkest);
-    padding: calc(var(--space) * 2) var(--space);
-    border-radius: 20px;
-    max-width: 350px;
-  }
-
-  .tokenSection-form h4 {
-    text-transform: uppercase;
+  .tokenSection-form-section:not(:last-child) {
+    margin-bottom: var(--space);
   }
   
   @media screen and (max-width: 1200px) {
@@ -865,13 +889,16 @@ export default {
     .tokenSection-info, .tokenSection-info h4 {
       text-align: center;
     }
+
+    .tokenSection:before {
+      right: -200px;
+    }
   }
 
-  @media screen and (max-width: 900px) {
-    .tokenSection{
-      background: none
+  @media screen and (max-width: 660px) {
+    .tokenSection:before {
+      display: none;
     }
-
   }
 
   @media screen and (max-width: 570px) {
@@ -879,6 +906,12 @@ export default {
       max-width: auto
     }
 
+  }
+
+  .purchase-balance {
+    text-transform: uppercase;
+    white-space: 1px;
+    color: var(--color-white);
   }
   /* end of Token purchase section */
 

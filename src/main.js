@@ -6,7 +6,7 @@ import Fragment from "vue-fragment";
 import Vuex from 'vuex'; // for some global data
 // import { checkAddress } from "@polkadot/util-crypto";
 import VueHead from 'vue-head'; // for injecting to <head/>
-import ToggleSwitch from 'vuejs-toggle-switch'
+// import ToggleSwitch from 'vuejs-toggle-switch'
 
 import { getProvider, getInstance, getAccounts } from "./services/substrate";
 import config from "./config";
@@ -23,7 +23,7 @@ console.log("App info:", JSON.stringify(config.APP_INFO))
 Vue.use(Fragment.Plugin);
 Vue.use(Vuex);
 Vue.use(VueHead);
-Vue.use(ToggleSwitch)
+// Vue.use(ToggleSwitch)
 
 const store = new Vuex.Store({
   state: {

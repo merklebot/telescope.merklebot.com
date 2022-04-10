@@ -1,71 +1,81 @@
 <template>
   <div>
-    <h4>Purchase tokens</h4>
-    <toggle-switch
-      :options="options"
-      :disabled="false"
-      @change="updatePaymentMethod($event.value)"
-    />
+    <h4 class="text-left">Purchase $STRGZN Tokens:</h4>
 
-    <p
-      v-if="extensionStatus !== 'extension ready'"
-      class="error-title text-small"
-    >
-      Please
-      <a href="#step-1" @click.prevent="jumpToExtensionSetupFunction('#step-1')"
-        >connect your Polkadot account</a
+    <section class="section-blue-darkest section-colored purchase-quantity">
+
+        <div class="inputNumbers m-b-space">
+          <div class="less" @click="setQuantity(-pricePerNftInStrgzn)">-</div>
+          <input
+            id="strgzn_quantity"
+            type="number"
+            v-model.number="quantity"
+            value="quantity"
+            required
+          />
+          <div class="more" @click="setQuantity(pricePerNftInStrgzn)">+</div>
+        </div>
+
+        <div>$STRGZN</div>
+    </section>
+
+    <ul class="switch switch-section">
+      <li>
+        <input 
+          type="radio" 
+          name="payment_method" 
+          value="Card" 
+          id="Card" 
+          :checked="paymentMethod == 'Card' ? true : false"
+          v-model="paymentMethod"/>
+        <label for="Card">Credit Card</label>
+      </li>
+      <li>
+        <input 
+          type="radio" 
+          name="payment_method" 
+          value="KSM" 
+          id="KSM" 
+          :checked="paymentMethod == 'KSM' ? true : false"
+          v-model="paymentMethod"
+        />
+        <label for="KSM">$KSM</label>
+      </li>
+    </ul>
+
+   
+      <form
+        v-if="paymentMethod === 'Card'"
+        @submit.prevent="handleSubmit"
+        :class="{ disabled: extensionStatus !== 'extension ready' }"
       >
-    </p>
 
-    <br />
+        <section class="section-blue-darkest section-colored bil">
+          <div>Total: {{ total }} USD</div>
+        </section>
 
-    <form
-      v-if="paymentMethod === 'Card'"
-      @submit.prevent="handleSubmit"
-      :class="{ disabled: extensionStatus !== 'extension ready' }"
-    >
-      <div class="inputNumbers m-b-space">
-        <div class="less" @click="setQuantity(-pricePerNftInStrgzn)">-</div>
-        <input
-          type="number"
-          v-model.number="quantity"
-          value="quantity"
-          required
-        />
-        <div class="more" @click="setQuantity(pricePerNftInStrgzn)">+</div>
-      </div>
+        <Button class="container-full" size="medium" :disabled="!checkoutStatus">
+          <span class="text">Pay with</span>
+          <img class="label" alt="Stripe" src="i/stripe.svg" />
+        </Button>
+      </form>
 
-      <h5>Total: {{ total }} USD</h5>
+      <form
+        v-if="paymentMethod === 'KSM'"
+        @submit.prevent="handleSubmit"
+        :class="{ disabled: extensionStatus !== 'extension ready' }"
+      >
 
-      <Button class="container-full" size="medium" :disabled="!checkoutStatus">
-        <span class="text">Pay with</span>
-        <img class="label" alt="Stripe" src="i/stripe.svg" />
-      </Button>
-    </form>
-
-    <form
-      v-if="paymentMethod === 'KSM'"
-      @submit.prevent="handleSubmit"
-      :class="{ disabled: extensionStatus !== 'extension ready' }"
-    >
-      <div class="inputNumbers m-b-space">
-        <div class="less" @click="setQuantity(-pricePerNftInStrgzn)">-</div>
-        <input
-          type="number"
-          v-model.number="quantity"
-          value="quantity"
-          required
-        />
-        <div class="more" @click="setQuantity(pricePerNftInStrgzn)">+</div>
-      </div>
-
-      <h5>Your Statemine KSM balance: {{ this.picoKsmBalance * Math.pow(10, -12) }} </h5>
-      <h5 v-if="pricePerStrgznInPicoKsm">Total: {{ total }} Statemine KSM</h5>
-      <h5 v-else>Total: loading price...</h5>
-      <Button class="container-full" size="medium" :disabled="!checkoutStatus || !pricePerStrgznInPicoKsm || !isEnoughBalance">
-        <span class="text">Sign</span>
-      </Button>
-    </form>
+        <section class="section-blue-darkest section-colored bil">
+          <div>Your balance: {{ formatBalance(ksmBalance, decimalsRoundKsm) }} Statemine KSM</div>
+          <div v-if="pricePerStrgznInPicoKsm">Total: {{ total }} Statemine KSM</div>
+          <div v-else>Total: loading price...</div>
+        </section>
+        
+        <Button class="container-full" size="medium" :disabled="!checkoutStatus || !pricePerStrgznInPicoKsm || !isEnoughBalance">
+          <span class="text">Sign</span>
+        </Button>
+      </form>
 
     <TransactionInfoModal
       v-if="showTransactionInfo"
@@ -77,6 +87,7 @@
       :asFinalized="checkoutCryptoTxInfo ? checkoutCryptoTxInfo.finalized : null"
       @closed="onTransactionInfoClosed()"
     />
+
   </div>
 </template>
 
@@ -108,42 +119,11 @@ export default {
       quantity: this.defaultQuantity,
       paymentMethod: "Card",
       showTransactionInfo: false,
-      options: {
-        layout: {
-          color: "black",
-          backgroundColor: "lightgray",
-          selectedColor: "white",
-          selectedBackgroundColor: "blue",
-          borderColor: "black",
-          //   fontFamily: "Arial",
-          fontWeight: "normal",
-          fontWeightSelected: "bold",
-          squareCorners: false,
-          noBorder: false,
-        },
-        size: {
-          //   fontSize: 14,
-          //   height: 34,
-          //   padding: 7,
-          width: 18,
-        },
-        items: {
-          delay: 0.1,
-          preSelected: "Card",
-          disabled: false,
-          labels: [
-            { name: "Card", color: "white", backgroundColor: "blue" },
-            { name: "KSM", color: "white", backgroundColor: "blue" },
-            // { name: "Crypto", color: "white", backgroundColor: "blue" },
-          ],
-        },
-      },
+      decimalsRoundUsd: 2,
+      decimalsRoundKsm: 6,
     };
   },
   methods: {
-    updatePaymentMethod(value) {
-      this.paymentMethod = value;
-    },
     async handleSubmit() {
       this.submitHandler(this.paymentMethod, this.quantity, this.total);
     },
@@ -162,13 +142,28 @@ export default {
       this.showTransactionInfo = false
       this.$emit('resetCheckoutCryptoTxInfo')
     },
+
+    formatBalance(balance, decimals) {
+        
+        var qty = Number(balance)
+
+        if(Number.isInteger(qty)) {
+            return qty
+        } else {
+            return parseFloat(qty.toFixed(decimals))
+        }
+      }
   },
   computed: {
+    ksmBalance() {
+      return this.pricePerStrgznInPicoKsm * Math.pow(10, -12)
+    },
+
     total() {
       if (this.paymentMethod === "Card") {
-        return (this.quantity * this.pricePerStrgznInCents / 100).toFixed(2);
+        return this.formatBalance(this.quantity * this.pricePerStrgznInCents / 100, this.decimalsRoundUsd);
       } else if (this.paymentMethod === "KSM") {
-        return (this.quantity * (this.pricePerStrgznInPicoKsm * Math.pow(10, -12))).toFixed(6)
+        return this.formatBalance(this.quantity * this.ksmBalance, this.decimalsRoundKsm)
       } else {
         throw new Error("Unexpected payment method", this.paymentMethod)
       }
@@ -181,5 +176,27 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+  .purchase-quantity {
+    display: grid;
+    grid-template-columns: auto 100px;
+    gap: var(--space);
+    align-items: center;
+  }
+
+  .purchase-quantity .inputNumbers {
+    margin-bottom: 0;
+  }
+
+  .bil > div {
+    font-size: 85%;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .bil > div:not(:last-child) {
+    margin-bottom: var(--space);
+    padding-bottom: var(--space);
+    border-bottom: 1px dashed var(--color-cyan);
+  }
 </style>
