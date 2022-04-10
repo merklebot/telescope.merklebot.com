@@ -38,6 +38,11 @@ export default {
     href: {
       type: String,
       default: null
+    },
+
+    round: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -45,9 +50,10 @@ export default {
     classes() {
       return {
         [`button`]: true,
-        [`${this.size}`]: true,
+        [`button--${this.size}`]: true,
         [`label-${this.label}`]: true,
-        [`${this.color}`]: true
+        [`${this.color}`]: true,
+        [`button--round`]: this.round,
       };
     },
   }
@@ -85,7 +91,7 @@ export default {
     color: var(--color-cyan);
   }
 
-  .button.mid {
+  .button--medium {
     font-size: var(--font-size);
     padding: 0.8rem 1rem;
     min-width: auto;
@@ -121,5 +127,31 @@ export default {
   }
   .button.green:hover {
     background-color: var(--color-red);
+  }
+
+  .button--round {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: auto;
+    padding: 0;
+  }
+
+  .button--round.button--small {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 2.5rem;
+  }
+
+  .button--round.button--medium {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 3.5rem;
+  }
+
+  .button--round.button--big {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 4.5rem;
   }
 </style>

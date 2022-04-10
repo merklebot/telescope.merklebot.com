@@ -101,7 +101,8 @@ h1:not(:first-child), h2:not(:first-child), h3:not(:first-child), h4:not(:first-
 h1 { font-size: calc(var(--font-size) * 1.7); }
 h2 { font-size: calc(var(--font-size) * 1.2); }
 h3 { font-size: calc(var(--font-size) * 1.2); }
-h4, h5 { font-size: calc(var(--font-size) * 1); }
+h4{ font-size: calc(var(--font-size) * 1); }
+h5 { font-size: calc(var(--font-size) * 0.9); }
 
 h1, h2 {
   text-transform: uppercase;
@@ -356,31 +357,6 @@ section section {
   margin-bottom: var(--space);
 }
 /* end of Colored sections */
-
-.loader {
-  position: relative;
-  display: inline-block;
-  height: 20px;
-  width: 20px;
-  border-radius: 20px;
-  border-color: var(--color-cyan);
-  border-top: 2px solid var(--color-cyan);
-  border-right: 2px solid var(--color-cyan);
-  animation: 0.8s Rotate ease-in-out infinite;
-  margin: 0 var(--space);
-}
-
-.loader:first-child { margin-left: 0}
-.loader:last-child { margin-right: 0}
-
-@keyframes Rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
 
 
