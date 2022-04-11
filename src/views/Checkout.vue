@@ -299,7 +299,7 @@ export default {
 
     pricePerTokenPicoKsm: {
       get() {
-        return this.$store.state.priceStrgznPicoKsm
+        return this.$store.state.prices.strgznPicoKsm
       }
     },
   },

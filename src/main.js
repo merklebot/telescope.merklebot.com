@@ -53,6 +53,13 @@ const store = new Vuex.Store({
     },
     order: null, // active order tracked
     priceStrgznPicoKsm: null,
+    prices: {
+      strgznPicoKsm: null,
+      strgznCents: config.PRICE_PER_STRGZN_CENTS,
+      nftStrgzn: config.PRICE_PER_NFT_STRGZNS,
+      nftPicoKsm: null,
+      nftCents: config.PRICE_PER_NFT_STRGZNS * config.PRICE_PER_STRGZN_CENTS,
+    },
     referrer: null,
   },
   mutations: {
@@ -86,8 +93,9 @@ const store = new Vuex.Store({
     setActiveOrder(state, value) {
       state.order = value
     },
-    setPriceStrgznPicoKsm(state, value) {
-      state.priceStrgznPicoKsm = value
+    setPrices(state, value) {
+      console.log(`Prices update, before: ${JSON.stringify(state.prices)}, after: ${JSON.stringify(value)}`)
+      state.prices = value
     },
     setReferrer(state, value) {
       state.referrer = value
@@ -228,11 +236,12 @@ const store = new Vuex.Store({
       commit('setActiveOrder', order)
     },
     async updatePriceStrgznPicoKsm({ commit, state }) {
-      const priceStrgnKsm = await readPriceStrgznPicoKsm(
-        state.priceStrgznPicoKsm ?? 0,
+      const strgznPicoKsm = await readPriceStrgznPicoKsm(
+        state.prices.strgznPicoKsm ?? 0,
         config.API_SERVER_LONG_POLLING_TIMEOUT,
       )
-      commit('setPriceStrgznPicoKsm', priceStrgnKsm)
+      const nftPicoKsm = state.prices.nftStrgzn * strgznPicoKsm
+      commit('setPrices', { ...state.prices, strgznPicoKsm, nftPicoKsm })
     },
   },
 });
