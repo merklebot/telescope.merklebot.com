@@ -48,11 +48,9 @@ export default {
   methods: {
     windowScrolled() {
       if(window.pageYOffset > 200) {
-        console.log('window.pageYOffset > 200')
         this.scrolled = true
       } else {
         this.scrolled = false
-        console.log('window.pageYOffset < 200')
       }
     }
   },

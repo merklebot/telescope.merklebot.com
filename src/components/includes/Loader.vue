@@ -83,6 +83,9 @@ export default {
         margin: 0 var(--space);
     }
 
+    .loader:first-child .loader-circle {margin-left: 0}
+    .loader:last-child .loader-circle {margin-right: 0}
+
     .loader:first-child { margin-left: 0}
     .loader:last-child { margin-right: 0}
 

@@ -5,10 +5,18 @@
       <p class="hyphens">Choose an astronomical object below and hit the submit button. The telescope will start moving and will mint your NFT in a few minutes.</p>
     </div>
 
-    <section>
+    <section v-if="astronomicalObj.length == 0">
 
       <div class="layout-narrow">
-        <h4>Choose one from {{ this.astronomicalObj.length }} astronomical objects</h4>
+        <h4>Please wait for astronomical objects on the sky. Now they are all invisible</h4>
+      </div>
+
+    </section>
+
+    <section v-if="astronomicalObj.length > 0">
+
+      <div class="layout-narrow">
+        <h4>Choose one from {{ astronomicalObj.length }} astronomical objects</h4>
       </div>
 
       <div class="objects layout-mid">
@@ -49,7 +57,7 @@
 
           <div v-if="nftStatus !== 'done' && nftStatus !== null">
             <p>
-              <span class="loader"></span>
+              <Loader />
               <span>{{nftStatus}}</span>
             </p>
             <p><a 
@@ -64,7 +72,8 @@
           </div>
         </li>
 
-        <li v-if="nftStatus === 'done'">
+        <!-- <li v-if="nftStatus === 'done'"> -->
+        <li>
           <span>Your next steps:</span>
 
           <div>
@@ -93,7 +102,7 @@
       </ul>
     </section>
       
-    <section class="order-form layout-narrow">
+    <section class="order-form layout-narrow" v-if="astronomicalObj.length > 0">
         <form>
           <p>
             <select class="container-full" v-model="astronomicalObjSelected">
@@ -148,7 +157,8 @@ export default {
     Stars: () => import('../includes/Stars.vue'),
     iSingular: () => import('../icons/iSingular.vue'),
     iTwitter: () => import('../icons/iTwitter.vue'),
-    iDiscord: () => import('../icons/iDiscord.vue')
+    iDiscord: () => import('../icons/iDiscord.vue'),
+    Loader: () => import("./Loader.vue"),
   },
 
   computed: {

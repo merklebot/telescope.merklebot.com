@@ -18,7 +18,7 @@
 
             <template v-else-if="$store.state.app.account">
 
-                <div><Button @click.native="jump('#step-2')" size="medium" color="orange">Get access</Button></div>
+                <div v-if="$store.state.app.balance < 1"><Button @click.native="jump('#step-2')" size="medium" color="orange">Get access</Button></div>
 
                 <div>or</div>
 
@@ -52,11 +52,10 @@
         <div class="banner-bottom">
           <div class="layout-narrow">
             <div class="service-status">Telescope {{service.status}}</div>
-            <!-- <div class="service-message">{{service.message}}</div> -->
             <p class="service-message">
               <span v-if="conditionsStatus.includes('night')">{{service.message}}</span>
               <span v-if="conditionsStatus.includes('day')">Telescope is waiting for night…</span><br/>
-              <span v-if="conditionsStatus.includes('day') && countdownToNight">{{ countdownToNight }}</span>
+              <span v-if="conditionsStatus.includes('day') && countdownLeftToNight">{{ countdownLeftToNight }} left</span>
             </p>
           </div>
         </div>
@@ -258,14 +257,12 @@ export default {
       checkoutStatus: true,
       checkoutCryptoTxInfo: null,
 
-      // For timer
-      countdownToNight: null,
-      countdownToNightUpdateTimeoutId: null,
-      time: "00:00:00",
-      hourStartNight: "18",
-      hourEndNight: "05",
-      currentHour: "00",
-      timeId: null
+      // Countdown 'left for tonght'
+      // location: top banner
+      countdownNightStart: "22:00:00", //default time, should be rewritten by api on mount. technical data hidden from user
+      countdownLeftToNight: null, // this is what user watches in top banner, format 'hh:mm:ss'
+      countdownTimeoutId: null // technical data
+      
     };
   },
 
@@ -287,15 +284,6 @@ export default {
         this.$store.dispatch("setAccountActive", value)
       },
     },
-
-    // email: {
-    //   get() {
-    //     return this.$store.state.email;
-    //   },
-    //   set(value) {
-    //     this.$store.commit("setEmail", value);
-    //   },
-    // },
 
     pricePerTokenPicoKsm: {
       get() {
@@ -445,24 +433,49 @@ export default {
       return status
     },
 
-    /* Timer - Gets telescope time in Atacama(Chile) */
-    getCurrentHour(){
-      return new Date().toLocaleString("en-US", { timeZone: "America/Santiago", hour: 'numeric', hour12: false })
-    },
+    /*
+      Current time in Atacama:
+      Required for Countdown tonight;
+      format 'hh:mm:ss'
+    */
     currentTime(){
       return new Date().toLocaleString("en-US", { timeZone: "America/Santiago", hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false })
     },
-    /* Timer - Gets how long left tonight */
-    countdown(currentTime) {
+
+    
+    /* 
+    Countdown - Gets how long left tonight 
+    tonight - string, time when night starts in Atacama, format 'hh:mm:ss'
+    current - string, time now in Atacama, format 'hh:mm:ss'
+    */
+    countdown(tonight, current) {
       var 
-          startNight = moment.duration(this.hourStartNight + ':00:00'),
-          timer = startNight.subtract(currentTime),
+          startNight = moment.duration(tonight),
+          timer = startNight.subtract(current),
           timeString = '';
+
+          // You may switch time left for user in this format if you like
+          // 11 hour(s) 30 minute(s) 10 second(s)
+
+          // if(timer.hours() > 0) {
+          //   timeString += timer.hours() + ' hours '
+          // }
+          // if(timer.minutes() > 0) {
+          //   timeString += timer.minutes() + ' minute(s) '
+          // }
+          // if(timer.seconds() > 0) {
+          //   timeString += timer.seconds() + ' second(s) '
+          // }
+
+          // Format for user 'hh:mm:ss'
           if(timer.hours() > 0) {
-            timeString += timer.hours() + ' hours '
+            timeString += timer.hours()
           }
-          if(timer.minutes() >= 0) {
-            timeString += timer.minutes() + ' minute(s) '
+          if(timer.minutes() > 0) {
+            timeString += ':' + timer.minutes()
+          }
+          if(timer.seconds() > 0) {
+            timeString += ':' +  timer.seconds()
           }
 
       return timeString
@@ -477,34 +490,21 @@ export default {
       /* Set class for top banner */
       this.conditionsStatus = this.dayTime()
 
-      /* Set timer */
-      const timeNight = await getTimeNight();
-      this.hourStartNight = moment(timeNight.start).hour();
-      this.hourEndNight = moment(timeNight.end).hour();
 
-      var self = this
-      this.time = this.countdown(this.currentTime())
-      this.currentHour = this.getCurrentHour()
-      this.timeId = setInterval(() => {
-        self.time = self.countdown(self.currentTime())
-        self.currentHour = self.getCurrentHour()
-      }, 10000)
-
+      /* TIME LEFT TO NIGHT */
       // Update countdown message
       setImmediate(async () => {
-        const tonight = await getTimeNight()
-        const tonightFetchedAt = Date.now()
+
+        const nightInterval = await getTimeNight();
+        this.countdownNightStart = nightInterval.start.split('T')[1].split('-')[0]; // parse hh:mm:ss from api string. do not use standart moment/date tools here because of time zone in api string!
+
         const updateCountdownToNight = async () => {
-          const dt = Date.now() - tonightFetchedAt
-          if (dt <= 0) {
-            this.countdownToNight = null
-          } else {
-            const message = moment.duration(tonight.left * 1_000 - dt).humanize() + ' left'
-            this.countdownToNight = message.charAt(0).toUpperCase() + message.slice(1)
-          }
-          this.countdownToNightUpdateTimeoutId = setTimeout(updateCountdownToNight, 10_000)
+          this.countdownLeftToNight = this.countdown(this.countdownNightStart, this.currentTime());
+          this.countdownTimeoutId = setTimeout(updateCountdownToNight, 1000) //update info every second as we show seconds also
         }
+
         updateCountdownToNight()
+
       })
   },
 
@@ -515,8 +515,7 @@ export default {
   },
 
   beforeDestroy() {
-    clearInterval(this.timeId)
-    clearInterval(this.countdownToNightUpdateTimeoutId)
+    clearInterval(this.countdownTimeoutId)
   }
 };
 </script>
