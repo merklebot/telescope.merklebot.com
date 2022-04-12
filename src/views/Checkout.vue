@@ -22,7 +22,7 @@
                 <div>or</div>
 
                 <div><Button 
-                :href="'https://singular.rmrk.app/space/' + $store.state.app.account + '?tab=owned&owner=yes'" 
+                :href="'https://singular.app/space/' + $store.state.app.account + '?tab=owned&owner=yes'" 
                 size="medium" 
                 color="green"
                 target="_blank" rel="noopener noreferrer">

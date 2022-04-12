@@ -53,7 +53,7 @@
               <span>{{nftStatus}}</span>
             </p>
             <p><a 
-              :href="'https://singular.rmrk.app/space/' + $store.state.app.account + '?tab=owned&owner=yes'" 
+              :href="'https://singular.app/space/' + $store.state.app.account + '?tab=owned&owner=yes'" 
               target="_blank" rel="noopener noreferrer">
               Check your NFT(s)
             </a></p>
@@ -70,7 +70,7 @@
           <div>
             <p class="order-servicelinks">
               <a 
-                :href="'https://singular.rmrk.app/space/' + $store.state.app.account + '?tab=owned&owner=yes'" 
+                :href="'https://singular.app/space/' + $store.state.app.account + '?tab=owned&owner=yes'" 
                 target="_blank" rel="noopener noreferrer"
                 title="Check your NFT(s)">
                 <i-singular class="logo" />
