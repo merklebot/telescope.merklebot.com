@@ -17,11 +17,10 @@
             </template>
 
             <template v-else-if="$store.state.app.account">
-
-                <div v-if="$store.state.app.balance < 1"><Button @click.native="jump('#step-2')" size="medium" color="orange">Get access</Button></div>
-
-                <div>or</div>
-
+                <div v-if="$store.state.app.balance < $store.state.prices.nftStrgzn">
+                  <Button @click.native="jump('#step-2')" size="medium" color="orange">Get access</Button>
+                  <div>or</div>
+                </div>
                 <div><Button 
                 :href="'https://singular.app/space/' + $store.state.app.account + '?tab=owned&owner=yes'" 
                 size="medium" 
