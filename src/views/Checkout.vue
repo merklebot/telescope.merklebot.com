@@ -469,13 +469,17 @@ export default {
 
           // Format for user 'hh:mm:ss'
           if(timer.hours() > 0) {
-            timeString += timer.hours()
+            timeString += timer.hours() + ":"
           }
           if(timer.minutes() > 0) {
-            timeString += ':' + timer.minutes().toString().padStart(2, 0)
+            timeString += timer.minutes().toString().padStart(2, 0) + ":"
           }
           if(timer.seconds() > 0) {
-            timeString += ':' +  timer.seconds().toString().padStart(2, 0)
+            if (timer.minutes() > 0) {
+              timeString += timer.seconds().toString().padStart(2, 0)
+            } else {
+              timeString += timer.seconds()
+            }
           }
 
       return timeString
