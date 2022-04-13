@@ -472,10 +472,10 @@ export default {
             timeString += timer.hours()
           }
           if(timer.minutes() > 0) {
-            timeString += ':' + timer.minutes()
+            timeString += ':' + timer.minutes().toString().padStart(2, 0)
           }
           if(timer.seconds() > 0) {
-            timeString += ':' +  timer.seconds()
+            timeString += ':' +  timer.seconds().toString().padStart(2, 0)
           }
 
       return timeString
