@@ -173,9 +173,9 @@
               <div v-if="$store.state.app.checkoutStatus === 'error'" class="text-red">Payment error, please <a :href="$discord" target="_blank" rel="noopener noreferrer">contact us</a></div>
             </h4>
             
-            <p><span class="nowrap">1 $STRGZN</span> = <span class="nowrap">{{ pricePerTokenCents / 100 }} USD*</span><br/>
-            <span class="nowrap">1 Space NFT</span> = <span class="nowrap">25 $STRGZN</span></p>
-            <div class="tip">* STRGZN is not a cryptocurrency token, and STRGZN has no resale value. The $1 value is only associated with purchase of STRGZN.</div>
+            <p><span class="nowrap">1 $STRGZN</span> = <span class="nowrap">{{ ($store.state.prices.strgznCents / 100).toFixed(2) }} USD*</span><br/>
+            <span class="nowrap">1 Space NFT</span> = <span class="nowrap">{{ $store.state.prices.nftStrgzn }} $STRGZN</span></p>
+            <div class="tip">* STRGZN is not a cryptocurrency token, and STRGZN has no resale value. The ${{ ($store.state.prices.strgznCents / 100).toFixed(2) }} value is only associated with purchase of STRGZN.</div>
           </div>
 
           <div class="tokenSection-form">
