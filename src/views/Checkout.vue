@@ -449,38 +449,36 @@ export default {
     current - string, time now in Atacama, format 'hh:mm:ss'
     */
     countdown(tonight, current) {
-      var 
-          startNight = moment.duration(tonight),
-          timer = startNight.subtract(current),
-          timeString = '';
+      let startNight = moment.duration(tonight)
+      let timer = startNight.subtract(current)
+      let timeString = ''
 
-          // You may switch time left for user in this format if you like
-          // 11 hour(s) 30 minute(s) 10 second(s)
+      // Format 11 hour(s) 30 minute(s) 10 second(s)
+      if(timer.hours() > 0) {
+        timeString += timer.hours() + ' hour(s) '
+      }
+      if(timer.minutes() > 0) {
+        timeString += timer.minutes() + ' minute(s) '
+      }
+      if(timer.seconds() > 0) {
+        timeString += timer.seconds() + ' second(s) '
+      }
 
-          // if(timer.hours() > 0) {
-          //   timeString += timer.hours() + ' hours '
-          // }
-          // if(timer.minutes() > 0) {
-          //   timeString += timer.minutes() + ' minute(s) '
-          // }
-          // if(timer.seconds() > 0) {
-          //   timeString += timer.seconds() + ' second(s) '
-          // }
-
-          // Format for user 'hh:mm:ss'
-          if(timer.hours() > 0) {
-            timeString += timer.hours() + ":"
-          }
-          if(timer.minutes() > 0) {
-            timeString += timer.minutes().toString().padStart(2, 0) + ":"
-          }
-          if(timer.seconds() > 0) {
-            if (timer.minutes() > 0) {
-              timeString += timer.seconds().toString().padStart(2, 0)
-            } else {
-              timeString += timer.seconds()
-            }
-          }
+      // You may switch time left for user in this format if you like
+      // Format for user 'hh:mm:ss'
+      // if(timer.hours() > 0) {
+      //   timeString += timer.hours() + ":"
+      // }
+      // if(timer.minutes() > 0) {
+      //   timeString += timer.minutes().toString().padStart(2, 0) + ":"
+      // }
+      // if(timer.seconds() > 0) {
+      //   if (timer.minutes() > 0) {
+      //     timeString += timer.seconds().toString().padStart(2, 0)
+      //   } else {
+      //     timeString += timer.seconds()
+      //   }
+      // }
 
       return timeString
     },
