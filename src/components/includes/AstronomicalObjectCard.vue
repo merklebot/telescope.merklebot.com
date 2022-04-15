@@ -229,7 +229,7 @@ export default {
         this.$store.state.service.status === 'off' ||
         // !this.$store.state.telescope ||
         !this.$store.state.app.account || this.$store.state.app.status !== 'extension ready' || 
-        this.$store.state.app.balance < 25) {
+        this.$store.state.app.balance < this.$store.state.prices.nftStrgzn) {
 
         return
       }
@@ -237,7 +237,7 @@ export default {
       this.nftStatus = 'Waiting for STRGZN spending transaction...'
 
       /* Send tokens */
-      const success = await sendAsset(this.$store.state.app.account, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, 25);
+      const success = await sendAsset(this.$store.state.app.account, config.ACCESS_TOKEN_RECV_ACCOUNT, config.ID_ASSET, this.$store.state.prices.nftStrgzn);
       if (!success) {
         this.submitMessage =  'Tokens not sent. Please, contact us or try later'
         return
