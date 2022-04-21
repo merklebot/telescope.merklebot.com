@@ -52,7 +52,9 @@
           <div class="layout-narrow">
             <div class="service-status">Telescope {{service.status}}</div>
             <p class="service-message">
-              <span v-if="conditionsStatus.includes('night')">{{service.message}}</span>
+              <span v-if="conditionsStatus.includes('night')">
+                <span class="first-letter">{{ service.message[0] }}</span><span>{{ service.message.slice(1) }}</span>
+              </span>
               <span v-if="conditionsStatus.includes('day')">Telescope is waiting for night…</span><br/>
               <span v-if="conditionsStatus.includes('day') && countdownLeftToNight">{{ countdownLeftToNight }} left</span>
             </p>
@@ -729,6 +731,11 @@ export default {
     font-size: 80%;
     color: var(--color-lilac);
     opacity: 0.8;
+    text-transform:lowercase;
+  }
+  
+  .service-message .first-letter {
+    text-transform:capitalize;
   }
   /* end of Service status */
 
