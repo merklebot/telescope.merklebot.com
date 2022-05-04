@@ -18,7 +18,20 @@ import {
   readPriceStrgznPicoKsm,
 } from "./services/api"
 
-console.log("App info:", JSON.stringify(config.APP_INFO))
+console.log("App info:", JSON.stringify(config.APP_INFO, (k, v) => v === undefined ? null : v))
+console.log("Crypto info:", JSON.stringify({
+    ACCESS_TOKEN_RECV_ACCOUNT: config.ACCESS_TOKEN_RECV_ACCOUNT,
+    CRYPTO_PAYMENT_RECV_ACCOUNT: config.CRYPTO_PAYMENT_RECV_ACCOUNT,
+    MIN_TOKENS_BUY: config.MIN_TOKENS_BUY,
+    MAX_TOKENS_BUY: config.MAX_TOKENS_BUY,
+    ID_ASSET: config.ID_ASSET,
+    PRICE_PER_STRGZN_CENTS: config.PRICE_PER_STRGZN_CENTS,
+    PRICE_PER_NFT_STRGZNS: config.PRICE_PER_NFT_STRGZNS,
+}, (k, v) => v === undefined ? null : v))
+console.log("API info:", JSON.stringify({
+  API_SERVER: config.API_SERVER,
+  API_SERVER_LONG_POLLING_TIMEOUT: config.API_SERVER_LONG_POLLING_TIMEOUT,
+}, (k, v) => v === undefined ? null : v))
 
 Vue.use(Fragment.Plugin);
 Vue.use(Vuex);
