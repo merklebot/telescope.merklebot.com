@@ -1,7 +1,7 @@
 <template>
   <div class="modal-overlay">
     <div class="modal">
-      <div v-if="!isFinalized">
+      <div v-if="!isCreated && !isIncluded && !isFinalized">
         <p>
           <Loader />
         </p>
@@ -10,11 +10,8 @@
         <p class="text-small">Waiting for validation <Loader type="dots"/></p>
         <p class="text-small">Please do not close the window.</p>
       </div>
-      <div v-else>
-        <h4>Success!</h4>
-      </div>
 
-      <div v-if="isCreated && !isIncluded && !isFinalized">
+      <div v-else-if="isCreated && !isIncluded && !isFinalized">
         <p><Loader /></p>
 
         <h4>
@@ -35,7 +32,7 @@
         <p class="text-small">Please do not close the window.</p>
       </div>
 
-      <div v-if="isIncluded && !isFinalized">
+      <div v-else-if="!isCreated && isIncluded && !isFinalized">
         <p><Loader /></p>
 
         <h4>
@@ -66,7 +63,8 @@
         <p class="text-small">Please do not close the window.</p>
       </div>
 
-      <div v-else-if="isFinalized">
+      <div v-else-if="!isCreated && !isIncluded && isFinalized">
+        <h4>Success!</h4>
         <p>
           <Loader type="ok" size="medium" />
         </p>
