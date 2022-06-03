@@ -156,14 +156,14 @@ export default {
   },
   computed: {
     ksmBalance() {
-      return this.pricePerStrgznInPicoKsm * Math.pow(10, -12)
+      return this.picoKsmBalance * Math.pow(10, -12)
     },
 
     total() {
       if (this.paymentMethod === "Card") {
         return this.formatBalance(this.quantity * this.pricePerStrgznInCents / 100, this.decimalsRoundUsd);
       } else if (this.paymentMethod === "KSM") {
-        return this.formatBalance(this.quantity * this.ksmBalance, this.decimalsRoundKsm)
+        return this.formatBalance(this.quantity * this.pricePerStrgznInPicoKsm * Math.pow(10, -12), this.decimalsRoundKsm)
       } else {
         throw new Error("Unexpected payment method", this.paymentMethod)
       }
